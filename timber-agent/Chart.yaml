@@ -1,0 +1,17 @@
+name: timber-agent
+version: 0.1.0
+appVersion: 0.8.0
+description: Timber Agent
+keywords:
+  - timber
+  - logging
+icon: https://res.cloudinary.com/timber/image/upload/v1522350338/logo-purple_lreb3e.svg
+home: https://github.com/timberio/agent
+sources:
+  - https://timber.io
+  - https://timber.io/docs/platforms/kubernetes
+maintainers:
+  - name: carkmorwin
+    email: mark@timber.io
+  - name: DavidAntaramian
+    email: david@timber.io

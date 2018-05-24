@@ -1,0 +1,13 @@
+{{- if .Values.timber.config -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "timber.configMapName" . }}
+  labels:
+    app: {{ template "timber.name" . }}
+    chart: {{ template "timber.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  timber.toml: {{ toYaml .Values.timber.config | indent 2 }}
+{{- end -}}
