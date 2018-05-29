@@ -1,6 +1,6 @@
 name: timber-agent
-version: 0.1.0
-appVersion: 0.8.0
+version: 0.1.1
+appVersion: 0.8.1
 description: Timber Agent
 keywords:
   - timber

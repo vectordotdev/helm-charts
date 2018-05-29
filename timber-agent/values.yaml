@@ -1,7 +1,7 @@
 # Default values for timber-agent
 image:
   repository: timberio/agent
-  tag: 0.8.0
+  tag: 0.8.1
   pullPolicy: IfNotPresent
 
 # Annotations to add to the DaemonSet's Pods
