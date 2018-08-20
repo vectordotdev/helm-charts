@@ -34,7 +34,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | Parameter                   | Description                         | Default                                           |
 |-----------------------------|-------------------------------------|---------------------------------------------------|
 | `image.repository`          | Image repository | `timberio/agent` |
-| `image.tag`                 | Image tag (`Must be >= 0.8.0`) | `0.8.1`|
+| `image.tag`                 | Image tag (`Must be >= 0.8.0`) | `0.9.1`|
 | `image.pullPolicy`          | Image pull policy | `IfNotPresent` |
 | `podAnnotations`            | Key value pairs to store as Pod metadata | `{}`
 | `daemonsetTolerations`      | List of accepted node taints | `[]`
