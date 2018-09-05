@@ -24,14 +24,14 @@ spec:
         release: {{ .Release.Name }}
     spec:
       initContainers:
-      - name: docker-pull-timber-agent
+      - name: "docker-pull-{{ template "timber.name" . }}"
         image: "timberio/docker-client:17.03.2-ce"
         args: ["pull", "{{ .Values.image.repository }}:{{ .Values.image.tag }}"]
         volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
     {{- if .Values.timber.proxyImage }}
-      - name: "docker-pull-proxy-image"
+      - name: "docker-pull-{{ template "timber.name" . }}-proxy"
         image: "timberio/docker-client:17.03.2-ce"
         args: ["pull", "{{ .Values.timber.proxyImage }}"]
         volumeMounts:
@@ -52,7 +52,7 @@ spec:
         - name: TIMBER_AGENT_PROXY_SERVICE_HOST
           value: {{ .Values.timber.proxyHost }}
         - name: TIMBER_AGENT_PROXY_SERVICE_PORT
-          value: "{{ .Values.timber.proxyPort }}"
+          value: "{{ .Values.timber.proxyPort }}" # Must have quotes
       {{- if .Values.resources }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
@@ -75,7 +75,11 @@ spec:
         image: {{ .Values.timber.proxyImage }}
         args: ["proxy", "-p", "{{ .Values.timber.proxyPort }}"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+    {{- end }}
       serviceAccount: {{ template "timber.serviceAccountName" . }}
+    {{- if .Values.daemonsetTolerations }}
+      tolerations:
+{{ toYaml .Values.daemonsetTolerations | indent 8 }}
     {{- end }}
       volumes:
       - name: dockersock
@@ -96,10 +100,6 @@ spec:
       - name: varlog
         hostPath:
           path: /var/log
-    {{- if .Values.daemonsetTolerations }}
-      tolerations:
-{{ toYaml .Values.daemonsetTolerations | indent 8 }}
-    {{- end }}
   updateStrategy:
     type: {{ .Values.updateStrategy }}
   {{- if eq .Values.updateStrategy "RollingUpdate" }}

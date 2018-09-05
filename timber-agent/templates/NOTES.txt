@@ -9,4 +9,4 @@ To view the Timber Agent logs, run:
 kubectl logs \
   --namespace={{ .Release.Namespace }} \
   -l "app={{ template "timber.name" . }},release={{ .Release.Name }}" \
-  -c {{ template "timber.fullname" . }}
+  -c {{ template "timber.name" . }}
