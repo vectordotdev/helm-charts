@@ -2,7 +2,28 @@ apiVersion: v1
 entries:
   timber-agent:
   - appVersion: 0.9.2
-    created: 2018-09-04T10:20:54.095675656-04:00
+    created: 2018-09-05T15:47:51.181028092-04:00
+    description: Timber Agent
+    digest: af4295b66d9b9aba08b046948db940bca6efba446324ad5ea4e85c8a6d9fd9bb
+    home: https://github.com/timberio/agent
+    icon: https://res.cloudinary.com/timber/image/upload/v1522350338/logo-purple_lreb3e.svg
+    keywords:
+    - timber
+    - logging
+    maintainers:
+    - email: mark@timber.io
+      name: carkmorwin
+    - email: david@timber.io
+      name: DavidAntaramian
+    name: timber-agent
+    sources:
+    - https://timber.io
+    - https://timber.io/docs/platforms/kubernetes
+    urls:
+    - timber-agent-0.3.0.tgz
+    version: 0.3.0
+  - appVersion: 0.9.2
+    created: 2018-09-05T15:47:51.179630856-04:00
     description: Timber Agent
     digest: ca50ad0c0755a2dee3748ad10530214eae9ffda064486399e587168355a610fa
     home: https://github.com/timberio/agent
@@ -23,7 +44,7 @@ entries:
     - timber-agent-0.2.1.tgz
     version: 0.2.1
   - appVersion: 0.9.1
-    created: 2018-09-04T10:20:54.095261288-04:00
+    created: 2018-09-05T15:47:51.178853052-04:00
     description: Timber Agent
     digest: 142279db76bc6eba87eb2fc2cef7b01d79537b8f3d4d87d6e72cb76827a89a44
     home: https://github.com/timberio/agent
@@ -44,7 +65,7 @@ entries:
     - timber-agent-0.2.0.tgz
     version: 0.2.0
   - appVersion: 0.8.1
-    created: 2018-09-04T10:20:54.094022611-04:00
+    created: 2018-09-05T15:47:51.177912775-04:00
     description: Timber Agent
     digest: cee611c6f383a11beaf323370b2e3577358cbd64763f0314d6b9d5c2996a3fa5
     home: https://github.com/timberio/agent
@@ -65,7 +86,7 @@ entries:
     - timber-agent-0.1.1.tgz
     version: 0.1.1
   - appVersion: 0.8.0
-    created: 2018-09-04T10:20:54.092473116-04:00
+    created: 2018-09-05T15:47:51.177075334-04:00
     description: Timber Agent
     digest: 576b7b46d4b5fd6ccd52604328a8aa2864410039b13425940982878f25ed2575
     home: https://github.com/timberio/agent
@@ -85,4 +106,4 @@ entries:
     urls:
     - timber-agent-0.1.0.tgz
     version: 0.1.0
-generated: 2018-09-04T10:20:54.090966111-04:00
+generated: 2018-09-05T15:47:51.174386299-04:00
