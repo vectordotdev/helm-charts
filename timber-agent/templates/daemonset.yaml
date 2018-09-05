@@ -75,6 +75,7 @@ spec:
         image: {{ .Values.timber.proxyImage }}
         args: ["proxy", "-p", "{{ .Values.timber.proxyPort }}"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+      serviceAccount: {{ template "timber.serviceAccountName" . }}
     {{- end }}
       volumes:
       - name: dockersock
