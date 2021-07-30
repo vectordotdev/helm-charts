@@ -1,12 +1,15 @@
-# Timber Helm Charts Repo
+# Vector Helm Charts
 
-[Helm] Charts Repository for Timber on Kubernetes
+Official Helm charts for Vector. Currently supported:
+- [Vector](charts/vector/README.md) (timberio/vector)
+- [Vector Agents](charts/vector-agent/README.md) (timberio/vector-agent)
+- [Vector Aggregators](charts/vector-aggregator/README.md) (timberio/vector-aggregator)
 
-[Helm]: https://helm.sh/
+# How to use the Vector Helm Repository
 
-# Usage
+You need to add this repository to your Helm repositories:
 
-```bash
-helm repo add timber https://timberio.github.io/helm-charts
-helm search timber
+```shell
+helm repo add timberio https://packages.timber.io/helm/latest
+helm repo update
 ```

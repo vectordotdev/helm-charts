@@ -1,0 +1,9 @@
+dependencies:
+- name: vector-agent
+  repository: file://../vector-agent
+  version: 0.0.0
+- name: vector-aggregator
+  repository: file://../vector-aggregator
+  version: 0.0.0
+digest: sha256:2de1680e166d30f97736ddc1a7bc4d1c223e06c997fefb87484681b34f031a29
+generated: "2021-07-27T18:19:00.480249-04:00"

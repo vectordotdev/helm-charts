@@ -1,0 +1,27 @@
+# Credit: https://github.com/DataDog/helm-charts/blob/master/.github/workflows/release.yaml
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: action/checkout@v1
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Add repo
+        run: |
+          helm repo add timberio https://packages.timber.io/helm/latest
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.0
+        env:
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
