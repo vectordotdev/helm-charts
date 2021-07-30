@@ -4,7 +4,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'charts/**'
 
@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: action/checkout@v1
+        uses: action/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -22,6 +24,6 @@ jobs:
         run: |
           helm repo add timberio https://packages.timber.io/helm/latest
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.0
+        uses: helm/chart-releaser-action@v1.2.1
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'

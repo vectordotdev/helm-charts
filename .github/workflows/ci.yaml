@@ -13,9 +13,11 @@ jobs:
       charts: ${{ steps.list-changed.outputs.changed }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: action/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2.1.0
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -35,9 +37,11 @@ jobs:
       - changed
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: action/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2.1.0
       - name: Run chart-testing (lint)
         run: ct lint -- config .github/ct.yaml
 
@@ -54,7 +58,9 @@ jobs:
           - v1.18.1
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: action/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Add timberio helm repo
         run: helm repo add timberio https://packages.timber.io/helm/latest && helm repo update
       - name: Run kubeval
@@ -76,12 +82,14 @@ jobs:
           - v1.18.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: action/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Create kind ${{ matrix.k8s }}
         uses: helm/kind-action@main
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2.1.0
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared
