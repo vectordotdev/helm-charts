@@ -16,5 +16,5 @@ dependencies:
     version: "*"
     repository: https://packages.timber.io/helm/latest
   - name: vector-aggregator
-    version: "*"
+    version: "0.16.0-nightly-2021-08-09"
     repository: https://packages.timber.io/helm/nightly
