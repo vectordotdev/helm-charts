@@ -3,7 +3,7 @@ name: vector-agent
 type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A Helm chart to collect Kubernetes logs with Vector
-version: "0.15.1"
+version: "1.0.0-beta.1"
 appVersion: "0.15.1"
 home: https://vector.dev/
 sources:
