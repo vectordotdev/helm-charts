@@ -3,7 +3,7 @@
 set -euo pipefail
 
 KUBEVAL_VERSION="0.16.1"
-SCHEMA_LOCATION="https://kubernetesjsonschema.dev/"
+SCHEMA_LOCATION="https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" # Up-to-date fork of instrumenta/kubernetes-json-schema
 OS=$(uname)
 
 CHANGED_CHARTS=${CHANGED_CHARTS:-${1:-}}

@@ -43,7 +43,7 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.1.0
       - name: Run chart-testing (lint)
-        run: ct lint -- config .github/ct.yaml
+        run: ct lint --config .github/ct.yaml
 
   kubeval-chart:
     runs-on: ubuntu-latest
@@ -51,11 +51,13 @@ jobs:
       - changed
     strategy:
       matrix:
-        # When changing versions here, check that the version exists at: https://github.com/instrumenta/kubernetes-json-schema
+        # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema
         k8s:
-          - v1.14.10
-          - v1.16.4
-          - v1.18.1
+          - v1.15.12
+          - v1.16.15
+          - v1.17.17
+          - v1.18.20
+          - v1.19.13
     steps:
       - name: Checkout
         uses: actions/checkout@v2
