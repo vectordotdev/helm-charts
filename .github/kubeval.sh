@@ -2,7 +2,7 @@
 # Credit: https://github.com/DataDog/helm-charts/blob/master/.github/kubeval.sh
 set -euo pipefail
 
-KUBEVAL_VERSION="0.15.0"
+KUBEVAL_VERSION="0.16.1"
 SCHEMA_LOCATION="https://kubernetesjsonschema.dev/"
 OS=$(uname)
 
@@ -15,7 +15,7 @@ else
 fi
 
 # install kubeval
-curl --silent --show-error --fail --location --output /tmp/kubeval.tar.gz https://github.com/instrumenta/kubeval/releases/download/"${KUBEVAL_VERSION}"/kubeval-${OS}-amd64.tar.gz
+curl --silent --show-error --fail --location --output /tmp/kubeval.tar.gz https://github.com/instrumenta/kubeval/releases/download/v"${KUBEVAL_VERSION}"/kubeval-${OS}-amd64.tar.gz
 tar -xf /tmp/kubeval.tar.gz kubeval
 
 # validate charts
