@@ -3,7 +3,7 @@ name: vector
 type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A Helm chart for Vector observability stack
-version: "1.0.0-beta.1"
+version: "0.16.0-beta.1"
 appVersion: "0.15.1"
 home: https://vector.dev/
 sources:
