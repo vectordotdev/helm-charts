@@ -3,7 +3,7 @@ entries:
   vector:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T14:04:36.387579413Z"
+    created: "2021-08-11T16:52:02.86593-04:00"
     dependencies:
     - name: vector-agent
       repository: https://packages.timber.io/helm/latest
@@ -12,7 +12,7 @@ entries:
       repository: https://packages.timber.io/helm/nightly
       version: 0.16.0-nightly-2021-08-09
     description: A Helm chart for Vector observability stack
-    digest: 03614d848e989b4b71405aa235040be4eff17006a2fd540a513e03f11d44b48a
+    digest: b479bf2558106059c7cc2c9a084cd16f0ffd16a5d2e989ed546cf6dd7a7c996f
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
     maintainers:
@@ -28,13 +28,13 @@ entries:
   vector-agent:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T14:04:36.529666912Z"
+    created: "2021-08-11T16:52:05.028156-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
       version: '*'
     description: A Helm chart to collect Kubernetes logs with Vector
-    digest: 8e6630c44c65cc47b2fa1a753f32536c86e3d464e168190a4f06242fd5960bac
+    digest: 8f57722a7f6c1c7d1455a178eb2d4fe042db98b0895bffbd2cee799643fd5e84
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
     maintainers:
@@ -47,16 +47,247 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.16.0-beta.1/vector-agent-0.16.0-beta.1.tgz
     version: 0.16.0-beta.1
+  - apiVersion: v2
+    appVersion: 0.15.1
+    created: "2021-08-11T16:52:04.890839-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 40e4568ab08a4bac84f4c18b5ba0f846c31247aa85c134aa1a84d7cca557e93e
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.15.1/vector-agent-0.15.1.tgz
+    version: 0.15.1
+  - apiVersion: v2
+    appVersion: 0.15.0
+    created: "2021-08-11T16:52:04.741364-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 9b5fc50ea0881932a81f40371e5c05f590c8847adb756077cc916f6b4aca4bee
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.15.0/vector-agent-0.15.0.tgz
+    version: 0.15.0
+  - apiVersion: v2
+    appVersion: 0.14.1
+    created: "2021-08-11T16:52:04.615823-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 122efcbd9aa1f8d657526b403743b448a567e97ad5726d93c9850618c635cf61
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.14.1/vector-agent-0.14.1.tgz
+    version: 0.14.1
+  - apiVersion: v2
+    appVersion: 0.14.0
+    created: "2021-08-11T16:52:04.409301-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: aca4f57508c77665f64ca43770fcd784080706a6ace444188c65e73c5d70ad81
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.14.0/vector-agent-0.14.0.tgz
+    version: 0.14.0
+  - apiVersion: v2
+    appVersion: 0.13.1
+    created: "2021-08-11T16:52:04.230618-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 9cdc7796d37c17d048be3b2d98490c2da2bddbab686f213912e54460a9957707
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.13.1/vector-agent-0.13.1.tgz
+    version: 0.13.1
+  - apiVersion: v2
+    appVersion: 0.13.0
+    created: "2021-08-11T16:52:04.094374-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: dd1a42780382234eb75132a147873781f0e7e8621c11cedab19398fb91b9bead
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.13.0/vector-agent-0.13.0.tgz
+    version: 0.13.0
+  - apiVersion: v2
+    appVersion: 0.12.2
+    created: "2021-08-11T16:52:03.965724-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: f842c2027c144d2852635797c63fcd09724240cf3697a6f004c05871920e1b39
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.12.2/vector-agent-0.12.2.tgz
+    version: 0.12.2
+  - apiVersion: v2
+    appVersion: 0.12.1
+    created: "2021-08-11T16:52:03.726065-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 62477c5d325577b080c9e5db1a537233dc685251747d602666ef8ff56b11e654
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.12.1/vector-agent-0.12.1.tgz
+    version: 0.12.1
+  - apiVersion: v2
+    appVersion: 0.12.0
+    created: "2021-08-11T16:52:03.506386-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 64b282bb9a8cc74a6cb082e2d1d6eeec0812043df0786f95bf54c5c1bcd196f8
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.12.0/vector-agent-0.12.0.tgz
+    version: 0.12.0
+  - apiVersion: v2
+    appVersion: 0.11.1
+    created: "2021-08-11T16:52:03.305417-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: ec178bc7acffd7f3630418c7c2c8f6756748f52efd5b5dfec419f972a48dfff5
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.11.1/vector-agent-0.11.1.tgz
+    version: 0.11.1
+  - apiVersion: v2
+    appVersion: 0.11.0
+    created: "2021-08-11T16:52:03.089139-04:00"
+    dependencies:
+    - name: vector-shared
+      repository: file://../vector-shared
+      version: '*'
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 12dd56aeceb332500621a07b5e52add24e40a3cdfa7f591b4b03f8a432e5a37c
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.11.0/vector-agent-0.11.0.tgz
+    version: 0.11.0
   vector-aggregator:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T14:04:36.676465366Z"
+    created: "2021-08-11T16:52:05.177626-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
       version: '*'
     description: A Helm chart to aggregate data with Vector
-    digest: d4bff4471a784e52df8fb89017292220805a9b7794552cbc3522db6846ee0b2a
+    digest: ba6726d246cadc3f723a09ed4b19574fe54f91803ca26c8483876954df8608c7
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
     maintainers:
@@ -71,9 +302,9 @@ entries:
     version: 0.16.0-beta.1
   vector-shared:
   - apiVersion: v2
-    created: "2021-08-11T14:04:36.824697837Z"
+    created: "2021-08-11T16:52:05.297164-04:00"
     description: Shared dependencies of Vector Helm charts
-    digest: da004349bb6950daf0e4b2630a21203299f96eb3f0eeea3fb9847d9018886e45
+    digest: 9ace9ef67c15e620b4f9d78444c4afbe30e90009db1444bb5b78be80057f928a
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
     maintainers:
@@ -86,4 +317,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-11T14:04:36.824716238Z"
+generated: "2021-08-11T16:52:05.297533-04:00"
