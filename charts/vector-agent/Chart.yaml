@@ -1,0 +1,17 @@
+apiVersion: v2
+name: vector-agent
+type: application
+icon: https://vector.dev/press/vector-icon.svg
+description: A Helm chart to collect Kubernetes logs with Vector
+version: "0.16.0-beta.1"
+appVersion: "0.15.1"
+home: https://vector.dev/
+sources:
+  - https://github.com/timberio/vector/
+maintainers:
+  - name: Datadog
+    email: team-vector@datadoghq.com
+dependencies:
+  - name: vector-shared
+    version: "*"
+    repository: file://../vector-shared

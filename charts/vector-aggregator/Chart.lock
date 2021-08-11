@@ -1,0 +1,6 @@
+dependencies:
+- name: vector-shared
+  repository: file://../vector-shared
+  version: 0.1.0
+digest: sha256:e5315fe99b2b529ddb674f1a65d85687ffc2c098fc52ededc957932c9462c471
+generated: "2021-07-27T19:11:08.362594-04:00"
