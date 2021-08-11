@@ -3,7 +3,7 @@ entries:
   vector:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T16:52:02.86593-04:00"
+    created: "2021-08-11T17:10:14.134206-04:00"
     dependencies:
     - name: vector-agent
       repository: https://packages.timber.io/helm/latest
@@ -25,10 +25,52 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-0.16.0-beta.1/vector-0.16.0-beta.1.tgz
     version: 0.16.0-beta.1
+  - apiVersion: v2
+    appVersion: 0.11.1
+    created: "2021-08-11T17:10:14.009319-04:00"
+    dependencies:
+    - name: vector-agent
+      repository: file://../vector-agent
+      version: '*'
+    description: A Helm chart for Vector observability stack
+    digest: e739751ee7aa6d7fddae21e215ddadf81ceb76a9e19da0267955e1e2b68aa480
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-0.11.1/vector-0.11.1.tgz
+    version: 0.11.1
+  - apiVersion: v2
+    appVersion: 0.11.0
+    created: "2021-08-11T17:10:13.833201-04:00"
+    dependencies:
+    - name: vector-agent
+      repository: file://../vector-agent
+      version: '*'
+    description: A Helm chart for Vector observability stack
+    digest: ac4e40dfcdedaaf588e6d7f06f1733bdb27c6fda47842d9bf6b69b3eef59819f
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: vector@timber.io
+      name: Vector Contributors
+    name: vector
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-0.11.0/vector-0.11.0.tgz
+    version: 0.11.0
   vector-agent:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T16:52:05.028156-04:00"
+    created: "2021-08-11T17:10:15.703975-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -49,7 +91,7 @@ entries:
     version: 0.16.0-beta.1
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T16:52:04.890839-04:00"
+    created: "2021-08-11T17:10:15.574381-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -70,7 +112,7 @@ entries:
     version: 0.15.1
   - apiVersion: v2
     appVersion: 0.15.0
-    created: "2021-08-11T16:52:04.741364-04:00"
+    created: "2021-08-11T17:10:15.449177-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -91,7 +133,7 @@ entries:
     version: 0.15.0
   - apiVersion: v2
     appVersion: 0.14.1
-    created: "2021-08-11T16:52:04.615823-04:00"
+    created: "2021-08-11T17:10:15.303394-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -112,7 +154,7 @@ entries:
     version: 0.14.1
   - apiVersion: v2
     appVersion: 0.14.0
-    created: "2021-08-11T16:52:04.409301-04:00"
+    created: "2021-08-11T17:10:15.174399-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -133,7 +175,7 @@ entries:
     version: 0.14.0
   - apiVersion: v2
     appVersion: 0.13.1
-    created: "2021-08-11T16:52:04.230618-04:00"
+    created: "2021-08-11T17:10:15.057467-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -154,7 +196,7 @@ entries:
     version: 0.13.1
   - apiVersion: v2
     appVersion: 0.13.0
-    created: "2021-08-11T16:52:04.094374-04:00"
+    created: "2021-08-11T17:10:14.883356-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -175,7 +217,7 @@ entries:
     version: 0.13.0
   - apiVersion: v2
     appVersion: 0.12.2
-    created: "2021-08-11T16:52:03.965724-04:00"
+    created: "2021-08-11T17:10:14.751529-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -196,7 +238,7 @@ entries:
     version: 0.12.2
   - apiVersion: v2
     appVersion: 0.12.1
-    created: "2021-08-11T16:52:03.726065-04:00"
+    created: "2021-08-11T17:10:14.623268-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -217,7 +259,7 @@ entries:
     version: 0.12.1
   - apiVersion: v2
     appVersion: 0.12.0
-    created: "2021-08-11T16:52:03.506386-04:00"
+    created: "2021-08-11T17:10:14.499643-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -238,7 +280,7 @@ entries:
     version: 0.12.0
   - apiVersion: v2
     appVersion: 0.11.1
-    created: "2021-08-11T16:52:03.305417-04:00"
+    created: "2021-08-11T17:10:14.375862-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -259,7 +301,7 @@ entries:
     version: 0.11.1
   - apiVersion: v2
     appVersion: 0.11.0
-    created: "2021-08-11T16:52:03.089139-04:00"
+    created: "2021-08-11T17:10:14.263241-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -281,7 +323,7 @@ entries:
   vector-aggregator:
   - apiVersion: v2
     appVersion: 0.15.1
-    created: "2021-08-11T16:52:05.177626-04:00"
+    created: "2021-08-11T17:10:15.834532-04:00"
     dependencies:
     - name: vector-shared
       repository: file://../vector-shared
@@ -302,7 +344,7 @@ entries:
     version: 0.16.0-beta.1
   vector-shared:
   - apiVersion: v2
-    created: "2021-08-11T16:52:05.297164-04:00"
+    created: "2021-08-11T17:10:15.963213-04:00"
     description: Shared dependencies of Vector Helm charts
     digest: 9ace9ef67c15e620b4f9d78444c4afbe30e90009db1444bb5b78be80057f928a
     home: https://vector.dev/
@@ -317,4 +359,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-11T16:52:05.297533-04:00"
+generated: "2021-08-11T17:10:15.963478-04:00"
