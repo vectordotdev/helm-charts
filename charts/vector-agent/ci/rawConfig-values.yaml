@@ -1,0 +1,7 @@
+sinks:
+  stdout:
+    type: console
+    inputs: ["kubernetes_logs"]
+    rawConfig: |
+      target = "stdout"
+      encoding = "json"
