@@ -1,0 +1,7 @@
+vector-agent:
+  vectorSink:
+    host: "vector-haproxy"
+
+vector-aggregator:
+  haproxy:
+    enabled: true

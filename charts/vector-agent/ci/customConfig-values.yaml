@@ -1,0 +1,26 @@
+customConfig:
+  data_dir: "/vector-data-dir"
+  sources:
+    host_metrics:
+      type: host_metrics
+      filesystem:
+        devices:
+          excludes: ["binfmt_misc"]
+        filesystems:
+          excludes: ["binfmt_misc"]
+        mountpoints:
+          excludes: ["*/proc/sys/fs/binfmt_misc"]
+    internal_metrics:
+      type: internal_metrics
+    kubernetes_logs:
+      type: kubernetes_logs
+      glob_minimum_cooldown_ms: 5000
+  sinks:
+    prometheus_sink:
+      type: prometheus_exporter
+      inputs: ["*_metrics"]
+      address: 0.0.0.0:9090
+    stdout:
+      type: console
+      inputs: ["*_logs"]
+      encoding: json
