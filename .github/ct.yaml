@@ -1,6 +1,5 @@
 chart-repos:
-  - timberio=https://packages.timber.io/helm/latest
-  - timberio-nightly=https://packages.timber.io/helm/nightly
+  - vector=https://helm.vector.dev
 check-version-increment: true
 debug: true
 helm-extra-args: --timeout 300s

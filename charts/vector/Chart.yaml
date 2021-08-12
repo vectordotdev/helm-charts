@@ -3,7 +3,7 @@ name: vector
 type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A Helm chart for Vector observability stack
-version: "0.16.0-beta.2"
+version: "0.16.0-beta.3"
 appVersion: "0.15.1"
 home: https://vector.dev/
 sources:
@@ -14,7 +14,7 @@ maintainers:
 dependencies:
   - name: vector-agent
     version: "*"
-    repository: https://packages.timber.io/helm/latest
+    repository: https://helm.vector.dev
   - name: vector-aggregator
-    version: "0.16.0-nightly-2021-08-09"
-    repository: https://packages.timber.io/helm/nightly
+    version: "0.16.0-beta.1"
+    repository: https://helm.vector.dev
