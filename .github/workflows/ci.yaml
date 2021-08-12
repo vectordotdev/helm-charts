@@ -65,8 +65,7 @@ jobs:
           fetch-depth: 0
       - name: Add timberio helm repo
         run: |
-          helm repo add timberio https://packages.timber.io/helm/latest
-          helm repo add timberio-nightly https://packages.timber.io/helm/nightly
+          helm repo add vector https://helm.vector.dev
           helm repo update
       - name: Run kubeval
         env:
