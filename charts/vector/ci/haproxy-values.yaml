@@ -1,6 +1,11 @@
+global:
+  vector:
+    commonEnvKV:
+      VECTOR_REQUIRE_HEALTHY: true
+
 vector-agent:
   vectorSink:
-    host: "vector-haproxy"
+    host: "vector-aggregator-haproxy"
 
 vector-aggregator:
   haproxy:
