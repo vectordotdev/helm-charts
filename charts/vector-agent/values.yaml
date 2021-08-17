@@ -175,6 +175,9 @@ customConfig: {}
   #      inputs: ["host_metrics", "internal_metrics"]
   #      address: 0.0.0.0:9090
 
+# Whether to validate Vector config before installing/upgrading or not.
+validateConfig: false
+
 # Use prometheus-operator `PodMonitor` to opt-in for Prometheus scraping.
 # To be used in clusters that rely on prometheus-operator to gather metrics.
 # You might want to set `podMonitorSelectorNilUsesHelmValues=false` if you're

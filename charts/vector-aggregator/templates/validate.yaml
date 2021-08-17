@@ -1,0 +1,68 @@
+{{- if .Values.validateConfig }}
+{{- if (empty .Values.existingConfigMap) -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "libvector.configMapName" . }}-test
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    {{- include "libvector.labels" . | nindent 4 }}
+    tests: "true"
+data:
+  {{- if .Values.customConfig }}
+  vector.yaml: |
+{{ tpl (toYaml .Values.customConfig) . | indent 4 }}
+  {{- end }}
+
+{{- end }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "libvector.fullname" . }}-test
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    {{- include "libvector.labels" . | nindent 4 }}
+    tests: "true"
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      name: "{{ include "libvector.fullname" . }}-test"
+      labels:
+        heritage: {{.Release.Service | quote }}
+        release: {{.Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: config-dir
+          configMap:
+            {{- if (empty .Values.existingConfigMap) }}
+            name: {{ include "libvector.configMapName" . }}-test
+            {{- end }}
+            {{- if .Values.existingConfigMap }}
+            name: {{ .Values.existingConfigMap }}
+            {{- end }}
+      containers:
+        - name: vector-validate
+          image: {{ include "libvector.image" . | quote }}
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          args:
+            - validate
+            - --config-dir
+            - /etc/vector
+          volumeMounts:
+          - name: config-dir
+            mountPath: /etc/vector
+            readOnly: true
+
+{{- end }}
