@@ -30,7 +30,6 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
   labels:
     {{- include "libvector.labels" . | nindent 4 }}
-    tests: "true"
 spec:
   backoffLimit: 0
   activeDeadlineSeconds: 300
