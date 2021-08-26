@@ -93,6 +93,27 @@ entries:
     version: 0.11.0
   vector-agent:
   - apiVersion: v2
+    appVersion: 0.16.1
+    created: "2021-08-26T20:37:34.081524485Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: bd0113be72842e75c70a2a5a22e7821cc22b4c798b69226af874268fd5856ad2
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.16.1/vector-agent-0.16.1.tgz
+    version: 0.16.1
+  - apiVersion: v2
     appVersion: 0.16.0
     created: "2021-08-25T20:15:36.006535332Z"
     dependencies:
@@ -388,6 +409,27 @@ entries:
     version: 0.11.0
   vector-aggregator:
   - apiVersion: v2
+    appVersion: 0.16.1
+    created: "2021-08-26T20:37:34.219555991Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to aggregate data with Vector
+    digest: de48101aaa1ab004e8461c638e033c101b7c2e73a0b6bc0ee7e5e39334327752
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-aggregator-0.16.1/vector-aggregator-0.16.1.tgz
+    version: 0.16.1
+  - apiVersion: v2
     appVersion: 0.16.0
     created: "2021-08-25T20:15:40.338669749Z"
     dependencies:
@@ -467,4 +509,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-25T20:15:40.338809349Z"
+generated: "2021-08-26T20:37:34.219694693Z"
