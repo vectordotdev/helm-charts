@@ -94,6 +94,27 @@ entries:
   vector-agent:
   - apiVersion: v2
     appVersion: 0.16.1
+    created: "2021-08-31T16:31:47.119218058Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: e2920e2ed3cbecdad8cfdfba0e660fe901c2355ba36d8a911074c0f3c545a4e5
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-agent-0.17.0/vector-agent-0.17.0.tgz
+    version: 0.17.0
+  - apiVersion: v2
+    appVersion: 0.16.1
     created: "2021-08-26T20:37:34.081524485Z"
     dependencies:
     - name: vector-shared
@@ -410,6 +431,27 @@ entries:
   vector-aggregator:
   - apiVersion: v2
     appVersion: 0.16.1
+    created: "2021-08-31T16:31:47.268409958Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to aggregate data with Vector
+    digest: bd60037519d2916478d9de27a16133dbe896f7a002d9d3a2013e151c9156f0bc
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-aggregator-0.17.0/vector-aggregator-0.17.0.tgz
+    version: 0.17.0
+  - apiVersion: v2
+    appVersion: 0.16.1
     created: "2021-08-26T20:37:34.219555991Z"
     dependencies:
     - name: vector-shared
@@ -509,4 +551,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-26T20:37:34.219694693Z"
+generated: "2021-08-31T16:31:47.268566264Z"
