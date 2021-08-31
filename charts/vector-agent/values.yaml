@@ -73,6 +73,7 @@ dnsConfig: {}
 service:
   # Whether to create service resource or not.
   enabled: false
+  annotations: {}
   type: ClusterIP
   topologyKeys: {}
   # List of valid topologyKeys values.
