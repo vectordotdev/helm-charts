@@ -207,6 +207,7 @@ dnsConfig: {}
 
 # Configuration for both regular and headless `Service`.
 service:
+  annotations: {}
   # Service type - defaults to `ClusterIP` (only relevant for the regular service).
   type: "ClusterIP"
   # Additional ports to expose.
