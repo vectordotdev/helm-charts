@@ -22,7 +22,7 @@ resources:
 nodeSelector:
   kubernetes.io/os: linux
 
-tolerations: 
+tolerations:
   - key: node-role.kubernetes.io/master
     effect: NoSchedule
 
