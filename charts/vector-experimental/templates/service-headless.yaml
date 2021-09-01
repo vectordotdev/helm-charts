@@ -1,0 +1,45 @@
+{{- if (eq .Values.role "Aggregator") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vector.fullname" . }}-headless
+  labels:
+    {{- include "vector.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+{{- if not .Values.customConfig }}
+    - name: api
+      port: 8686
+      protocol: TCP
+    - name: datadog-agent
+      port: 8282
+      protocol: TCP
+    - name: fluent
+      port: 24224
+      protocol: TCP
+    - name: logstash
+      port: 5044
+      protocol: TCP
+    - name: splunk-hec
+      port: 8080
+      protocol: TCP
+    - name: statsd
+      port: 8125
+      protocol: TCP
+    - name: syslog
+      port: 9000
+      protocol: TCP
+    - name: vector
+      port: 6000
+      protocol: TCP
+{{- else if .Values.customConfig.api.enabled }}
+    - name: api
+      port: {{ mustRegexFind "[0-9]+$" .Values.customConfig.api.address }}
+      protocol: TCP
+{{- end }}
+  {{- include "vector.ports" . | indent 4 }}
+  selector:
+    {{- include "vector.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+{{- end }}

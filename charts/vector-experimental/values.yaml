@@ -1,0 +1,93 @@
+## Default values for Vector
+## See Vector helm documentation to learn more:
+## https://vector.dev/docs/setup/installation/package-managers/helm/
+
+# role -- Role for this deployment (possible values: Agent, Aggregator)
+## Ref: https://vector.dev/docs/setup/deployment/roles/
+role: "Aggregator"
+
+image:
+  repository: timberio/vector
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+rbac:
+  # rbac.create -- If true, create and use RBAC resources
+  create: true
+
+serviceAccount:
+  # serviceAccount.create -- If true, create ServiceAccount, require rbac rbac.create true
+  create: true
+
+  # serviceAccount.name -- The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
+  name:
+
+# podSecurityContext -- Allows you to overwrite the default PodSecurityContext on the Daemonset or StatefulSet
+podSecurityContext: {}
+
+# securityContext -- Specify securityContext on the vector container
+securityContext: {}
+
+# resources -- Vector resource requests and limits.
+resources: {}
+  # requests:
+  #   cpu: 200m
+  #   memory: 256Mi
+  # limits:
+  #   cpu: 200m
+  #   memory: 256Mi
+
+# nodeSelector -- Allow Vector to be scheduled on selected nodes
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+# tolerations -- Allow Vector to schedule on tainted nodes (requires Kubernetes >= 1.6)
+tolerations: []
+
+# affinity -- Allow Vector to schedule using affinity rules
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
+## Configuration for Vector's Service
+service:
+  # service.enabled -- If true, create and use a Service resource
+  enabled: true
+
+# customConfig -- Override Vector's default configs, if used **all** options need to be specified
+## Ref: https://vector.dev/docs/reference/configuration/
+customConfig: {}
+
+## Configuration for Vector's data persistence
+persistence:
+  # persistence.enabled -- If true, create and use PersistentVolumeClaims
+  enabled: false
+  # persistence.storageClassName -- Specifies the storageClassName for PersistentVolumeClaims
+  # storageClassName: default
+
+  # persistence.accessModes -- Specifies the accessModes for PersistentVolumeClaims
+  accessModes:
+    - ReadWriteOnce
+  # persistence.size -- Specifies the size of PersistentVolumeClaims
+  size: 10Gi
+  # persistence.finalizers -- Specifies the finalizers of PersistentVolumeClaims
+  finalizers:
+    - kubernetes.io/pvc-protection
+  # persistence.selectors -- Specifies the selectors for PersistentVolumeClaims
+  selectors: {}
+
+# livenessProbe -- Override default liveness probe settings
+## Requires Vector's API to be enabled
+livenessProbe: {}
+  # httpGet:
+  #   path: /health
+  #   port: api
+
+# readinessProbe -- Override default readiness probe settings, if customConfig is used require customConfig.api.enabled true
+## Requires Vector's API to be enabled
+readinessProbe: {}
+  # httpGet:
+  #   path: /health
+  #   port: api

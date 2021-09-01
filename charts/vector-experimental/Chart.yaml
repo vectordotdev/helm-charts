@@ -1,0 +1,13 @@
+apiVersion: v2
+name: vector-experimental
+type: application
+icon: https://vector.dev/press/vector-icon.svg
+description: A lightweight, ultra-fast tool for building observability pipelines
+version: "1.0.0-alpha.0"
+appVersion: "0.16.1-distroless-libc"
+home: https://vector.dev/
+sources:
+  - https://github.com/timberio/vector/
+maintainers:
+  - name: Datadog
+    email: team-vector@datadoghq.com
