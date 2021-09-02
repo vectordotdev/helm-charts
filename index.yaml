@@ -431,6 +431,27 @@ entries:
   vector-aggregator:
   - apiVersion: v2
     appVersion: 0.16.1
+    created: "2021-09-02T16:38:06.877659472Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to aggregate data with Vector
+    digest: 20c798a49ddee783db74ba749200cd1c0f8e0578492b348dfbbed1046348ab42
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/timberio/helm-charts/releases/download/vector-aggregator-0.17.1/vector-aggregator-0.17.1.tgz
+    version: 0.17.1
+  - apiVersion: v2
+    appVersion: 0.16.1
     created: "2021-08-31T16:31:47.268409958Z"
     dependencies:
     - name: vector-shared
@@ -551,4 +572,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-31T16:31:47.268566264Z"
+generated: "2021-09-02T16:38:06.878219678Z"
