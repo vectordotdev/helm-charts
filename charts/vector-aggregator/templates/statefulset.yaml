@@ -140,7 +140,8 @@ spec:
     - metadata:
         name: data-dir
         labels:
-          {{- include "libvector.labels" $ | nindent 10 }}
+          {{- include "libvector.selectorLabels" $ | nindent 10 }}
+          app.kubernetes.io/component: aggregator
           {{- with .labels }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
