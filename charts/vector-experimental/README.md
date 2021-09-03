@@ -72,6 +72,11 @@ helm install --name <RELEASE_NAME> \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
+| autoscaling.customMetric | object | `{}` |  |
+| autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
+| autoscaling.maxReplicas | int | `10` |  |
+| autoscaling.minReplicas | int | `1` |  |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"timberio/vector"` |  |
@@ -86,8 +91,9 @@ helm install --name <RELEASE_NAME> \
 | podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext on the Daemonset or StatefulSet |
 | rbac.create | bool | `true` | If true, create and use RBAC resources |
 | readinessProbe | object | `{}` | Override default readiness probe settings, if customConfig is used require customConfig.api.enabled true |
+| replicas | int | `1` | Set the number of pods to create |
 | resources | object | `{}` | Vector resource requests and limits. |
-| role | string | `"Aggregator"` | Role for this deployment (possible values: Agent, Aggregator) |
+| role | string | `"Aggregator"` | Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator) |
 | securityContext | object | `{}` | Specify securityContext on the vector container |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount, require rbac rbac.create true |

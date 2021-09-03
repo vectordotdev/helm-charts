@@ -2,8 +2,12 @@
 ## See Vector helm documentation to learn more:
 ## https://vector.dev/docs/setup/installation/package-managers/helm/
 
-# role -- Role for this deployment (possible values: Agent, Aggregator)
+# role -- Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator)
 ## Ref: https://vector.dev/docs/setup/deployment/roles/
+## Each role is created with the following workloads:
+## Agent - DaemonSet
+## Aggregator - StatefulSet
+## Stateless-Aggregator - Deployment
 role: "Aggregator"
 
 image:
@@ -11,6 +15,26 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion
   tag: ""
+
+# replicas -- Set the number of pods to create
+## Valid for Aggregator and Stateless-Aggregator
+replicas: 1
+
+autoscaling:
+  # autoscaling.enabled -- Enabled autoscaling for the Stateless-Aggregator
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+  customMetric: {}
+    #  - type: Pods
+    #    pods:
+    #      metric:
+    #        name: utilization
+    #      target:
+    #        type: AverageValue
+    #        averageValue: 95
 
 rbac:
   # rbac.create -- If true, create and use RBAC resources
@@ -40,9 +64,11 @@ resources: {}
   #   memory: 256Mi
 
 # updateStrategy -- Customize the updateStrategy used to replace Vector Pods
+## Also used for the DeploymentStrategy for Stateless-Aggregators
 ## Valid options are used depending on the chosen role
 ## Agent (DaemonSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec)
 ## Aggregator (StatefulSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/#StatefulSetSpec
+## Stateless-Aggregator (DeploymentStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/
 updateStrategy: {}
 #   type: RollingUpdate
 #   rollingUpdate:
