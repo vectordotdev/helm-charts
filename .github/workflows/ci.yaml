@@ -1,4 +1,4 @@
-# Credit: https://github.com/DataDog/helm-charts/blob/master/.github/workflows/ci.yaml
+# Credit: https://github.com/DataDog/helm-charts/blob/main/.github/workflows/ci.yaml
 name: Lint and Test Charts
 
 on:
