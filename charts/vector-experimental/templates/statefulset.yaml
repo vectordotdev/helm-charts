@@ -10,6 +10,10 @@ spec:
   selector:
     matchLabels:
       {{- include "vector.selectorLabels" . | nindent 6 }}
+  {{- with .Values.updateStrategy }}
+  updateStrategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   serviceName: {{ template "vector.fullname" . }}-headless
   template:
     metadata:

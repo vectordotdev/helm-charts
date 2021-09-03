@@ -93,3 +93,4 @@ helm install --name <RELEASE_NAME> \
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount, require rbac rbac.create true |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes (requires Kubernetes >= 1.6) |
+| updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods |

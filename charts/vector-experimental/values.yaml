@@ -39,6 +39,15 @@ resources: {}
   #   cpu: 200m
   #   memory: 256Mi
 
+# updateStrategy -- Customize the updateStrategy used to replace Vector Pods
+## Valid options are used depending on the chosen role
+## Agent (DaemonSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec)
+## Aggregator (StatefulSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/#StatefulSetSpec
+updateStrategy: {}
+#   type: RollingUpdate
+#   rollingUpdate:
+#     maxUnavailable: 1
+
 # nodeSelector -- Allow Vector to be scheduled on selected nodes
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
