@@ -42,7 +42,7 @@ containers:
       - name: api
         containerPort: 8686
         protocol: TCP
-{{- if (eq .Values.role "Aggregator") }}
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
       - name: datadog-agent
         containerPort: 8282
         protocol: TCP

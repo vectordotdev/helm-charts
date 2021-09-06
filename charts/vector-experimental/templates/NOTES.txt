@@ -11,6 +11,12 @@ Vector is starting in your cluster. After a few minutes, you can use Vector's AP
   {{- else }}
 	kubectl -n {{ .Release.Namespace }} exec -it statefulset/{{ include "vector.fullname" . }} -- vector top --url {{ .Values.customConfig.api.address }}
   {{- end }}
+{{ else if (eq .Values.role "Stateless-Aggregator") }}
+  {{- if not .Values.customConfig }}
+	kubectl -n {{ .Release.Namespace }} exec -it deployment/{{ include "vector.fullname" . }} -- vector top 
+  {{- else }}
+	kubectl -n {{ .Release.Namespace }} exec -it deployment/{{ include "vector.fullname" . }} -- vector top --url {{ .Values.customConfig.api.address }}
+  {{- end }}
 {{ else if (eq .Values.role "Agent") }}
   {{- if not .Values.customConfig }}
 	kubectl -n {{ .Release.Namespace }} exec -it daemonset/{{ include "vector.fullname" . }} -- vector top 

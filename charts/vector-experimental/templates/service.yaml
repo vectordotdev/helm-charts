@@ -11,7 +11,7 @@ spec:
     - name: api
       port: 8686
       protocol: TCP
-{{- if (eq .Values.role "Aggregator") }}
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
     - name: datadog-agent
       port: 8282
       protocol: TCP

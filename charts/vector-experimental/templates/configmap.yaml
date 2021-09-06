@@ -8,7 +8,7 @@ data:
   {{- if .Values.customConfig }}
   vector.yaml: |
 {{ tpl (toYaml .Values.customConfig) . | indent 4 }}
-  {{- else if (eq .Values.role "Aggregator") }}
+  {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
   aggregator.yaml: |
     data_dir: /vector-data-dir
     api:
