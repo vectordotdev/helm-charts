@@ -41,7 +41,7 @@ rbac:
   create: true
 
 serviceAccount:
-  # serviceAccount.create -- If true, create ServiceAccount, require rbac rbac.create true
+  # serviceAccount.create -- If true, create ServiceAccount
   create: true
 
   # serviceAccount.name -- The name of the ServiceAccount to use.
@@ -158,7 +158,7 @@ haproxy:
   replicas: 1
 
   serviceAccount:
-    # haproxy.serviceAccount.create -- If true, create ServiceAccount, require rbac haproxy.rbac.create true
+    # haproxy.serviceAccount.create -- If true, create ServiceAccount
     create: true
 
     # haproxy.serviceAccount.name -- The name of the ServiceAccount to use.

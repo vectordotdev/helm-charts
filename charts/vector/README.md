@@ -98,7 +98,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.resources | object | `{}` |  |
 | haproxy.securityContext | object | `{}` |  |
 | haproxy.service.type | string | `"ClusterIP"` |  |
-| haproxy.serviceAccount.create | bool | `true` | If true, create ServiceAccount, require rbac haproxy.rbac.create true |
+| haproxy.serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
 | haproxy.terminationGracePeriodSeconds | int | `60` |  |
 | haproxy.tolerations | list | `[]` |  |
@@ -122,7 +122,7 @@ helm install --name <RELEASE_NAME> \
 | role | string | `"Aggregator"` | Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator) |
 | securityContext | object | `{}` | Specify securityContext on the vector container |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
-| serviceAccount.create | bool | `true` | If true, create ServiceAccount, require rbac rbac.create true |
+| serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes (requires Kubernetes >= 1.6) |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods |
