@@ -1,4 +1,4 @@
-{{- if (eq .Values.role "Aggregator") -}}
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
 apiVersion: v1
 kind: Service
 metadata:

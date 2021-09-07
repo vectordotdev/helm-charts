@@ -19,6 +19,9 @@ resources:
     cpu: 200m
     memory: 256Mi
 
+updateStrategy:
+  type: OnDelete
+
 nodeSelector:
   kubernetes.io/os: linux
 

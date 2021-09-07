@@ -48,7 +48,7 @@ Selector labels
 {{- define "vector.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if or (ne .Values.role "Agent") (ne .Values.role "Aggregator") }}
+{{- if or (ne .Values.role "Agent") (ne .Values.role "Aggregator") (ne .Values.role "Stateless-Aggregator") }}
 app.kubernetes.io/component: {{ .Values.role }}
 {{- end }}
 {{- end }}
