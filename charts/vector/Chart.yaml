@@ -1,10 +1,11 @@
 apiVersion: v2
-name: vector-experimental
+name: vector
 type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A lightweight, ultra-fast tool for building observability pipelines
 version: "0.1.0-alpha.0"
 appVersion: "0.16.1-distroless-libc"
+kubeVersion: ">=1.15"
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/

@@ -13,9 +13,9 @@ helm repo add vector https://helm.vector.dev
 helm repo update
 ```
 
-## Prerequisites
+## Requirements
 
-Kubernetes 1.15+
+Kubernetes: `>=1.15`
 
 ## Quick start
 
