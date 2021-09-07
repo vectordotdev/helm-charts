@@ -15,7 +15,7 @@ helm repo update
 
 ## Requirements
 
-Kubernetes: `>=1.15`
+Kubernetes: `>=1.15.0`
 
 ## Quick start
 
@@ -88,7 +88,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.fullnameOverride | string | `""` |  |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` |  |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` |  |
-| haproxy.image.tag | string | `"2.4.0"` |  |
+| haproxy.image.tag | string | `"2.4.4"` |  |
 | haproxy.imagePullSecrets | list | `[]` |  |
 | haproxy.nameOverride | string | `""` |  |
 | haproxy.nodeSelector | object | `{}` |  |

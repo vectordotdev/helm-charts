@@ -148,7 +148,7 @@ haproxy:
   image:
     repository: haproxytech/haproxy-alpine
     pullPolicy: IfNotPresent
-    tag: "2.4.0"
+    tag: "2.4.4"
 
   imagePullSecrets: []
   nameOverride: ""
