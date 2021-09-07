@@ -78,6 +78,30 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
+| haproxy.affinity | object | `{}` |  |
+| haproxy.autoscaling.customMetric | object | `{}` |  |
+| haproxy.autoscaling.enabled | bool | `false` | Enabled autoscaling for the HAProxy load balancer |
+| haproxy.autoscaling.maxReplicas | int | `10` |  |
+| haproxy.autoscaling.minReplicas | int | `1` |  |
+| haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
+| haproxy.fullnameOverride | string | `""` |  |
+| haproxy.image.pullPolicy | string | `"IfNotPresent"` |  |
+| haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` |  |
+| haproxy.image.tag | string | `"2.4.0"` |  |
+| haproxy.imagePullSecrets | list | `[]` |  |
+| haproxy.nameOverride | string | `""` |  |
+| haproxy.nodeSelector | object | `{}` |  |
+| haproxy.podAnnotations | object | `{}` |  |
+| haproxy.podSecurityContext | object | `{}` |  |
+| haproxy.replicas | int | `1` | Set the number of pods to create |
+| haproxy.resources | object | `{}` |  |
+| haproxy.securityContext | object | `{}` |  |
+| haproxy.service.type | string | `"ClusterIP"` |  |
+| haproxy.serviceAccount.create | bool | `true` | If true, create ServiceAccount, require rbac haproxy.rbac.create true |
+| haproxy.serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
+| haproxy.terminationGracePeriodSeconds | int | `60` |  |
+| haproxy.tolerations | list | `[]` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"timberio/vector"` |  |
 | image.tag | string | `""` |  |

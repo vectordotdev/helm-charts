@@ -126,3 +126,76 @@ readinessProbe: {}
   # httpGet:
   #   path: /health
   #   port: api
+
+## Optional built-in HAProxy load balancer
+haproxy:
+  # haproxy.enabled -- If true, create a HAProxy load balancer
+  enabled: false
+
+  image:
+    repository: haproxytech/haproxy-alpine
+    pullPolicy: IfNotPresent
+    tag: "2.4.0"
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  # haproxy.replicas -- Set the number of pods to create
+  replicas: 1
+
+  serviceAccount:
+    # haproxy.serviceAccount.create -- If true, create ServiceAccount, require rbac haproxy.rbac.create true
+    create: true
+
+    # haproxy.serviceAccount.name -- The name of the ServiceAccount to use.
+    ## If not set and create is true, a name is generated using the fullname template
+    name:
+
+  terminationGracePeriodSeconds: 60
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+
+  autoscaling:
+    # haproxy.autoscaling.enabled -- Enabled autoscaling for the HAProxy load balancer
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+    customMetric: {}
+      #  - type: Pods
+      #    pods:
+      #      metric:
+      #        name: utilization
+      #      target:
+      #        type: AverageValue
+      #        averageValue: 95
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
