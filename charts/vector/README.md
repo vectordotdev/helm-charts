@@ -109,7 +109,9 @@ helm install --name <RELEASE_NAME> \
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Specifies the accessModes for PersistentVolumeClaims |
 | persistence.enabled | bool | `false` | If true, create and use PersistentVolumeClaims |
+| persistence.existingClaim | string | `""` | Name of an existing PersistentVolumeClaim to use |
 | persistence.finalizers | list | `["kubernetes.io/pvc-protection"]` | Specifies the finalizers of PersistentVolumeClaims |
+| persistence.hostPath.path | string | `"/var/lib/vector"` | Override path used for hostPath persistence |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims |
 | podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext on the Daemonset or StatefulSet |

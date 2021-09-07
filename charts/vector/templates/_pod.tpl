@@ -115,7 +115,16 @@ tolerations:
 {{ toYaml . | indent 2 }}
 {{- end }}
 volumes:
-{{- if and .Values.persistence.enabled }}
+{{- if and .Values.persistence.enabled (eq .Values.role "Aggregator") }}
+  {{- with .Values.persistence.existingClaim }}
+  - name: data
+    persistentVolumeClaim:
+      claimName: {{ . }}
+  {{- end }}
+{{- else if and .Values.persistence.enabled (eq .Values.role "Agent") }}
+  - name: data
+    hostPath:
+      path: {{ .Values.persistence.hostPath.path | quote }}
 {{- else }}
   - name: data
     emptyDir: {}

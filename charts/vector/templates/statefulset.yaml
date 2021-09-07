@@ -26,7 +26,7 @@ spec:
     spec:
       {{- include "vector.pod" . | nindent 6 }}
   volumeClaimTemplates:
-{{- if .Values.persistence.enabled }}
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
   - metadata:
       name: data
     spec:
