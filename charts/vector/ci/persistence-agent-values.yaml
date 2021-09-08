@@ -1,0 +1,9 @@
+# Agent role
+## Values file for testing default Agent parameters.
+role: Agent
+
+persistence:
+  enabled: true
+
+  hostPath:
+    path: "/data/vector"
