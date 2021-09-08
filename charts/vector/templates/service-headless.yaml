@@ -1,5 +1,4 @@
 {{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
-{{- if or (gt (len (include "vector.ports" .)) 0) (not .Values.customConfig) -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,5 +36,4 @@ spec:
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP
-{{- end }}
 {{- end }}

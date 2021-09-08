@@ -1,4 +1,4 @@
-{{- if and .Values.service.enabled (or (gt (len (include "vector.ports" .)) 0) (not .Values.customConfig)) -}}
+{{- if and .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
