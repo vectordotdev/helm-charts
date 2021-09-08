@@ -29,3 +29,4 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/timberio/helm-charts
+  artifacthub.io/prerelease: "true"
