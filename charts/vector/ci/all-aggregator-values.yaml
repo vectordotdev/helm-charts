@@ -55,13 +55,13 @@ customConfig:
       bootstrap_servers: kafka-bootstrap.svc.cluster.local:9092
       group_id: vector-consumer
       topics: [application-logs]
-    prometheus_remote:
+    prom_remote:
       type: prometheus_remote_write
       address: 0.0.0.0:9999
   transforms:
     aggregate:
       type: aggregate
-      inputs: [prometheus_remote]
+      inputs: [prom_remote]
       interval_ms: 15000
     remap:
       type: remap
