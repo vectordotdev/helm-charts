@@ -101,3 +101,40 @@ Generate a single ServicePort based on a component configuration
 {{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/timberio/vector" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate an array of ContainerPorts based on customConfig
+*/}}
+{{- define "vector.containerPorts" -}}
+{{- range $componentKind, $configs := .Values.customConfig }}
+{{- if eq $componentKind "sources" }}
+{{- range $componentId, $componentConfig := $configs }}
+{{- if (hasKey $componentConfig "address") }}
+{{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
+{{- end }}
+{{- end }}
+{{- else if eq $componentKind "sinks" }}
+{{- range $componentId, $componentConfig := $configs }}
+{{- if (hasKey $componentConfig "address") }}
+{{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Generate a single ContainerPort based on a component configuration
+*/}}
+{{- define "_helper.generateContainerPort" -}}
+{{- $name := index . 0 | kebabcase -}}
+{{- $config := index . 1 -}}
+{{- $port := mustRegexFind "[0-9]+$" (get $config "address") -}}
+{{- $protocol := default (get $config "mode" | upper) "TCP" }}
+- name: {{ $name }}
+  containerPort: {{ $port }}
+  protocol: {{ $protocol }}
+{{- if not (mustHas $protocol (list "TCP" "UDP")) }}
+{{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/timberio/vector" }}
+{{- end }}
+{{- end }}

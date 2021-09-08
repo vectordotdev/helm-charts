@@ -38,11 +38,9 @@ containers:
         value: "/host/sys"
 {{- end }}
     ports:
-{{- if not .Values.customConfig }}
-      - name: api
-        containerPort: 8686
-        protocol: TCP
-{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+{{- if .Values.customConfig }}
+    {{- include "vector.containerPorts" . | indent 6 }}
+{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
       - name: datadog-agent
         containerPort: 8282
         protocol: TCP
@@ -63,11 +61,6 @@ containers:
         protocol: TCP
       - name: vector
         containerPort: 6000
-        protocol: TCP
-{{- end }}
-{{- else if .Values.customConfig.api.enabled }}
-      - name: api
-        containerPort: {{ mustRegexFind "[0-9]+$" .Values.customConfig.api.address }}
         protocol: TCP
 {{- end }}
 {{- with .Values.livenessProbe }}
