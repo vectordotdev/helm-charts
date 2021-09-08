@@ -31,6 +31,13 @@ spec:
     - name: vector
       port: 6000
       protocol: TCP
+    - name: prometheus-exporter
+      port: 9090
+      protocol: TCP
+{{- else if (eq .Values.role "Agent") }}
+    - name: prometheus-exporter
+      port: 9090
+      protocol: TCP
 {{- end }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
