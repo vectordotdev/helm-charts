@@ -7,12 +7,12 @@ metadata:
     {{- include "haproxy.labels" . | nindent 4 }}
 spec:
   ports:
-{{- if not .Values.customConfig }}
+{{- if .Values.customConfig }}
+  {{- include "vector.ports" . | indent 4 }}
+{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
     - name: stats
       port: 1024
       protocol: TCP
-{{- end }}
-{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
     - name: datadog-agent
       port: 8282
       protocol: TCP
@@ -35,7 +35,6 @@ spec:
       port: 6000
       protocol: TCP
 {{- end }}
-  {{- include "vector.ports" . | indent 4 }}
   selector:
     {{- include "haproxy.selectorLabels" . | nindent 4 }}
   type: {{ .Values.haproxy.service.type }}

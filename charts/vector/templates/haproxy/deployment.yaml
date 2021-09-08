@@ -38,6 +38,11 @@ spec:
             - -f
             - /usr/local/etc/haproxy/haproxy.cfg
           ports:
+          {{- if not .Values.customConfig }}
+            - name: stats
+              containerPort: 1024
+              protocol: TCP
+          {{- end }}
           livenessProbe:
           readinessProbe:
           resources:
@@ -48,7 +53,7 @@ spec:
       volumes:
         - name: haproxy-config
           configMap:
-            name: {{ include "vector.fullname" . }}-haproxy
+            name: {{ include "haproxy.fullname" . }}
       {{- with .Values.haproxy.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

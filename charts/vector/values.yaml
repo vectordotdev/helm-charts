@@ -183,6 +183,8 @@ haproxy:
   service:
     type: ClusterIP
 
+  customConfig: ""
+
   autoscaling:
     # haproxy.autoscaling.enabled -- Enabled autoscaling for the HAProxy load balancer
     enabled: false
