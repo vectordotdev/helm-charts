@@ -1,4 +1,4 @@
-{{- if .Values.service.enabled -}}
+{{- if and .Values.service.enabled (or (gt (len (include "vector.ports" .)) 0) (not .Values.customConfig)) -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,11 +7,9 @@ metadata:
     {{- include "vector.labels" . | nindent 4 }}
 spec:
   ports:
-{{- if not .Values.customConfig }}
-    - name: api
-      port: 8686
-      protocol: TCP
-{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+{{- if .Values.customConfig }}
+  {{- include "vector.ports" . | indent 4 }}
+{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
     - name: datadog-agent
       port: 8282
       protocol: TCP
@@ -34,12 +32,6 @@ spec:
       port: 6000
       protocol: TCP
 {{- end }}
-{{- else if .Values.customConfig.api.enabled }}
-    - name: api
-      port: {{ mustRegexFind "[0-9]+$" .Values.customConfig.api.address }}
-      protocol: TCP
-{{- end }}
-  {{- include "vector.ports" . | indent 4 }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP
