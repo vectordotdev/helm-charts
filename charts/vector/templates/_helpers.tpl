@@ -131,7 +131,7 @@ Generate a single ContainerPort based on a component configuration
 {{- $config := index . 1 -}}
 {{- $port := mustRegexFind "[0-9]+$" (get $config "address") -}}
 {{- $protocol := default (get $config "mode" | upper) "TCP" }}
-- name: {{ $name }}
+- name: {{ $name | trunc 15 | trimSuffix "-" }}
   containerPort: {{ $port }}
   protocol: {{ $protocol }}
 {{- if not (mustHas $protocol (list "TCP" "UDP")) }}

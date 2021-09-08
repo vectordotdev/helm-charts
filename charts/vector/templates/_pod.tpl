@@ -62,11 +62,11 @@ containers:
       - name: vector
         containerPort: 6000
         protocol: TCP
-      - name: prometheus-exporter
+      - name: prometheus
         containerPort: 9090
         protocol: TCP
 {{- else if (eq .Values.role "Agent") }}
-      - name: prometheus-exporter
+      - name: prometheus
         containerPort: 9090
         protocol: TCP
 {{- end }}

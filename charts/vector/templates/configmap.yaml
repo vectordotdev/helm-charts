@@ -43,7 +43,7 @@ data:
         type: vector
         version: "2"
     sinks:
-      prometheus_exporter:
+      prometheus:
         type: prometheus_exporter
         inputs: [internal_metrics]
         address: 0.0.0.0:9090
@@ -74,7 +74,7 @@ data:
       internal_metrics:
         type: internal_metrics
     sinks:
-      prometheus_exporter:
+      prometheus:
         type: prometheus_exporter
         inputs: [host_metrics, internal_metrics]
         address: 0.0.0.0:9090
