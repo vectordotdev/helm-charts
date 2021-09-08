@@ -1,5 +1,5 @@
 #!/bin/bash
-# Credit: https://github.com/DataDog/helm-charts/blob/master/.github/kubeval.sh
+# Credit: https://github.com/DataDog/helm-charts/blob/main/.github/kubeval.sh
 set -euo pipefail
 
 KUBEVAL_VERSION="0.16.1"

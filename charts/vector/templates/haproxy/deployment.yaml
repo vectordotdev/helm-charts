@@ -1,0 +1,64 @@
+{{- if .Values.haproxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "haproxy.fullname" . }}
+  labels:
+    {{- include "haproxy.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.haproxy.autoscaling.enabled }}
+  replicas: {{ .Values.haproxy.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "haproxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.haproxy.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "haproxy.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.haproxy.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}
+      containers:
+        - name: haproxy
+          securityContext:
+            {{- toYaml .Values.haproxy.securityContext | nindent 12 }}
+          image: "{{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}"
+          imagePullPolicy: {{ .Values.haproxy.image.pullPolicy }}
+          args:
+            - -f
+            - /usr/local/etc/haproxy/haproxy.cfg
+          ports:
+          livenessProbe:
+          readinessProbe:
+          resources:
+            {{- toYaml .Values.haproxy.resources | nindent 12 }}
+          volumeMounts:
+            - name: haproxy-config
+              mountPath: /usr/local/etc/haproxy
+      volumes:
+        - name: haproxy-config
+          configMap:
+            name: {{ include "vector.fullname" . }}-haproxy
+      {{- with .Values.haproxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.haproxy.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.haproxy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,42 @@
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vector.fullname" . }}-headless
+  labels:
+    {{- include "vector.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+{{- if .Values.customConfig }}
+  {{- include "vector.ports" . | indent 4 }}
+{{- else }}
+    - name: datadog-agent
+      port: 8282
+      protocol: TCP
+    - name: fluent
+      port: 24224
+      protocol: TCP
+    - name: logstash
+      port: 5044
+      protocol: TCP
+    - name: splunk-hec
+      port: 8080
+      protocol: TCP
+    - name: statsd
+      port: 8125
+      protocol: TCP
+    - name: syslog
+      port: 9000
+      protocol: TCP
+    - name: vector
+      port: 6000
+      protocol: TCP
+    - name: prometheus-exporter
+      port: 9090
+      protocol: TCP
+  {{- end }}
+  selector:
+    {{- include "vector.selectorLabels" . | nindent 4 }}
+  type: ClusterIP
+{{- end }}

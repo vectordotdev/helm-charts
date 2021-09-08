@@ -1,4 +1,4 @@
-# Credit: https://github.com/DataDog/helm-charts/blob/master/.github/workflows/release.yaml
+# Credit: https://github.com/DataDog/helm-charts/blob/main/.github/workflows/release.yaml
 name: Release Charts
 
 on:

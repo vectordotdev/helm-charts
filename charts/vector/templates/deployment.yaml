@@ -1,0 +1,29 @@
+{{- if (eq .Values.role "Stateless-Aggregator") -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vector.fullname" . }}
+  labels:
+    {{- include "vector.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "vector.selectorLabels" . | nindent 6 }}
+  {{- with .Values.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vector.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- include "vector.pod" . | nindent 6 }}
+{{- end }}
