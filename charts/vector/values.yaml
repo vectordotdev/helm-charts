@@ -10,23 +10,46 @@
 ## Stateless-Aggregator - Deployment
 role: "Aggregator"
 
+## Define the Vector image to use
 image:
+  # image.repository -- Override default registry + name for Vector
   repository: timberio/vector
+  # image.pullPolicy -- Vector image pullPolicy
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion
+  # image.pullSecrets -- Agent repository pullSecret (ex: specify docker registry credentials)
+  ## Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  pullSecrets: []
+  # image.tag -- Vector image tag to use
+  # @default -- Chart's appVersion
   tag: ""
 
-# replicas -- Set the number of pods to create
+# replicas -- Set the number of Pods to create
 ## Valid for Aggregator and Stateless-Aggregator
 replicas: 1
 
+## Create a Secret resource for Vector to use
+secrets:
+  # secrets.generic -- Each Key/Value will be added to the Secret's data key
+  ## Values should be entered base64 encoded (examples below are "REPLACE_ME" encoded)
+  ## NOTE: Don't commit unencrypted secrets to git!
+  generic: {}
+    # awsAccessKeyId: "UkVQTEFDRV9NRQo="
+    # awsSecretAccessKey: "UkVQTEFDRV9NRQo="
+
+## Configure a HorizontalPodAutoscaler for Vector
+## Valid for Stateless-Aggregator role
 autoscaling:
   # autoscaling.enabled -- Enabled autoscaling for the Stateless-Aggregator
   enabled: false
+  # autoscaling.minReplicas -- Minimum replicas for Vector's HPA
   minReplicas: 1
+  # autoscaling.maxReplicas -- Maximum replicas for Vector's HPA
   maxReplicas: 10
+  # autoscaling.targetCPUUtilizationPercentage -- Target CPU utilization for Vector's HPA
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  # autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for Vector's HPA
+  targetMemoryUtilizationPercentage:
+  # autoscaling.customMetric -- Target a custom metric
   customMetric: {}
     #  - type: Pods
     #    pods:
@@ -48,13 +71,21 @@ serviceAccount:
   ## If not set and create is true, a name is generated using the fullname template
   name:
 
-# podSecurityContext -- Allows you to overwrite the default PodSecurityContext on the Daemonset or StatefulSet
+# podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
-# securityContext -- Specify securityContext on the vector container
+# securityContext -- Specify securityContext on the Vector container
 securityContext: {}
 
-# resources -- Vector resource requests and limits.
+# env -- Set environment variables in the Vector container
+env: []
+  # - name: AWS_ACCESS_KEY_ID
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: vector-aggregator
+  #       key: awsAcessKeyId
+
+# resources -- Set Vector resource requests and limits.
 resources: {}
   # requests:
   #   cpu: 200m
@@ -79,7 +110,7 @@ updateStrategy: {}
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
-# tolerations -- Allow Vector to schedule on tainted nodes (requires Kubernetes >= 1.6)
+# tolerations -- Allow Vector to schedule on tainted nodes
 tolerations: []
 
 # affinity -- Allow Vector to schedule using affinity rules
@@ -92,6 +123,7 @@ service:
   enabled: true
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
+## This section supports using helm templates to populate dynamic values
 ## Ref: https://vector.dev/docs/reference/configuration/
 customConfig: {}
 
@@ -123,7 +155,7 @@ persistence:
 
   hostPath:
     # persistence.hostPath.path -- Override path used for hostPath persistence
-    ## Valid for Agent role
+    ## Valid for Agent role, persistence always used for Agent role
     path: "/var/lib/vector"
 
 # livenessProbe -- Override default liveness probe settings
@@ -145,33 +177,40 @@ haproxy:
   # haproxy.enabled -- If true, create a HAProxy load balancer
   enabled: false
 
+  ## Define the HAProxy image to use
   image:
+    # haproxy.image.repository -- Override default registry + name for HAProxy
     repository: haproxytech/haproxy-alpine
+    # haproxy.image.pullPolicy -- HAProxy image pullPolicy
     pullPolicy: IfNotPresent
+    # haproxy.image.pullSecrets -- HAProxy repository pullSecret (ex: specify docker registry credentials)
+    ## Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+    pullSecrets: []
+    # haproxy.image.tag -- HAProxy image tag to use
     tag: "2.4.4"
 
-  imagePullSecrets: []
-  nameOverride: ""
-  fullnameOverride: ""
-
-  # haproxy.replicas -- Set the number of pods to create
+  # haproxy.replicas -- Set the number of HAProxy Pods to create
   replicas: 1
 
   serviceAccount:
-    # haproxy.serviceAccount.create -- If true, create ServiceAccount
+    # haproxy.serviceAccount.create -- If true, create a HAProxy ServiceAccount
     create: true
 
-    # haproxy.serviceAccount.name -- The name of the ServiceAccount to use.
+    # haproxy.serviceAccount.name -- The name of the HAProxy ServiceAccount to use.
     ## If not set and create is true, a name is generated using the fullname template
     name:
 
+  # haproxy.terminationGracePeriodSeconds -- Override HAProxy's terminationGracePeriodSeconds
   terminationGracePeriodSeconds: 60
 
+  # haproxy.podAnnotations -- Set annotations on HAProxy Pods
   podAnnotations: {}
 
+  # haproxy.podSecurityContext -- Allows you to overwrite the default PodSecurityContext for HAProxy
   podSecurityContext: {}
     # fsGroup: 2000
 
+  # haproxy.securityContext -- Specify securityContext on the HAProxy container
   securityContext: {}
     # capabilities:
     #   drop:
@@ -180,16 +219,30 @@ haproxy:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  ## HAProxy's Service configuration
   service:
+    # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
 
+  # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
+  ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
+  ## can be overwritten with haproxy.customConfig
+  ## This section supports using helm templates to populate dynamic values
+  customConfig: ""
+
+  ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:
-    # haproxy.autoscaling.enabled -- Enabled autoscaling for the HAProxy load balancer
+    # haproxy.autoscaling.enabled -- Enabled autoscaling for HAProxy
     enabled: false
+    # haproxy.autoscaling.minReplicas -- Minimum replicas for HAProxy's HPA
     minReplicas: 1
+    # haproxy.autoscaling.maxReplicas -- Maximum replicas for HAProxy's HPA
     maxReplicas: 10
+    # haproxy.autoscaling.targetCPUUtilizationPercentage -- Target CPU utilization for HAProxy's HPA
     targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    # haproxy.autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for HAProxy's HPA
+    targetMemoryUtilizationPercentage:
+    # haproxy.autoscaling.customMetric -- Target a custom metric
     customMetric: {}
       #  - type: Pods
       #    pods:
@@ -199,6 +252,7 @@ haproxy:
       #        type: AverageValue
       #        averageValue: 95
 
+  # haproxy.resources -- Set HAProxy resource requests and limits.
   resources: {}
     # limits:
     #   cpu: 100m
@@ -207,8 +261,14 @@ haproxy:
     #   cpu: 100m
     #   memory: 128Mi
 
+  # haproxy.nodeSelector -- Allow HAProxy to be scheduled on selected nodes
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   nodeSelector: {}
 
+  # haproxy.tolerations -- Allow HAProxy to schedule on tainted nodes
   tolerations: []
 
+  # haproxy.affinity -- Allow HAProxy to schedule using affinity rules
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}

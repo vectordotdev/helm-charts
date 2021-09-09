@@ -116,16 +116,12 @@ tolerations:
 {{- end }}
 volumes:
 {{- if and .Values.persistence.enabled (eq .Values.role "Aggregator") }}
-  {{- with .Values.persistence.existingClaim }}
+{{- with .Values.persistence.existingClaim }}
   - name: data
     persistentVolumeClaim:
       claimName: {{ . }}
-  {{- end }}
-{{- else if and .Values.persistence.enabled (eq .Values.role "Agent") }}
-  - name: data
-    hostPath:
-      path: {{ .Values.persistence.hostPath.path | quote }}
-{{- else }}
+{{- end }}
+{{- else if (ne .Values.role "Agent") }}
   - name: data
     emptyDir: {}
 {{- end }}
@@ -133,6 +129,9 @@ volumes:
     configMap:
       name: {{ template "vector.fullname" . }}
 {{- if (eq .Values.role "Agent") }}
+  - name: data
+    hostPath:
+      path: {{ .Values.persistence.hostPath.path | quote }}
   - name: var-log
     hostPath:
       path: "/var/log/"
