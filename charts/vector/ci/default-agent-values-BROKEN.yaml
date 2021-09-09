@@ -1,7 +1,0 @@
-# Agent role
-## Values file for testing default Agent parameters.
-role: Agent
-
-# This is currently broken without persistence enabled.
-# It appears to be related to us mounting `/var/lib` from
-# the host but the host not having an exiting `/var/lib/vector`.
