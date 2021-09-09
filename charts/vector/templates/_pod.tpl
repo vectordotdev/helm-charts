@@ -116,10 +116,12 @@ tolerations:
 {{- end }}
 volumes:
 {{- if and .Values.persistence.enabled (eq .Values.role "Aggregator") }}
+{{- with .Values.persistence.existingClaim }}
   - name: data
     persistentVolumeClaim:
-      claimName: {{ .Values.persistence.existingClaim }}
-{{- else }}
+      claimName: {{ . }}
+{{- end }}
+{{- else if (ne .Values.role "Agent") }}
   - name: data
     emptyDir: {}
 {{- end }}
