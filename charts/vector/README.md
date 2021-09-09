@@ -80,9 +80,12 @@ helm install --name <RELEASE_NAME> \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
-| autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":2,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":null}` | Configure a HorizontalPodAutoscaler for Vector |
 | autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
+| autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |
+| autoscaling.minReplicas | int | `1` | Minimum replicas for Vector's HPA |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
+| autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
@@ -115,9 +118,12 @@ helm install --name <RELEASE_NAME> \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | haproxy.affinity | object | `{}` | Allow HAProxy to schedule using affinity rules |
-| haproxy.autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":null}` | Configure a HorizontalPodAutoscaler for HAProxy |
 | haproxy.autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
 | haproxy.autoscaling.enabled | bool | `false` | Enabled autoscaling for HAProxy |
+| haproxy.autoscaling.maxReplicas | int | `10` | Maximum replicas for HAProxy's HPA |
+| haproxy.autoscaling.minReplicas | int | `1` | Minimum replicas for HAProxy's HPA |
+| haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for HAProxy's HPA |
+| haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |

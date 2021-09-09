@@ -27,14 +27,18 @@ image:
 ## Valid for Aggregator and Stateless-Aggregator
 replicas: 1
 
-# autoscaling -- Configure a HorizontalPodAutoscaler for Vector
+## Configure a HorizontalPodAutoscaler for Vector
 ## Valid for Stateless-Aggregator role
 autoscaling:
   # autoscaling.enabled -- Enabled autoscaling for the Stateless-Aggregator
   enabled: false
-  minReplicas: 2
+  # autoscaling.minReplicas -- Minimum replicas for Vector's HPA
+  minReplicas: 1
+  # autoscaling.maxReplicas -- Maximum replicas for Vector's HPA
   maxReplicas: 10
+  # autoscaling.targetCPUUtilizationPercentage -- Target CPU utilization for Vector's HPA
   targetCPUUtilizationPercentage: 80
+  # autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for Vector's HPA
   targetMemoryUtilizationPercentage:
   # autoscaling.customMetric -- Autoscale based on a custom metric
   customMetric: {}
@@ -206,13 +210,17 @@ haproxy:
   ## can be overwritten with haproxy.customConfig
   customConfig: ""
 
-  # haproxy.autoscaling -- Configure a HorizontalPodAutoscaler for HAProxy
+  ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:
     # haproxy.autoscaling.enabled -- Enabled autoscaling for HAProxy
     enabled: false
+    # haproxy.autoscaling.minReplicas -- Minimum replicas for HAProxy's HPA
     minReplicas: 1
+    # haproxy.autoscaling.maxReplicas -- Maximum replicas for HAProxy's HPA
     maxReplicas: 10
+    # haproxy.autoscaling.targetCPUUtilizationPercentage -- Target CPU utilization for HAProxy's HPA
     targetCPUUtilizationPercentage: 80
+    # haproxy.autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for HAProxy's HPA
     targetMemoryUtilizationPercentage:
     # haproxy.autoscaling.customMetric -- Autoscale based on a custom metric
     customMetric: {}
