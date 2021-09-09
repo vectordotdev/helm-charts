@@ -40,7 +40,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for Vector's HPA
   targetMemoryUtilizationPercentage:
-  # autoscaling.customMetric -- Autoscale based on a custom metric
+  # autoscaling.customMetric -- Target a custom metric
   customMetric: {}
     #  - type: Pods
     #    pods:
@@ -106,6 +106,7 @@ service:
   enabled: true
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
+## This section supports using helm templates to populate dynamic values
 ## Ref: https://vector.dev/docs/reference/configuration/
 customConfig: {}
 
@@ -201,13 +202,15 @@ haproxy:
     # runAsNonRoot: true
     # runAsUser: 1000
 
-  # haproxy.service -- Configure HAProxy's Service resource
+  ## HAProxy's Service configuration
   service:
+    # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
 
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
   ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
   ## can be overwritten with haproxy.customConfig
+  ## This section supports using helm templates to populate dynamic values
   customConfig: ""
 
   ## Configure a HorizontalPodAutoscaler for HAProxy
@@ -222,7 +225,7 @@ haproxy:
     targetCPUUtilizationPercentage: 80
     # haproxy.autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for HAProxy's HPA
     targetMemoryUtilizationPercentage:
-    # haproxy.autoscaling.customMetric -- Autoscale based on a custom metric
+    # haproxy.autoscaling.customMetric -- Target a custom metric
     customMetric: {}
       #  - type: Pods
       #    pods:
