@@ -35,7 +35,8 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage:
+  # autoscaling.customMetric -- Autoscale based on a custom metric
   customMetric: {}
     #  - type: Pods
     #    pods:
@@ -212,7 +213,8 @@ haproxy:
     minReplicas: 1
     maxReplicas: 10
     targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage:
+    # haproxy.autoscaling.customMetric -- Autoscale based on a custom metric
     customMetric: {}
       #  - type: Pods
       #    pods:

@@ -75,32 +75,15 @@ helm install --name <RELEASE_NAME> \
 
 ## Values
 
+### Vector
+
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
-| autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":2,"targetCPUUtilizationPercentage":80}` | Configure a HorizontalPodAutoscaler for Vector |
+| autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":2,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":null}` | Configure a HorizontalPodAutoscaler for Vector |
+| autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
-| haproxy.affinity | object | `{}` | Allow HAProxy to schedule using affinity rules |
-| haproxy.autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPUUtilizationPercentage":80}` | Configure a HorizontalPodAutoscaler for HAProxy |
-| haproxy.autoscaling.enabled | bool | `false` | Enabled autoscaling for HAProxy |
-| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
-| haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
-| haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
-| haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
-| haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
-| haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
-| haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
-| haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
-| haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
-| haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
-| haproxy.securityContext | object | `{}` | Specify securityContext on the HAProxy container |
-| haproxy.service | object | `{"type":"ClusterIP"}` | Configure HAProxy's Service resource |
-| haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
-| haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
-| haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
-| haproxy.tolerations | list | `[]` | Allow HAProxy to schedule on tainted nodes |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
@@ -126,3 +109,29 @@ helm install --name <RELEASE_NAME> \
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods |
+
+### HAProxy
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| haproxy.affinity | object | `{}` | Allow HAProxy to schedule using affinity rules |
+| haproxy.autoscaling | object | `{"customMetric":{},"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":null}` | Configure a HorizontalPodAutoscaler for HAProxy |
+| haproxy.autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
+| haproxy.autoscaling.enabled | bool | `false` | Enabled autoscaling for HAProxy |
+| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
+| haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
+| haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
+| haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
+| haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
+| haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
+| haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
+| haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
+| haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
+| haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
+| haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
+| haproxy.securityContext | object | `{}` | Specify securityContext on the HAProxy container |
+| haproxy.service | object | `{"type":"ClusterIP"}` | Configure HAProxy's Service resource |
+| haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
+| haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
+| haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
+| haproxy.tolerations | list | `[]` | Allow HAProxy to schedule on tainted nodes |
