@@ -27,6 +27,15 @@ image:
 ## Valid for Aggregator and Stateless-Aggregator
 replicas: 1
 
+## Create a Secret resource for Vector to use
+secrets:
+  # secrets.generic -- Each Key/Value will be added to the Secret's data key
+  ## Values should be entered base64 encoded (examples below are "REPLACE_ME" encoded)
+  ## NOTE: Don't commit unencrypted secrets to git!
+  generic: {}
+    # awsAccessKeyId: "UkVQTEFDRV9NRQo="
+    # awsSecretAccessKey: "UkVQTEFDRV9NRQo="
+
 ## Configure a HorizontalPodAutoscaler for Vector
 ## Valid for Stateless-Aggregator role
 autoscaling:
@@ -67,6 +76,14 @@ podSecurityContext: {}
 
 # securityContext -- Specify securityContext on the Vector container
 securityContext: {}
+
+# env -- Set environment variables in the Vector container
+env: []
+  # - name: AWS_ACCESS_KEY_ID
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: vector-aggregator
+  #       key: awsAcessKeyId
 
 # resources -- Set Vector resource requests and limits.
 resources: {}

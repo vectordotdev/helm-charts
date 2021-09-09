@@ -75,18 +75,19 @@ helm install --name <RELEASE_NAME> \
 
 ## Values
 
-### Vector
+### Vector values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
-| autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
+| autoscaling.customMetric | object | `{}` | Target a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |
 | autoscaling.minReplicas | int | `1` | Minimum replicas for Vector's HPA |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
+| env | list | `[]` | Set environment variables in the Vector container |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
@@ -106,6 +107,7 @@ helm install --name <RELEASE_NAME> \
 | replicas | int | `1` | Set the number of Pods to create |
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator) |
+| secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key |
 | securityContext | object | `{}` | Specify securityContext on the Vector container |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount |
@@ -113,12 +115,12 @@ helm install --name <RELEASE_NAME> \
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods |
 
-### HAProxy
+### HAProxy values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | haproxy.affinity | object | `{}` | Allow HAProxy to schedule using affinity rules |
-| haproxy.autoscaling.customMetric | object | `{}` | Autoscale based on a custom metric |
+| haproxy.autoscaling.customMetric | object | `{}` | Target a custom metric |
 | haproxy.autoscaling.enabled | bool | `false` | Enabled autoscaling for HAProxy |
 | haproxy.autoscaling.maxReplicas | int | `10` | Maximum replicas for HAProxy's HPA |
 | haproxy.autoscaling.minReplicas | int | `1` | Minimum replicas for HAProxy's HPA |
@@ -136,7 +138,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.securityContext | object | `{}` | Specify securityContext on the HAProxy container |
-| haproxy.service | object | `{"type":"ClusterIP"}` | Configure HAProxy's Service resource |
+| haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
 | haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
