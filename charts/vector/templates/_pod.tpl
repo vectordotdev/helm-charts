@@ -19,6 +19,9 @@ containers:
       - --config-dir
       - "/etc/vector/"
     env:
+{{- with .Values.env }}
+    {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
       - name: VECTOR_SELF_NODE_NAME
         valueFrom:
