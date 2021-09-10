@@ -16,7 +16,7 @@ spec:
     metadata:
       annotations:
       {{- if .Values.haproxy.rollWorkload }}
-        checksum/config: {{ include (print $.Template.BasePath "haproxy/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/haproxy/configmap.yaml") . | sha256sum }}
       {{- end }}
       {{- with .Values.haproxy.podAnnotations }}
         {{- toYaml . | nindent 8 }}
