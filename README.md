@@ -13,3 +13,7 @@ You need to add this repository to your Helm repositories:
 helm repo add vector https://helm.vector.dev
 helm repo update
 ```
+
+# Releasing
+
+Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser) when the `develop` branch is merged into `master`.
