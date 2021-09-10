@@ -2,7 +2,7 @@
 ## See Vector helm documentation to learn more:
 ## https://vector.dev/docs/setup/installation/package-managers/helm/
 
-# role -- Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator)
+# role -- Role for this Vector (possible values: Agent, Aggregator, Stateless-Aggregator)
 ## Ref: https://vector.dev/docs/setup/deployment/roles/
 ## Each role is created with the following workloads:
 ## Agent - DaemonSet
@@ -83,16 +83,16 @@ podAnnotations: {}
 # podLabels -- Set labels on Vector Pods
 podLabels: {}
 
-# podPriorityClassName -- Set the priorityClassName on the Vector Pod
+# podPriorityClassName -- Set the priorityClassName on Vector Pods
 podPriorityClassName: ""
 
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
-# securityContext -- Specify securityContext on the Vector container
+# securityContext -- Specify securityContext on Vector containers
 securityContext: {}
 
-# env -- Set environment variables in the Vector container
+# env -- Set environment variables in Vector containers
 env: []
   # - name: AWS_ACCESS_KEY_ID
   #   valueFrom:
@@ -227,14 +227,14 @@ haproxy:
   # haproxy.podLabels -- Set labels on HAProxy Pods
   podLabels: {}
 
-  # haproxy.podPriorityClassName -- Set the priorityClassName on the HAProxy Pod
+  # haproxy.podPriorityClassName -- Set the priorityClassName on HAProxy Pods
   podPriorityClassName: ""
 
   # haproxy.podSecurityContext -- Allows you to overwrite the default PodSecurityContext for HAProxy
   podSecurityContext: {}
     # fsGroup: 2000
 
-  # haproxy.securityContext -- Specify securityContext on the HAProxy container
+  # haproxy.securityContext -- Specify securityContext on HAProxy containers
   securityContext: {}
     # capabilities:
     #   drop:
