@@ -71,6 +71,9 @@ serviceAccount:
   ## If not set and create is true, a name is generated using the fullname template
   name:
 
+# podAnnotations -- Set annotations on Vector Pods
+podAnnotations: {}
+
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
