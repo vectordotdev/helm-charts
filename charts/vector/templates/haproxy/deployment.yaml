@@ -14,8 +14,11 @@ spec:
       {{- include "haproxy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.haproxy.podAnnotations }}
       annotations:
+      {{- if .Values.haproxy.rollWorkload }}
+        checksum/config: {{ include (print $.Template.BasePath "haproxy/configmap.yaml") . | sha256sum }}
+      {{- end }}
+      {{- with .Values.haproxy.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
