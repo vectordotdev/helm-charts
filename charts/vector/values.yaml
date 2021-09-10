@@ -141,6 +141,12 @@ affinity: {}
 service:
   # service.enabled -- If true, create and use a Service resource
   enabled: true
+  # service.type -- Set type of Vector's Service
+  type: "ClusterIP"
+  # service.annotations -- Set annotations on Vector's Service
+  annotations: {}
+  # service.ports -- Override automated generation of Service ports
+  ports: []
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
