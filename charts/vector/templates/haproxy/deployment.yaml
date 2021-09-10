@@ -31,6 +31,9 @@ spec:
       serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       containers:
         - name: haproxy
           securityContext:

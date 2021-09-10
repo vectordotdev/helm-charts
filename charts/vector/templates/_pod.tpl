@@ -7,6 +7,9 @@ serviceAccountName: {{ include "vector.serviceAccountName" . }}
 securityContext:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.priorityClassName }}
+priorityClassName: {{ . }}
+{{- end }}
 containers:
   - name: vector
 {{- with .Values.securityContext }}

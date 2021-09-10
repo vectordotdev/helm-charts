@@ -83,6 +83,9 @@ podAnnotations: {}
 # podLabels -- Set labels on Vector Pods
 podLabels: {}
 
+# podPriorityClassName -- Set the priorityClassName on the Vector Pod
+podPriorityClassName: ""
+
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
@@ -223,6 +226,9 @@ haproxy:
 
   # haproxy.podLabels -- Set labels on HAProxy Pods
   podLabels: {}
+
+  # haproxy.podPriorityClassName -- Set the priorityClassName on the HAProxy Pod
+  podPriorityClassName: ""
 
   # haproxy.podSecurityContext -- Allows you to overwrite the default PodSecurityContext for HAProxy
   podSecurityContext: {}
