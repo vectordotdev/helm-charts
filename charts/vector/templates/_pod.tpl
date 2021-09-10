@@ -10,6 +10,10 @@ securityContext:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
+{{- with .Values.image.pullSecrets }}
+imagePullSecrets:
+{{ toYaml . | indent 2 }}
+{{- end }}
 containers:
   - name: vector
 {{- with .Values.securityContext }}
