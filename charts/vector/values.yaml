@@ -66,10 +66,13 @@ rbac:
 serviceAccount:
   # serviceAccount.create -- If true, create ServiceAccount
   create: true
-
+  # serviceAccount.annotations -- Annotations to add to the Vector ServiceAccount
+  annotations: {}
   # serviceAccount.name -- The name of the ServiceAccount to use.
   ## If not set and create is true, a name is generated using the fullname template
   name:
+  # serviceAccount.automountToken -- Automount API credentials for the Vector ServiceAccount
+  automountToken: true
 
 # podAnnotations -- Set annotations on Vector Pods
 podAnnotations: {}
@@ -198,10 +201,13 @@ haproxy:
   serviceAccount:
     # haproxy.serviceAccount.create -- If true, create a HAProxy ServiceAccount
     create: true
-
+    # haproxy.serviceAccount.annotations -- Annotations to add to the HAProxy ServiceAccount
+    annotations: {}
     # haproxy.serviceAccount.name -- The name of the HAProxy ServiceAccount to use.
     ## If not set and create is true, a name is generated using the fullname template
     name:
+    # haproxy.serviceAccount.automountToken -- Automount API credentials for the HAProxy ServiceAccount
+    automountToken: true
 
   # haproxy.terminationGracePeriodSeconds -- Override HAProxy's terminationGracePeriodSeconds
   terminationGracePeriodSeconds: 60
