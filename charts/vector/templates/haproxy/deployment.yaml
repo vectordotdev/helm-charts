@@ -20,6 +20,9 @@ spec:
       {{- end }}
       labels:
         {{- include "haproxy.selectorLabels" . | nindent 8 }}
+      {{- with .Values.haproxy.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.haproxy.imagePullSecrets }}
       imagePullSecrets:

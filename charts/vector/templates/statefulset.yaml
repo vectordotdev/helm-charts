@@ -26,6 +26,9 @@ spec:
       {{- end }}
       labels:
         {{- include "vector.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- include "vector.pod" . | nindent 6 }}
   volumeClaimTemplates:

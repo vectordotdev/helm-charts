@@ -80,6 +80,9 @@ serviceAccount:
 # podAnnotations -- Set annotations on Vector Pods
 podAnnotations: {}
 
+# podLabels -- Set labels on Vector Pods
+podLabels: {}
+
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
@@ -217,6 +220,9 @@ haproxy:
 
   # haproxy.podAnnotations -- Set annotations on HAProxy Pods
   podAnnotations: {}
+
+  # haproxy.podLabels -- Set labels on HAProxy Pods
+  podLabels: {}
 
   # haproxy.podSecurityContext -- Allows you to overwrite the default PodSecurityContext for HAProxy
   podSecurityContext: {}
