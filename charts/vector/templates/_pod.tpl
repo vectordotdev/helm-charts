@@ -10,6 +10,13 @@ securityContext:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
+{{- with .Values.dnsPolicy }}
+dnsPolicy: {{ . }}
+{{- end }}
+{{- with .Values.dnsConfig }}
+dnsConfig:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.image.pullSecrets }}
 imagePullSecrets:
 {{ toYaml . | indent 2 }}

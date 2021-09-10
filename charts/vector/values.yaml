@@ -184,6 +184,23 @@ persistence:
     ## Valid for Agent role, persistence always used for Agent role
     path: "/var/lib/vector"
 
+# dnsPolicy -- Specify DNS policy for Vector Pods
+## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+dnsPolicy: ClusterFirst
+
+# dnsConfig -- Specify DNS configuration options for Vector Pods
+## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+dnsConfig: {}
+  # nameservers:
+  #   - 1.2.3.4
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+
 # livenessProbe -- Override default liveness probe settings
 ## Requires Vector's API to be enabled
 livenessProbe: {}
