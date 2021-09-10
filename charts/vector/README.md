@@ -88,7 +88,10 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
+| dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods |
+| dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
 | env | list | `[]` | Set environment variables in Vector containers |
+| existingConfigMap | string | `""` | Use existing ConfigMap for Vector's configuration instead of creating a new one |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
@@ -104,6 +107,13 @@ helm install --name <RELEASE_NAME> \
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims |
 | podAnnotations | object | `{}` | Set annotations on Vector Pods |
 | podLabels | object | `{}` | Set labels on Vector Pods |
+| podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
+| podMonitor.enabled | bool | `false` | If true, create a PodMonitor for Vector |
+| podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from |
+| podMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
+| podMonitor.path | string | `"/metrics"` | Override the path to scrape |
+| podMonitor.port | string | `"prom-exporter"` | Override the port to scrape |
+| podMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
 | podPriorityClassName | string | `""` | Set the priorityClassName on Vector Pods |
 | podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for Vector |
 | rbac.create | bool | `true` | If true, create and use RBAC resources |
@@ -122,6 +132,7 @@ helm install --name <RELEASE_NAME> \
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for the Vector ServiceAccount |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
+| terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods |
 
