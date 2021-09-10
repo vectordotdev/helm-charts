@@ -30,6 +30,10 @@ image:
 ## Valid for Aggregator and Stateless-Aggregator
 replicas: 1
 
+# podManagementPolicy -- Specify the podManagementPolicy for the Aggregator role
+## Valid for Aggregator role
+podManagementPolicy: OrderedReady
+
 ## Create a Secret resource for Vector to use
 secrets:
   # secrets.generic -- Each Key/Value will be added to the Secret's data key
@@ -124,6 +128,9 @@ updateStrategy: {}
 #   type: RollingUpdate
 #   rollingUpdate:
 #     maxUnavailable: 1
+
+# terminationGracePeriodSeconds -- Override Vector's terminationGracePeriodSeconds
+terminationGracePeriodSeconds: 60
 
 # nodeSelector -- Allow Vector to be scheduled on selected nodes
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector

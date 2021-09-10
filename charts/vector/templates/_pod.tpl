@@ -120,6 +120,7 @@ containers:
         mountPath: "/host/sys"
         readOnly: true
 {{- end }}
+terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
 {{ toYaml . | indent 2 }}
