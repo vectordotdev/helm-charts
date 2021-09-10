@@ -148,6 +148,10 @@ service:
   # service.ports -- Override automated generation of Service ports
   ports: []
 
+# existingConfigMap -- Use existing ConfigMap for Vector's configuration instead of creating a new one
+## If set, this parameter takes precedence over customConfig and the chart's default configs
+existingConfigMap: ""
+
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
 ## Ref: https://vector.dev/docs/reference/configuration/
