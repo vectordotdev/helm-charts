@@ -92,6 +92,11 @@ podSecurityContext: {}
 # securityContext -- Specify securityContext on Vector containers
 securityContext: {}
 
+# args -- Override Vector's default arguments
+args:
+  - --config-dir
+  - "/etc/vector/"
+
 # env -- Set environment variables in Vector containers
 env: []
   # - name: AWS_ACCESS_KEY_ID

@@ -22,9 +22,10 @@ containers:
 {{- end }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- with .Values.args }}
     args:
-      - --config-dir
-      - "/etc/vector/"
+    {{- toYaml . | nindent 6 }}
+{{- end }}
     env:
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
