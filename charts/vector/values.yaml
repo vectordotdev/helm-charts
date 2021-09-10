@@ -10,6 +10,9 @@
 ## Stateless-Aggregator - Deployment
 role: "Aggregator"
 
+# rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations
+rollWorkload: true
+
 ## Define the Vector image to use
 image:
   # image.repository -- Override default registry + name for Vector
