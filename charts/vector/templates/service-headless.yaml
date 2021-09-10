@@ -5,10 +5,16 @@ metadata:
   name: {{ include "vector.fullname" . }}-headless
   labels:
     {{- include "vector.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   clusterIP: None
   ports:
-{{- if .Values.customConfig }}
+{{- if .Values.service.ports }}
+  {{- toYaml .Values.service.ports | nindent 4 }}
+{{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}
 {{- else }}
     - name: datadog-agent

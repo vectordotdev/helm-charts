@@ -2,13 +2,16 @@
 ## See Vector helm documentation to learn more:
 ## https://vector.dev/docs/setup/installation/package-managers/helm/
 
-# role -- Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator)
+# role -- Role for this Vector (possible values: Agent, Aggregator, Stateless-Aggregator)
 ## Ref: https://vector.dev/docs/setup/deployment/roles/
 ## Each role is created with the following workloads:
 ## Agent - DaemonSet
 ## Aggregator - StatefulSet
 ## Stateless-Aggregator - Deployment
 role: "Aggregator"
+
+# rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations
+rollWorkload: true
 
 ## Define the Vector image to use
 image:
@@ -66,18 +69,35 @@ rbac:
 serviceAccount:
   # serviceAccount.create -- If true, create ServiceAccount
   create: true
-
+  # serviceAccount.annotations -- Annotations to add to the Vector ServiceAccount
+  annotations: {}
   # serviceAccount.name -- The name of the ServiceAccount to use.
   ## If not set and create is true, a name is generated using the fullname template
   name:
+  # serviceAccount.automountToken -- Automount API credentials for the Vector ServiceAccount
+  automountToken: true
+
+# podAnnotations -- Set annotations on Vector Pods
+podAnnotations: {}
+
+# podLabels -- Set labels on Vector Pods
+podLabels: {}
+
+# podPriorityClassName -- Set the priorityClassName on Vector Pods
+podPriorityClassName: ""
 
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
-# securityContext -- Specify securityContext on the Vector container
+# securityContext -- Specify securityContext on Vector containers
 securityContext: {}
 
-# env -- Set environment variables in the Vector container
+# args -- Override Vector's default arguments
+args:
+  - --config-dir
+  - "/etc/vector/"
+
+# env -- Set environment variables in Vector containers
 env: []
   # - name: AWS_ACCESS_KEY_ID
   #   valueFrom:
@@ -121,6 +141,12 @@ affinity: {}
 service:
   # service.enabled -- If true, create and use a Service resource
   enabled: true
+  # service.type -- Set type of Vector's Service
+  type: "ClusterIP"
+  # service.annotations -- Set annotations on Vector's Service
+  annotations: {}
+  # service.ports -- Override automated generation of Service ports
+  ports: []
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
@@ -189,16 +215,22 @@ haproxy:
     # haproxy.image.tag -- HAProxy image tag to use
     tag: "2.4.4"
 
+  # haproxy.rollWorkload -- Add a checksum of the generated ConfigMap to the HAProxy Deployment
+  rollWorkload: true
+
   # haproxy.replicas -- Set the number of HAProxy Pods to create
   replicas: 1
 
   serviceAccount:
     # haproxy.serviceAccount.create -- If true, create a HAProxy ServiceAccount
     create: true
-
+    # haproxy.serviceAccount.annotations -- Annotations to add to the HAProxy ServiceAccount
+    annotations: {}
     # haproxy.serviceAccount.name -- The name of the HAProxy ServiceAccount to use.
     ## If not set and create is true, a name is generated using the fullname template
     name:
+    # haproxy.serviceAccount.automountToken -- Automount API credentials for the HAProxy ServiceAccount
+    automountToken: true
 
   # haproxy.terminationGracePeriodSeconds -- Override HAProxy's terminationGracePeriodSeconds
   terminationGracePeriodSeconds: 60
@@ -206,11 +238,17 @@ haproxy:
   # haproxy.podAnnotations -- Set annotations on HAProxy Pods
   podAnnotations: {}
 
+  # haproxy.podLabels -- Set labels on HAProxy Pods
+  podLabels: {}
+
+  # haproxy.podPriorityClassName -- Set the priorityClassName on HAProxy Pods
+  podPriorityClassName: ""
+
   # haproxy.podSecurityContext -- Allows you to overwrite the default PodSecurityContext for HAProxy
   podSecurityContext: {}
     # fsGroup: 2000
 
-  # haproxy.securityContext -- Specify securityContext on the HAProxy container
+  # haproxy.securityContext -- Specify securityContext on HAProxy containers
   securityContext: {}
     # capabilities:
     #   drop:

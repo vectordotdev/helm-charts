@@ -7,6 +7,13 @@ serviceAccountName: {{ include "vector.serviceAccountName" . }}
 securityContext:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.priorityClassName }}
+priorityClassName: {{ . }}
+{{- end }}
+{{- with .Values.image.pullSecrets }}
+imagePullSecrets:
+{{ toYaml . | indent 2 }}
+{{- end }}
 containers:
   - name: vector
 {{- with .Values.securityContext }}
@@ -15,10 +22,14 @@ containers:
 {{- end }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- with .Values.args }}
     args:
-      - --config-dir
-      - "/etc/vector/"
+    {{- toYaml . | nindent 6 }}
+{{- end }}
     env:
+{{- with .Values.env }}
+    {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
       - name: VECTOR_SELF_NODE_NAME
         valueFrom:
