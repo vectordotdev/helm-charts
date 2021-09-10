@@ -226,6 +226,24 @@ readinessProbe: {}
   #   path: /health
   #   port: api
 
+## Configure a PodMonitor for Vector
+## Requires the PodMonitor CRD to be installed
+podMonitor:
+  # podMonitor.enabled -- If true, create a PodMonitor for Vector
+  enabled: false
+  # podMonitor.jobLabel -- Override the label to retrieve the job name from
+  jobLabel: app.kubernetes.io/name
+  # podMonitor.port -- Override the port to scrape
+  port: prom-exporter
+  # podMonitor.path -- Override the path to scrape
+  path: /metrics
+  # podMonitor.relabelings -- RelabelConfigs to apply to samples before scraping
+  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+  relabelings: []
+  # podMonitor.metricRelabelings -- MetricRelabelConfigs to apply to samples before ingestion
+  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+  metricRelabelings: []
+
 ## Optional built-in HAProxy load balancer
 haproxy:
   # haproxy.enabled -- If true, create a HAProxy load balancer
