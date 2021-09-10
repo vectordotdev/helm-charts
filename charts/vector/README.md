@@ -149,6 +149,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
+| haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |
