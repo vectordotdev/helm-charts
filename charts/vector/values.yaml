@@ -308,6 +308,10 @@ haproxy:
     # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
 
+  # haproxy.existingConfigMap -- Use existing ConfigMap for HAProxy's configuration instead of creating a new one
+  ## If set, this parameter takes precedence over customConfig and the chart's default configs
+  existingConfigMap: ""
+
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
   ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
   ## can be overwritten with haproxy.customConfig

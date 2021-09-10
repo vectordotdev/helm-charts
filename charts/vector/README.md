@@ -149,6 +149,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
+| haproxy.existingConfigMap | string | `""` | Use existing ConfigMap for HAProxy's configuration instead of creating a new one |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
