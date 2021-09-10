@@ -15,7 +15,7 @@ helm repo update
 
 ## Requirements
 
-Kubernetes: `>=1.15.0`
+Kubernetes: `>=1.15.0-0`
 
 ## Quick start
 
@@ -80,6 +80,7 @@ helm install --name <RELEASE_NAME> \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
+| args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments |
 | autoscaling.customMetric | object | `{}` | Target a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |
@@ -87,7 +88,7 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
-| env | list | `[]` | Set environment variables in the Vector container |
+| env | list | `[]` | Set environment variables in Vector containers |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
@@ -101,15 +102,24 @@ helm install --name <RELEASE_NAME> \
 | persistence.hostPath.path | string | `"/var/lib/vector"` | Override path used for hostPath persistence |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims |
+| podAnnotations | object | `{}` | Set annotations on Vector Pods |
+| podLabels | object | `{}` | Set labels on Vector Pods |
+| podPriorityClassName | string | `""` | Set the priorityClassName on Vector Pods |
 | podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for Vector |
 | rbac.create | bool | `true` | If true, create and use RBAC resources |
 | readinessProbe | object | `{}` | Override default readiness probe settings, if customConfig is used require customConfig.api.enabled true |
 | replicas | int | `1` | Set the number of Pods to create |
 | resources | object | `{}` | Set Vector resource requests and limits. |
-| role | string | `"Aggregator"` | Role for this deployment (possible values: Agent, Aggregator, Stateless-Aggregator) |
+| role | string | `"Aggregator"` | Role for this Vector (possible values: Agent, Aggregator, Stateless-Aggregator) |
+| rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations |
 | secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key |
-| securityContext | object | `{}` | Specify securityContext on the Vector container |
+| securityContext | object | `{}` | Specify securityContext on Vector containers |
+| service.annotations | object | `{}` | Set annotations on Vector's Service |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
+| service.ports | list | `[]` | Override automated generation of Service ports |
+| service.type | string | `"ClusterIP"` | Set type of Vector's Service |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the Vector ServiceAccount |
+| serviceAccount.automountToken | bool | `true` | Automount API credentials for the Vector ServiceAccount |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
@@ -134,11 +144,15 @@ helm install --name <RELEASE_NAME> \
 | haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
+| haproxy.podLabels | object | `{}` | Set labels on HAProxy Pods |
+| haproxy.podPriorityClassName | string | `""` | Set the priorityClassName on HAProxy Pods |
 | haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
-| haproxy.securityContext | object | `{}` | Specify securityContext on the HAProxy container |
+| haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
+| haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |
+| haproxy.serviceAccount.automountToken | bool | `true` | Automount API credentials for the HAProxy ServiceAccount |
 | haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
 | haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
