@@ -30,6 +30,10 @@ image:
 ## Valid for Aggregator and Stateless-Aggregator
 replicas: 1
 
+# podManagementPolicy -- Specify the podManagementPolicy for the Aggregator role
+## Valid for Aggregator role
+podManagementPolicy: OrderedReady
+
 ## Create a Secret resource for Vector to use
 secrets:
   # secrets.generic -- Each Key/Value will be added to the Secret's data key
@@ -125,6 +129,9 @@ updateStrategy: {}
 #   rollingUpdate:
 #     maxUnavailable: 1
 
+# terminationGracePeriodSeconds -- Override Vector's terminationGracePeriodSeconds
+terminationGracePeriodSeconds: 60
+
 # nodeSelector -- Allow Vector to be scheduled on selected nodes
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -147,6 +154,10 @@ service:
   annotations: {}
   # service.ports -- Override automated generation of Service ports
   ports: []
+
+# existingConfigMap -- Use existing ConfigMap for Vector's configuration instead of creating a new one
+## If set, this parameter takes precedence over customConfig and the chart's default configs
+existingConfigMap: ""
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
@@ -184,6 +195,23 @@ persistence:
     ## Valid for Agent role, persistence always used for Agent role
     path: "/var/lib/vector"
 
+# dnsPolicy -- Specify DNS policy for Vector Pods
+## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+dnsPolicy: ClusterFirst
+
+# dnsConfig -- Specify DNS configuration options for Vector Pods
+## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+dnsConfig: {}
+  # nameservers:
+  #   - 1.2.3.4
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+
 # livenessProbe -- Override default liveness probe settings
 ## Requires Vector's API to be enabled
 livenessProbe: {}
@@ -197,6 +225,24 @@ readinessProbe: {}
   # httpGet:
   #   path: /health
   #   port: api
+
+## Configure a PodMonitor for Vector
+## Requires the PodMonitor CRD to be installed
+podMonitor:
+  # podMonitor.enabled -- If true, create a PodMonitor for Vector
+  enabled: false
+  # podMonitor.jobLabel -- Override the label to retrieve the job name from
+  jobLabel: app.kubernetes.io/name
+  # podMonitor.port -- Override the port to scrape
+  port: prom-exporter
+  # podMonitor.path -- Override the path to scrape
+  path: /metrics
+  # podMonitor.relabelings -- RelabelConfigs to apply to samples before scraping
+  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+  relabelings: []
+  # podMonitor.metricRelabelings -- MetricRelabelConfigs to apply to samples before ingestion
+  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+  metricRelabelings: []
 
 ## Optional built-in HAProxy load balancer
 haproxy:
@@ -261,6 +307,10 @@ haproxy:
   service:
     # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
+
+  # haproxy.existingConfigMap -- Use existing ConfigMap for HAProxy's configuration instead of creating a new one
+  ## If set, this parameter takes precedence over customConfig and the chart's default configs
+  existingConfigMap: ""
 
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
   ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
