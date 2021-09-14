@@ -87,6 +87,7 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.minReplicas | int | `1` | Minimum replicas for Vector's HPA |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
+| command | list | `[]` | Override Vector's default command |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
