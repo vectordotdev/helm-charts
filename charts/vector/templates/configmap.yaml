@@ -1,3 +1,4 @@
+{{- if not .Values.existingConfigMap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -84,3 +85,4 @@ data:
         encoding:
           codec: json
   {{- end }}
+{{- end }}

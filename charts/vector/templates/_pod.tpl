@@ -10,6 +10,13 @@ securityContext:
 {{- with .Values.priorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
+{{- with .Values.dnsPolicy }}
+dnsPolicy: {{ . }}
+{{- end }}
+{{- with .Values.dnsConfig }}
+dnsConfig:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.image.pullSecrets }}
 imagePullSecrets:
 {{ toYaml . | indent 2 }}
@@ -73,11 +80,11 @@ containers:
       - name: vector
         containerPort: 6000
         protocol: TCP
-      - name: prometheus
+      - name: prom-exporter
         containerPort: 9090
         protocol: TCP
 {{- else if (eq .Values.role "Agent") }}
-      - name: prometheus
+      - name: prom-exporter
         containerPort: 9090
         protocol: TCP
 {{- end }}
@@ -113,6 +120,7 @@ containers:
         mountPath: "/host/sys"
         readOnly: true
 {{- end }}
+terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
 {{ toYaml . | indent 2 }}
@@ -138,7 +146,7 @@ volumes:
 {{- end }}
   - name: config
     configMap:
-      name: {{ template "vector.fullname" . }}
+      name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
     hostPath:

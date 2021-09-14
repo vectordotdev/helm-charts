@@ -62,7 +62,7 @@ spec:
       volumes:
         - name: haproxy-config
           configMap:
-            name: {{ include "haproxy.fullname" . }}
+            name: {{ if .Values.haproxy.existingConfigMap }}{{ .Values.haproxy.existingConfigMap }}{{ else }}{{ template "haproxy.fullname" . }}{{ end }}
       {{- with .Values.haproxy.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
