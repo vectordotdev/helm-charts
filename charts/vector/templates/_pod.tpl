@@ -149,8 +149,10 @@ volumes:
     emptyDir: {}
 {{- end }}
   - name: config
-    configMap:
-      name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
+    projected:
+      sources:
+        - configMap:
+            name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
     hostPath:
