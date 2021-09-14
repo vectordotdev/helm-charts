@@ -68,21 +68,28 @@ Create the name of the service account to use
 Generate an array of ServicePorts based on customConfig
 */}}
 {{- define "vector.ports" -}}
-{{- range $componentKind, $configs := .Values.customConfig }}
-{{- if eq $componentKind "sources" }}
-{{- range $componentId, $componentConfig := $configs }}
-{{- if (hasKey $componentConfig "address") }}
-{{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
-{{- end }}
-{{- end }}
-{{- else if eq $componentKind "sinks" }}
-{{- range $componentId, $componentConfig := $configs }}
-{{- if (hasKey $componentConfig "address") }}
-{{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
+  {{- range $componentKind, $configs := .Values.customConfig }}
+    {{- if eq $componentKind "sources" }}
+      {{- range $componentId, $componentConfig := $configs }}
+        {{- if (hasKey $componentConfig "address") }}
+        {{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
+        {{- end }}
+      {{- end }}
+    {{- else if eq $componentKind "sinks" }}
+      {{- range $componentId, $componentConfig := $configs }}
+        {{- if (hasKey $componentConfig "address") }}
+        {{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
+        {{- end }}
+      {{- end }}
+    {{- else if eq $componentKind "api" }}
+      {{- if $configs.enabled }}
+- name: api
+  port: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+  protocol: TCP
+  targetPort: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{/*
@@ -106,21 +113,27 @@ Generate a single ServicePort based on a component configuration
 Generate an array of ContainerPorts based on customConfig
 */}}
 {{- define "vector.containerPorts" -}}
-{{- range $componentKind, $configs := .Values.customConfig }}
-{{- if eq $componentKind "sources" }}
-{{- range $componentId, $componentConfig := $configs }}
-{{- if (hasKey $componentConfig "address") }}
-{{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
-{{- end }}
-{{- end }}
-{{- else if eq $componentKind "sinks" }}
-{{- range $componentId, $componentConfig := $configs }}
-{{- if (hasKey $componentConfig "address") }}
-{{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
+  {{- range $componentKind, $configs := .Values.customConfig }}
+    {{- if eq $componentKind "sources" }}
+      {{- range $componentId, $componentConfig := $configs }}
+        {{- if (hasKey $componentConfig "address") }}
+        {{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
+        {{- end }}
+      {{- end }}
+    {{- else if eq $componentKind "sinks" }}
+      {{- range $componentId, $componentConfig := $configs }}
+        {{- if (hasKey $componentConfig "address") }}
+        {{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
+        {{- end }}
+      {{- end }}
+    {{- else if eq $componentKind "api" }}
+      {{- if $configs.enabled }}
+- name: api
+  containerPort: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+  protocol: TCP
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{/*
