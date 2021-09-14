@@ -38,4 +38,8 @@ spec:
   selector:
     {{- include "haproxy.selectorLabels" . | nindent 4 }}
   type: {{ .Values.haproxy.service.type }}
+  {{- with .Values.haproxy.service.topologyKeys }}
+  topologyKeys:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}

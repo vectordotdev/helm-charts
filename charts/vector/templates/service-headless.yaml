@@ -45,4 +45,8 @@ spec:
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP
+  {{- with .Values.service.topologyKeys }}
+  topologyKeys:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
