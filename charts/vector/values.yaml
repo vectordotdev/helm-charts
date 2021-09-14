@@ -96,6 +96,9 @@ podSecurityContext: {}
 # securityContext -- Specify securityContext on Vector containers
 securityContext: {}
 
+# command -- Override Vector's default command
+command: []
+
 # args -- Override Vector's default arguments
 args:
   - --config-dir

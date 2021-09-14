@@ -29,6 +29,10 @@ containers:
 {{- end }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- with .Values.command }}
+    command:
+    {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- with .Values.args }}
     args:
     {{- toYaml . | nindent 6 }}
