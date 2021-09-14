@@ -127,6 +127,7 @@ helm install --name <RELEASE_NAME> \
 | service.annotations | object | `{}` | Set annotations on Vector's Service |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
 | service.ports | list | `[]` | Override automated generation of Service ports |
+| service.topologyKeys | list | `[]` | Specify the topologyKeys field on Vector's Service spec |
 | service.type | string | `"ClusterIP"` | Set type of Vector's Service |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the Vector ServiceAccount |
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for the Vector ServiceAccount |
@@ -163,6 +164,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
+| haproxy.service.topologyKeys | list | `[]` | Specify the topologyKeys field on HAProxy's Service spec |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |
 | haproxy.serviceAccount.automountToken | bool | `true` | Automount API credentials for the HAProxy ServiceAccount |

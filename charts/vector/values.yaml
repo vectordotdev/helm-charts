@@ -152,6 +152,13 @@ service:
   type: "ClusterIP"
   # service.annotations -- Set annotations on Vector's Service
   annotations: {}
+  # service.topologyKeys -- Specify the topologyKeys field on Vector's Service spec
+  ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
+  topologyKeys: []
+  #   - "kubernetes.io/hostname"
+  #   - "topology.kubernetes.io/zone"
+  #   - "topology.kubernetes.io/region"
+  #   - "*"
   # service.ports -- Override automated generation of Service ports
   ports: []
 
@@ -305,6 +312,13 @@ haproxy:
 
   ## HAProxy's Service configuration
   service:
+    # haproxy.service.topologyKeys -- Specify the topologyKeys field on HAProxy's Service spec
+    ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
+    topologyKeys: []
+    #   - "kubernetes.io/hostname"
+    #   - "topology.kubernetes.io/zone"
+    #   - "topology.kubernetes.io/region"
+    #   - "*"
     # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
 
