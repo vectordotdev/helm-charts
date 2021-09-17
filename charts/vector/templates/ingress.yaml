@@ -49,11 +49,10 @@ spec:
               service:
                 name: {{ if $.Values.haproxy.enabled }}{{ include "haproxy.fullname" $ }}{{ else }}{{ include "vector.fullname" $ }}{{ end }}
                 port:
-                  {{- with .port.name }}
-                  name: {{ . }}
-                  {{- end }}
-                  {{- with .port.number }}
-                  number: {{ . }}
+                  {{- if .port.name }}
+                  name: {{ .port.name }}
+                  {{- else }}
+                  number: {{ .port.number }}
                   {{- end }}
               {{- else }}
               serviceName: {{ if $.Values.haproxy.enabled }}{{ include "haproxy.fullname" $ }}{{ else }}{{ include "vector.fullname" $ }}{{ end }}
