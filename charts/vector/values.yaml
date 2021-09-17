@@ -168,7 +168,7 @@ service:
 ## Configuration for Vector's Ingress
 ingress:
   # ingress.enabled -- If true, create and use an Ingress resource
-  enabled: true
+  enabled: false
   # ingress.className -- Specify the ingressClassName, requires Kubernetes >= 1.18
   ## Ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
   className: ""
