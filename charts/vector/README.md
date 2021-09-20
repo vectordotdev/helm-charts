@@ -97,6 +97,11 @@ helm install --name <RELEASE_NAME> \
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
 | image.tag | string | Chart's appVersion | Vector image tag to use |
+| ingress.annotations | object | `{}` | Set annotations on the Ingress |
+| ingress.className | string | `""` | Specify the ingressClassName, requires Kubernetes >= 1.18 |
+| ingress.enabled | bool | `false` | If true, create and use an Ingress resource |
+| ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
+| ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | livenessProbe | object | `{}` | Override default liveness probe settings |
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Specifies the accessModes for PersistentVolumeClaims |
