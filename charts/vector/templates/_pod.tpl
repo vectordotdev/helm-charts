@@ -153,6 +153,12 @@ volumes:
       sources:
         - configMap:
             name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
+{{- with .Values.extraConfigs }}
+  {{- range . }}
+        - configMap:
+            name: {{ . }}
+  {{- end }}
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
     hostPath:

@@ -202,6 +202,8 @@ existingConfigMap: ""
 ## Ref: https://vector.dev/docs/reference/configuration/
 customConfig: {}
 
+# extraConfigs -- List of ConfigMap names to include as additional configuration files
+extraConfigs: []
 ## Configuration for Vector's data persistence
 persistence:
   # persistence.enabled -- If true, create and use PersistentVolumeClaims
