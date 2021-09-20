@@ -152,7 +152,7 @@ volumes:
     projected:
       sources:
         - configMap:
-            name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
+            name: {{ if .Values.existingConfig }}{{ .Values.existingConfig }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
 {{- with .Values.extraConfigs }}
   {{- range . }}
         - configMap:
