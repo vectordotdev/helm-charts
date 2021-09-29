@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 # https://tera.netlify.app/docs/#introduction
 body = """
 {% if version %}\
-    ## [{{ version | replace(from="v", to="") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+    ## [{{ version }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else %}\
     ## [unreleased]
 {% endif %}\
@@ -48,4 +48,4 @@ commit_parsers = [
 # filter out the commits that are not matched by commit parsers
 filter_commits = true
 # glob pattern for matching git tags
-tag_pattern = "v[0-9]*"
+tag_pattern = "vector-*"
