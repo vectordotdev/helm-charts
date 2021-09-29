@@ -106,7 +106,11 @@ containers:
 {{- end }}
     volumeMounts:
       - name: data
+        {{- if .Values.existingConfig }}
+        mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfig`" }}{{ end }}"
+        {{- else }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
+        {{- end }}
       - name: config
         mountPath: "/etc/vector/"
         readOnly: true
@@ -149,8 +153,16 @@ volumes:
     emptyDir: {}
 {{- end }}
   - name: config
-    configMap:
-      name: {{ if .Values.existingConfigMap }}{{ .Values.existingConfigMap }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
+    projected:
+      sources:
+        - configMap:
+            name: {{ if .Values.existingConfig }}{{ .Values.existingConfig }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
+{{- with .Values.extraConfigs }}
+  {{- range . }}
+        - configMap:
+            name: {{ . }}
+  {{- end }}
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
     hostPath:
