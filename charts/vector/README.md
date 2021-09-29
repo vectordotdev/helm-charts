@@ -89,7 +89,7 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | command | list | `[]` | Override Vector's default command |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
-| dataDir | string | `""` | Specify the path for Vector's data, required when existingConfig is used |
+| dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfig is used |
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
 | env | list | `[]` | Set environment variables in Vector containers |
