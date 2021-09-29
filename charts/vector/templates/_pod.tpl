@@ -106,7 +106,11 @@ containers:
 {{- end }}
     volumeMounts:
       - name: data
+        {{- if .Values.existingConfig }}
+        mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfig`" }}{{ end }}"
+        {{- else }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
+        {{- end }}
       - name: config
         mountPath: "/etc/vector/"
         readOnly: true

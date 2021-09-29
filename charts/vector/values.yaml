@@ -201,9 +201,12 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# existingConfig -- Use this existing ConfigMap for Vector's configuration instead of creating a new one
+# existingConfig -- Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set
 ## If set, this parameter takes precedence over customConfig and the chart's default configs
 existingConfig: ""
+
+# dataDir -- Specify the path for Vector's data, only used when existingConfig is used
+dataDir: ""
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
@@ -261,14 +264,14 @@ dnsConfig: {}
   #     value: "2"
   #   - name: edns0
 
-# livenessProbe -- Override default liveness probe settings
+# livenessProbe -- Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true
 ## Requires Vector's API to be enabled
 livenessProbe: {}
   # httpGet:
   #   path: /health
   #   port: api
 
-# readinessProbe -- Override default readiness probe settings, if customConfig is used require customConfig.api.enabled true
+# readinessProbe -- Override default readiness probe settings, if customConfig is used requires customConfig.api.enabled true
 ## Requires Vector's API to be enabled
 readinessProbe: {}
   # httpGet:
