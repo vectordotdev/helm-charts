@@ -88,6 +88,7 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | command | list | `[]` | Override Vector's default command |
+| commonLabels | object | `{}` | Add additional labels to all created resources |
 | containerPorts | list | `[]` | Manually define Vector's Container ports, overrides automated generation of Container ports |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfig is used |

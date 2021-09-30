@@ -19,6 +19,9 @@ role: "Aggregator"
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations
 rollWorkload: true
 
+# commonLabels -- Add additional labels to all created resources
+commonLabels: {}
+
 ## Define the Vector image to use
 image:
   # image.repository -- Override default registry + name for Vector
