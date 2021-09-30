@@ -2,6 +2,12 @@
 ## See Vector helm documentation to learn more:
 ## https://vector.dev/docs/setup/installation/package-managers/helm/
 
+# nameOverride -- Override name of app
+nameOverride: ""
+
+# fullnameOverride -- Override the full qualified app name
+fullnameOverride: ""
+
 # role -- Role for this Vector (possible values: Agent, Aggregator, Stateless-Aggregator)
 ## Ref: https://vector.dev/docs/setup/deployment/roles/
 ## Each role is created with the following workloads:

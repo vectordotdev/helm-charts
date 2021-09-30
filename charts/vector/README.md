@@ -95,6 +95,7 @@ helm install --name <RELEASE_NAME> \
 | env | list | `[]` | Set environment variables in Vector containers |
 | existingConfig | string | `""` | Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set |
 | extraConfigs | list | `[]` | List of ConfigMap names to include as additional configuration files |
+| fullnameOverride | string | `""` | Override the full qualified app name |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
@@ -105,6 +106,7 @@ helm install --name <RELEASE_NAME> \
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true |
+| nameOverride | string | `""` | Override name of app |
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Specifies the accessModes for PersistentVolumeClaims |
 | persistence.enabled | bool | `false` | If true, create and use PersistentVolumeClaims |
