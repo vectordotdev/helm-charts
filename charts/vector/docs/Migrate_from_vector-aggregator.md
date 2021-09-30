@@ -4,7 +4,6 @@
 
 | Old parameter  | New parameter | Comment |
 | -------------  | ------------- | ------- |
-| `commonLabels` | ∅ | |
 | `image.version`, `image.base` | ∅ | Only `image.tag` is now used to set the Vector tag |
 | `imagePullSecrets` | `image.pullSecrets` | |
 | `existingConfigMap` and `extraConfigDirSources` | `existingConfigMaps` | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory |

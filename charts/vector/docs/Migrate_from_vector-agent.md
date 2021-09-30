@@ -4,7 +4,6 @@
 
 | Old parameter | New parameter | Comment |
 | ------------- | ------------- | ------- |
-| `commonLabels` | ∅ | |
 | `dataVolume.hostPath.path` | `persistence.hostPath.path` | |
 | `image.version`, `image.base` | ∅ | Only `image.tag` is now used to set the Vector tag |
 | `imagePullSecrets` | `image.pullSecrets` | |
