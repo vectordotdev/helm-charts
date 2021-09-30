@@ -9,4 +9,3 @@ service:
     - name: override
       port: 9999
       protocol: TCP
-
