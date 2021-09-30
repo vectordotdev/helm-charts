@@ -88,12 +88,13 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | command | list | `[]` | Override Vector's default command |
+| containerPorts | list | `[]` | Manually define Vector's Container ports, overrides automated generation of Container ports |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfig is used |
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
 | env | list | `[]` | Set environment variables in Vector containers |
-| existingConfig | string | `""` | Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set |
+| existingConfig | string | `""` | Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration |
 | extraConfigs | list | `[]` | List of ConfigMap names to include as additional configuration files |
 | fullnameOverride | string | `""` | Override the full qualified app name |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
@@ -140,7 +141,7 @@ helm install --name <RELEASE_NAME> \
 | securityContext | object | `{}` | Specify securityContext on Vector containers |
 | service.annotations | object | `{}` | Set annotations on Vector's Service |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
-| service.ports | list | `[]` | Override automated generation of Service ports |
+| service.ports | list | `[]` | Manually set Service ports, overrides automated generation of Service ports |
 | service.topologyKeys | list | `[]` | Specify the topologyKeys field on Vector's Service spec |
 | service.type | string | `"ClusterIP"` | Set type of Vector's Service |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the Vector ServiceAccount |

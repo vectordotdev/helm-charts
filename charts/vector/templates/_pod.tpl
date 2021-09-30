@@ -60,7 +60,9 @@ containers:
         value: "/host/sys"
 {{- end }}
     ports:
-{{- if .Values.customConfig }}
+{{- if or .Values.containerPorts .Values.existingConfig }}
+    {{- toYaml .Values.containerPorts | nindent 6 }}
+{{- else if .Values.customConfig }}
     {{- include "vector.containerPorts" . | indent 6 }}
 {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
       - name: datadog-agent

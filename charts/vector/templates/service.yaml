@@ -11,7 +11,7 @@ metadata:
   {{- end }}
 spec:
   ports:
-{{- if .Values.service.ports }}
+{{- if or .Values.service.ports .Values.existingConfig }}
   {{- toYaml .Values.service.ports | nindent 4 }}
 {{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}

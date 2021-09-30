@@ -131,6 +131,9 @@ env: []
   #       name: vector-aggregator
   #       key: awsAcessKeyId
 
+# containerPorts -- Manually define Vector's Container ports, overrides automated generation of Container ports
+containerPorts: []
+
 # resources -- Set Vector resource requests and limits.
 resources: {}
   # requests:
@@ -181,7 +184,7 @@ service:
   #   - "topology.kubernetes.io/zone"
   #   - "topology.kubernetes.io/region"
   #   - "*"
-  # service.ports -- Override automated generation of Service ports
+  # service.ports -- Manually set Service ports, overrides automated generation of Service ports
   ports: []
 
 ## Configuration for Vector's Ingress
@@ -212,7 +215,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# existingConfig -- Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set
+# existingConfig -- Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set.
+# Additionally, containerPorts and service.ports should be specified based on your supplied configuration
 ## If set, this parameter takes precedence over customConfig and the chart's default configs
 existingConfig: ""
 
