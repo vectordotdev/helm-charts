@@ -157,13 +157,14 @@ volumes:
   - name: config
     projected:
       sources:
-        - configMap:
-            name: {{ if .Values.existingConfig }}{{ .Values.existingConfig }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
-{{- with .Values.extraConfigs }}
-  {{- range . }}
+{{- if .Values.existingConfigMaps }}
+  {{- range .Values.existingConfigMaps }}
         - configMap:
             name: {{ . }}
   {{- end }}
+{{- else }}
+        - configMap:
+            name: {{ template "vector.fullname" . }}}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
