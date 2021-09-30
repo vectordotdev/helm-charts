@@ -32,15 +32,12 @@ helm install --name <RELEASE_NAME> \
 
 ### Upgrading
 
-#### From vector-agent
+#### From original charts
 
-TODO
+* [Migrate from the `vector-agent` chart](docs/Migrate_from_vector-agent.md)
+* [Migrate from the `vector-aggregator` chart](docs/Migrate_from_vector-aggregator.md)
 
-#### From vector-aggregator
-
-TODO
-
-### Uninstalling the Chart
+### Uninstalling the chart
 
 To uninstall/delete the `<RELEASE_NAME>` deployment:
 
