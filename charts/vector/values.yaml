@@ -218,7 +218,7 @@ ingress:
 # existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set.
 # Additionally, containerPorts and service.ports should be specified based on your supplied configuration
 ## If set, this parameter takes precedence over customConfig and the chart's default configs
-existingConfigMaps: [] 
+existingConfigMaps: []
 
 # dataDir -- Specify the path for Vector's data, only used when existingConfigMaps are used
 dataDir: ""
