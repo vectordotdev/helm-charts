@@ -129,7 +129,8 @@ helm install --name <RELEASE_NAME> \
 | podMonitor.relabelings | list | `[]` | RelabelConfigs to apply to samples before scraping |
 | podPriorityClassName | string | `""` | Set the priorityClassName on Vector Pods |
 | podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for Vector |
-| rbac.create | bool | `true` | If true, create and use RBAC resources |
+| psp.create | bool | `false` | If true, create a PodSecurityPolicy resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25 |
+| rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the Agent role |
 | readinessProbe | object | `{}` | Override default readiness probe settings, if customConfig is used requires customConfig.api.enabled true |
 | replicas | int | `1` | Set the number of Pods to create |
 | resources | object | `{}` | Set Vector resource requests and limits. |

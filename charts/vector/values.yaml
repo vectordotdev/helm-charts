@@ -81,8 +81,13 @@ podDisruptionBudget:
   maxUnavailable: 1
 
 rbac:
-  # rbac.create -- If true, create and use RBAC resources
+  # rbac.create -- If true, create and use RBAC resources. Only valid for the Agent role
   create: true
+
+psp:
+  # psp.create -- If true, create a PodSecurityPolicy resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25
+  ## Intended for use with the Agent role
+  create: false
 
 serviceAccount:
   # serviceAccount.create -- If true, create ServiceAccount
