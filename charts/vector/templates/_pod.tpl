@@ -164,7 +164,7 @@ volumes:
   {{- end }}
 {{- else }}
         - configMap:
-            name: {{ template "vector.fullname" . }}}
+            name: {{ template "vector.fullname" . }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
