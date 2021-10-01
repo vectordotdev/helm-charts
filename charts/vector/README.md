@@ -108,6 +108,7 @@ helm install --name <RELEASE_NAME> \
 | ingress.enabled | bool | `false` | If true, create and use an Ingress resource |
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
+| initContainers | list | `[]` | Init Containers to be added to the Vector Pod |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true |
 | nameOverride | string | `""` | Override name of app |
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes |
