@@ -8,8 +8,7 @@
 | `imagePullSecrets` | `image.pullSecrets` | |
 | `existingConfigMap` and `extraConfigDirSources` | `existingConfigMaps` | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory |
 | `extraContainersPorts` | `containerPorts` | Ports will be automatically generated from `customConfig` but can be manually set with `containerPorts` |
-| `global.clusterDomain` | ∅ | |
-| `global.kubeDNSAddress` | ∅ | |
+| `global.clusterDomain` and `global.kubeDNSAddress` | ∅ | The paramters are set by default or by `haproxy.customConfig` or `haproxy.existingConfigMap` |
 | `podMonitor.additionalLabels` | ∅ | |
 | `podMonitor.extraRelabelings` | `podMonitor.relabelings` | The chart adds no default relabelings |
 | `podRollmeAnnotation` and`podValuesChecksumAnnotation` | ∅ | Replaced by `rollWorkload`, enabled by default |
