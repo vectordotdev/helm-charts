@@ -96,6 +96,8 @@ helm install --name <RELEASE_NAME> \
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
 | env | list | `[]` | Set environment variables in Vector containers |
 | existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration |
+| extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers |
+| extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods |
 | fullnameOverride | string | `""` | Override the full qualified app name |
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) |
