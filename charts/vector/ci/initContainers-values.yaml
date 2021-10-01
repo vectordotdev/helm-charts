@@ -7,10 +7,8 @@ initContainers:
   - name: wget
     image: busybox
     command:
-    - wget
-    - "-O"
-    - "/work-dir/index.html"
-    - http://info.cern.ch
+    - touch
+    - "/vector-data-dir/test"
     volumeMounts:
     - name: data
       mountPath: "/vector-data-dir"
