@@ -88,14 +88,14 @@ helm install --name <RELEASE_NAME> \
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA |
 | command | list | `[]` | Override Vector's default command |
+| commonLabels | object | `{}` | Add additional labels to all created resources |
 | containerPorts | list | `[]` | Manually define Vector's Container ports, overrides automated generation of Container ports |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified |
-| dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfig is used |
+| dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used |
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods |
 | env | list | `[]` | Set environment variables in Vector containers |
-| existingConfig | string | `""` | Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration |
-| extraConfigs | list | `[]` | List of ConfigMap names to include as additional configuration files |
+| existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods |
 | fullnameOverride | string | `""` | Override the full qualified app name |
@@ -167,7 +167,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.existingConfig | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one |
+| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |

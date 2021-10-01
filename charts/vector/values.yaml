@@ -19,6 +19,9 @@ role: "Aggregator"
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations
 rollWorkload: true
 
+# commonLabels -- Add additional labels to all created resources
+commonLabels: {}
+
 ## Define the Vector image to use
 image:
   # image.repository -- Override default registry + name for Vector
@@ -215,21 +218,18 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# existingConfig -- Use this existing ConfigMap for Vector's configuration instead of creating a new one, if used requires dataDir to be set.
+# existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set.
 # Additionally, containerPorts and service.ports should be specified based on your supplied configuration
 ## If set, this parameter takes precedence over customConfig and the chart's default configs
-existingConfig: ""
+existingConfigMaps: []
 
-# dataDir -- Specify the path for Vector's data, only used when existingConfig is used
+# dataDir -- Specify the path for Vector's data, only used when existingConfigMaps are used
 dataDir: ""
 
 # customConfig -- Override Vector's default configs, if used **all** options need to be specified
 ## This section supports using helm templates to populate dynamic values
 ## Ref: https://vector.dev/docs/reference/configuration/
 customConfig: {}
-
-# extraConfigs -- List of ConfigMap names to include as additional configuration files
-extraConfigs: []
 
 # extraVolumes -- Additional Volumes to use with Vector Pods
 extraVolumes: []
@@ -388,9 +388,9 @@ haproxy:
     # haproxy.service.type -- Set type of HAProxy's Service
     type: ClusterIP
 
-  # haproxy.existingConfig -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
+  # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
   ## If set, this parameter takes precedence over customConfig and the chart's default configs
-  existingConfig: ""
+  existingConfigMap: ""
 
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
   ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
