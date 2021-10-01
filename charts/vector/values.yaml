@@ -231,6 +231,12 @@ customConfig: {}
 # extraConfigs -- List of ConfigMap names to include as additional configuration files
 extraConfigs: []
 
+# extraVolumes -- Additional Volumes to use with Vector Pods
+extraVolumes: []
+
+# extraVolumeMounts -- Additional Volume to mount into Vector Containers
+extraVolumeMounts: []
+
 ## Configuration for Vector's data persistence
 persistence:
   # persistence.enabled -- If true, create and use PersistentVolumeClaims

@@ -130,6 +130,9 @@ containers:
         mountPath: "/host/sys"
         readOnly: true
 {{- end }}
+{{- with .Values.extraVolumeMounts }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
@@ -181,5 +184,8 @@ volumes:
   - name: sysfs
     hostPath:
       path: "/sys"
+{{- end }}
+{{- with .Values.extraVolumes }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
