@@ -1,5 +1,5 @@
-# Components sharing the same port with different protocols 
-## Values file for testing config that shares the same numeric port. 
+# Components sharing the same port with different protocols
+## Values file for testing config that shares the same numeric port.
 customConfig:
   api:
     enabled: false
@@ -16,3 +16,9 @@ customConfig:
       max_length: 102400
       mode: udp
       shutdown_timeout_secs: 30
+  sinks:
+    stdout:
+      type: console
+      inputs: ["syslog-*"]
+      encoding:
+        codec: json
