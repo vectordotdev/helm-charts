@@ -119,10 +119,12 @@ jobs:
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
 
   pr-validated:
+    if: ${{ always() }}
     name: pr-validated
     runs-on: ubuntu-latest
     needs:
       - install-chart
     steps:
       - name: validate
-        run: echo "PR OK"
+        if: ${{ needs.install-chart.result != 'success' }}
+        run: exit 1

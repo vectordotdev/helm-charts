@@ -16,3 +16,5 @@ customConfig:
       max_length: 102400
       mode: udp
       shutdown_timeout_secs: 30
+  sinks:
+    this_will: fail
