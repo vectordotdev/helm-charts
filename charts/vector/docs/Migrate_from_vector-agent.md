@@ -9,8 +9,6 @@
 | `imagePullSecrets` | `image.pullSecrets` | |
 | `existingConfigMap` and `extraConfigDirSources` | `existingConfigMaps` | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory |
 | `extraContainersPorts` | `containerPorts` | Ports will be automatically generated from `customConfig` but can be manually set with `containerPorts` |
-| `extraVolumeMounts` | ∅ | |
-| `extraVolumes` | ∅ | |
 | `maxUnavailable` | ∅ | `maxUnavailable` should be passed in as part of the `updateStrategy` object |
 | `podMonitor.additionalLabels` | ∅ | |
 | `podMonitor.extraRelabelings` | `podMonitor.relabelings` | The chart adds no default relabelings |

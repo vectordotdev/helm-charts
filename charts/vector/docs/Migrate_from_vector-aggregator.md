@@ -8,8 +8,6 @@
 | `imagePullSecrets` | `image.pullSecrets` | |
 | `existingConfigMap` and `extraConfigDirSources` | `existingConfigMaps` | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory |
 | `extraContainersPorts` | `containerPorts` | Ports will be automatically generated from `customConfig` but can be manually set with `containerPorts` |
-| `extraVolumeMounts` | ∅ | |
-| `extraVolumes` | ∅ | |
 | `global.clusterDomain` | ∅ | |
 | `global.kubeDNSAddress` | ∅ | |
 | `podMonitor.additionalLabels` | ∅ | |
