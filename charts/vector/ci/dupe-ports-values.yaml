@@ -1,5 +1,5 @@
-# Components sharing the same port with different protocols 
-## Values file for testing config that shares the same numeric port. 
+# Components sharing the same port with different protocols
+## Values file for testing config that shares the same numeric port.
 customConfig:
   api:
     enabled: false
