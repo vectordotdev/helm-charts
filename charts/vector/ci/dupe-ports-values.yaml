@@ -16,3 +16,9 @@ customConfig:
       max_length: 102400
       mode: udp
       shutdown_timeout_secs: 30
+  sinks:
+    stdout:
+      type: console
+      inputs: ["syslog-*"]
+      encoding:
+        codec: json
