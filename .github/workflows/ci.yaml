@@ -9,6 +9,7 @@ on:
 jobs:
   changed:
     runs-on: ubuntu-latest
+    continue-on-error: false
     outputs:
       charts: ${{ steps.list-changed.outputs.changed }}
     steps:
@@ -33,6 +34,7 @@ jobs:
 
   lint-chart:
     runs-on: ubuntu-latest
+    continue-on-error: false
     needs:
       - changed
     steps:
@@ -47,6 +49,7 @@ jobs:
 
   lint-docs:
     runs-on: ubuntu-latest
+    continue-on-error: false
     needs:
       - changed
     steps:
@@ -59,6 +62,7 @@ jobs:
 
   kubeval-chart:
     runs-on: ubuntu-latest
+    continue-on-error: false
     needs:
       - changed
     strategy:
@@ -87,6 +91,7 @@ jobs:
 
   install-chart:
     runs-on: ubuntu-latest
+    continue-on-error: false
     needs:
       - lint-chart
       - kubeval-chart
