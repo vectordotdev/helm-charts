@@ -14,4 +14,3 @@ initContainers:
     volumeMounts:
     - name: data
       mountPath: "/vector-data-dir"
-
