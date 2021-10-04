@@ -237,6 +237,9 @@ extraVolumes: []
 # extraVolumeMounts -- Additional Volume to mount into Vector Containers
 extraVolumeMounts: []
 
+# initContainers -- Init Containers to be added to the Vector Pod
+initContainers: []
+
 ## Configuration for Vector's data persistence
 persistence:
   # persistence.enabled -- If true, create and use PersistentVolumeClaims

@@ -21,6 +21,10 @@ dnsConfig:
 imagePullSecrets:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.initContainers }}
+initContainers:
+{{ toYaml . | indent 2 }}
+{{- end }}
 containers:
   - name: vector
 {{- with .Values.securityContext }}
