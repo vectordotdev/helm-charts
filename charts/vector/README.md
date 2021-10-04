@@ -140,7 +140,7 @@ helm install --name <RELEASE_NAME> \
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | Role for this Vector (possible values: Agent, Aggregator, Stateless-Aggregator) |
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations |
-| secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key |
+| secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded |
 | securityContext | object | `{}` | Specify securityContext on Vector containers |
 | service.annotations | object | `{}` | Set annotations on Vector's Service |
 | service.enabled | bool | `true` | If true, create and use a Service resource |
