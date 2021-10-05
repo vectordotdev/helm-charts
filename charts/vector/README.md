@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.1.0-alpha.4](https://img.shields.io/badge/Version-0.1.0--alpha.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.16.1--distroless--libc-informational?style=flat-square)
+![Version: 0.1.0-beta.0](https://img.shields.io/badge/Version-0.1.0--beta.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.16.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
