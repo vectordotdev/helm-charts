@@ -41,6 +41,10 @@ spec:
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
+      {{- with .Values.haproxy.initContainers }}
+      initContainers:
+        {{ toYaml . | indent 8 }}
+      {{- end }}
       containers:
         - name: haproxy
           securityContext:

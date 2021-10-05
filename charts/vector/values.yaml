@@ -412,6 +412,8 @@ haproxy:
   ## This section supports using helm templates to populate dynamic values
   customConfig: ""
 
+  # haproxy.initContainers -- Init Containers to be added to the HAProxy Pod
+  initContainers: []
   ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:
     # haproxy.autoscaling.enabled -- Enabled autoscaling for HAProxy
