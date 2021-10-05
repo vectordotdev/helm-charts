@@ -47,7 +47,41 @@ spec:
             - -f
             - /usr/local/etc/haproxy/haproxy.cfg
           ports:
-          {{- if not .Values.customConfig }}
+          {{- if or .Values.haproxy.containerPorts .Values.haproxy.existingConfig }}
+            {{- toYaml .Values.haproxy.containerPorts | nindent 12 }}
+          {{- else if .Values.customConfig }}
+            {{- include "vector.containerPorts" . | indent 12 }}
+          {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+            - name: datadog-agent
+              containerPort: 8282
+              protocol: TCP
+            - name: fluent
+              containerPort: 24224
+              protocol: TCP
+            - name: logstash
+              containerPort: 5044
+              protocol: TCP
+            - name: splunk-hec
+              containerPort: 8080
+              protocol: TCP
+            - name: statsd
+              containerPort: 8125
+              protocol: TCP
+            - name: syslog
+              containerPort: 9000
+              protocol: TCP
+            - name: vector
+              containerPort: 6000
+              protocol: TCP
+            - name: prom-exporter
+              containerPort: 9090
+              protocol: TCP
+          {{- else if (eq .Values.role "Agent") }}
+            - name: prom-exporter
+              containerPort: 9090
+              protocol: TCP
+          {{- end }}
+          {{- if not .Values.haproxy.customConfig }}
             - name: stats
               containerPort: 1024
               protocol: TCP

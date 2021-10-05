@@ -166,9 +166,10 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.minReplicas | int | `1` | Minimum replicas for HAProxy's HPA |
 | haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for HAProxy's HPA |
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
-| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
+| haproxy.containerPorts | list | `[]` | Manually define HAProxy's Container ports, overrides automated generation of Container ports |
+| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified This parameter supports using Helm templates to insert values dynamically |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one |
+| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
