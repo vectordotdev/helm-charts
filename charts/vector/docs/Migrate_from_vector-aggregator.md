@@ -33,3 +33,15 @@
 
 | Old parameter  | New parameter | Comment |
 | -------------  | ------------- | ------- |
+| `config` | `customConfig`| Default HAProxy config can be overwritten with `customConfig` |
+| `extraVolumeMounts` | | ! |
+| `extraVolumes` | | ! |
+| `initContainers` | | ! |
+| `mountedSecrets` | ∅ | |
+| `podSecurityContext.*` | ⚠️ | `podSecurityContext` now takes an object |
+| `replicaCount` | `replicas` | |
+| `service.annotations` | | ! |
+| `service.clusterIP` | | |
+| `service.loadBalancerIP` | | |
+| `service.loadBalancerSourceRanges` | | |
+| `strategy` | | ! |
