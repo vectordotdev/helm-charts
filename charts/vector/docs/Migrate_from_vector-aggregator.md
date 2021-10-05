@@ -14,6 +14,7 @@
 | `podRollmeAnnotation` and`podValuesChecksumAnnotation` | ∅ | Replaced by `rollWorkload`, enabled by default |
 | `psp.enabled` | `psp.create` | |
 | `rbac.enabled` | `rbac.create` | |
+| `secrets.generic` | ⚠️ | `secrets.generic` now takes raw values rather than base64 encoded values |
 | `storage.mode` | ∅ | If `persistence.enabled` a PersistentVolumeClaim will be created, unless `persistence.existingClaim` is set |
 | `storage.hostPath` | ∅ | Vector running as an Aggregator no longer supports `hostPath` based storage |
 | `storage.managedPersistentVolumeClaim.size` | `persistence.size` | |

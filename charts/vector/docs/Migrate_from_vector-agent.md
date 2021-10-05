@@ -15,4 +15,5 @@
 | `podRollmeAnnotation` and`podValuesChecksumAnnotation` | ∅ | Replaced by `rollWorkload`, enabled by default |
 | `psp.enabled` | `psp.create` | |
 | `rbac.enabled` | `rbac.create` | |
+| `secrets.generic` | ⚠️ | `secrets.generic` now takes raw values rather than base64 encoded values |
 | `updateStrategy` | ⚠️ | `updateStrategy` now takes an object instead of a string |
