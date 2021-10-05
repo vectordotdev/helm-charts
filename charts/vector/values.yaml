@@ -435,6 +435,16 @@ haproxy:
     #   cpu: 100m
     #   memory: 128Mi
 
+  # haproxy.livenessProbe -- Override default HAProxy liveness probe settings
+  livenessProbe:
+    tcpSocket:
+      port: 1024
+
+  # haproxy.readinessProbe -- Override default HAProxy readiness probe settings
+  readinessProbe:
+    tcpSocket:
+      port: 1024
+
   # haproxy.nodeSelector -- Allow HAProxy to be scheduled on selected nodes
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/

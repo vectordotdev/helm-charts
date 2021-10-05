@@ -176,11 +176,13 @@ helm install --name <RELEASE_NAME> \
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
 | haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
+| haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
 | haproxy.podLabels | object | `{}` | Set labels on HAProxy Pods |
 | haproxy.podPriorityClassName | string | `""` | Set the priorityClassName on HAProxy Pods |
 | haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
+| haproxy.readinessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy readiness probe settings |
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |

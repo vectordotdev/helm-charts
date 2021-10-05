@@ -86,8 +86,15 @@ spec:
               containerPort: 1024
               protocol: TCP
           {{- end }}
+          {{- with .Values.haproxy.livenessProbe }}
           livenessProbe:
+            {{- toYaml . | trim | nindent 12 }}
+          {{- end }}
+          {{- with .Values.haproxy.readinessProbe }}
           readinessProbe:
+            {{- toYaml . | trim | nindent 12 }}
+          {{- end }}
+          {{- with .Values.haproxy.resources }}
           resources:
             {{- toYaml .Values.haproxy.resources | nindent 12 }}
           volumeMounts:
