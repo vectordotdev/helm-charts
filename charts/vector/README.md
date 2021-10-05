@@ -182,6 +182,8 @@ helm install --name <RELEASE_NAME> \
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
+| haproxy.service.annotations | object | `{}` | Set annotations on HAProxy's Service |
+| haproxy.service.ports | list | `[]` | Manually set HAPRoxy's Service ports, overrides automated generation of Service ports |
 | haproxy.service.topologyKeys | list | `[]` | Specify the topologyKeys field on HAProxy's Service spec |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |

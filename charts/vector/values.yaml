@@ -380,6 +380,10 @@ haproxy:
 
   ## HAProxy's Service configuration
   service:
+    # haproxy.service.type -- Set type of HAProxy's Service
+    type: ClusterIP
+    # haproxy.service.annotations -- Set annotations on HAProxy's Service
+    annotations: {}
     # haproxy.service.topologyKeys -- Specify the topologyKeys field on HAProxy's Service spec
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
     topologyKeys: []
@@ -387,8 +391,8 @@ haproxy:
     #   - "topology.kubernetes.io/zone"
     #   - "topology.kubernetes.io/region"
     #   - "*"
-    # haproxy.service.type -- Set type of HAProxy's Service
-    type: ClusterIP
+    # haproxy.service.ports -- Manually set HAPRoxy's Service ports, overrides automated generation of Service ports
+    ports: []
 
   # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
   ## If set, this parameter takes precedence over customConfig and the chart's default configs
