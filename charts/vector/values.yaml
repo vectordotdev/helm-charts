@@ -386,6 +386,9 @@ haproxy:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  # haproxy.containerPorts -- Manually define HAProxy's Container ports, overrides automated generation of Container ports
+  containerPorts: []
+
   ## HAProxy's Service configuration
   service:
     # haproxy.service.type -- Set type of HAProxy's Service
@@ -403,17 +406,25 @@ haproxy:
     ports: []
 
   # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
+  # Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration
   ## If set, this parameter takes precedence over customConfig and the chart's default configs
   existingConfigMap: ""
 
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
-  ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
+  # This parameter supports using Helm templates to insert values dynamically
+  ## By default this chart will parse Vector's configuration from customConfig to generate HAProxy's config, this generated config
   ## can be overwritten with haproxy.customConfig
-  ## This section supports using helm templates to populate dynamic values
   customConfig: ""
+
+  # haproxy.extraVolumes -- Additional Volumes to use with HAProxy Pods
+  extraVolumes: []
+
+  # haproxy.extraVolumeMounts -- Additional Volume to mount into HAProxy Containers
+  extraVolumeMounts: []
 
   # haproxy.initContainers -- Init Containers to be added to the HAProxy Pod
   initContainers: []
+
   ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:
     # haproxy.autoscaling.enabled -- Enabled autoscaling for HAProxy

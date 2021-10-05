@@ -104,7 +104,8 @@ spec:
           {{- end }}
           {{- with .Values.haproxy.resources }}
           resources:
-            {{- toYaml .Values.haproxy.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: haproxy-config
               mountPath: /usr/local/etc/haproxy
