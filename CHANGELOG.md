@@ -3,15 +3,32 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [unreleased]
+## [vector-0.1.0-alpha.4] - 2021-10-01
+
+### Unscoped
+
+#### Documentation
+
+- Clarify suggested usage (#76) ([0555fb0](https://github.com/vectordotdev/helm-charts/commit/0555fb0d339cef1a1815203198102f6e5b0153e7))
 
 ### Vector
+
+#### Bug Fixes
+
+- Fix ordering of `default` function in port helpers (#80) ([bc8401f](https://github.com/vectordotdev/helm-charts/commit/bc8401fa449c70845f922c89aa5c6067ffbf23cc))
 
 #### Features
 
 - Add optional PodDisruptionBudget resource for Vector (#57) ([ea65bd0](https://github.com/vectordotdev/helm-charts/commit/ea65bd095cb876b29a747954fdaef28370d87a22))
 - Support injecting multiple ConfigMaps (#58) ([337d7d2](https://github.com/vectordotdev/helm-charts/commit/337d7d231ee1d307987fe4945a37bfa6f44c5342))
   - **BREAKING**: Renamed `existingConfigMap` to `existingConfig` and `haproxy.existingConfigMap` to `haproxy.existingConfig`
+- Allow option PSP to be created for Agent role (#67) ([a2c535b](https://github.com/vectordotdev/helm-charts/commit/a2c535be68f8fb57ab19e9f852e10312405c6a19))
+- Allow for manually setting ports for container and services (#68) ([5901de8](https://github.com/vectordotdev/helm-charts/commit/5901de8e6e68aaff976105f3be59b89f06732c43))
+- Create checksum annotations for existingConfig and extraConfigs (#69) ([26a1bd5](https://github.com/vectordotdev/helm-charts/commit/26a1bd52c70dc849ef69ba78f8a60dcde0092f5d))
+- Consolidate existing/extraConfig options (#71) ([17c94b8](https://github.com/vectordotdev/helm-charts/commit/17c94b8cbf21e6b1f1dedf329f74f8b928be5d46))
+  - **BREAKING**: Renamed existingConfig to existingConfigMaps, renamed haproxy.existingConfig to haproxy.existingConfigMaps removed extraConfigs
+- Add parameter to include additional labels on all resources (#73) ([6d1426b](https://github.com/vectordotdev/helm-charts/commit/6d1426b89323d85dd6a9d698aaba550194ce21e4))
+- Add extraVolumes and extraVolumeMounts parameters (#74) ([895354f](https://github.com/vectordotdev/helm-charts/commit/895354f4e3ef47a29b36d172187e350add40b535))
 
 ## [vector-0.1.0-alpha.3] - 2021-09-17
 

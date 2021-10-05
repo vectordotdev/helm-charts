@@ -40,6 +40,9 @@ helm.sh/chart: {{ include "vector.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ with .Values.commonLabels }}
+{{- toYaml . }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -99,7 +102,7 @@ Generate a single ServicePort based on a component configuration
 {{- $name := index . 0 | kebabcase -}}
 {{- $config := index . 1 -}}
 {{- $port := mustRegexFind "[0-9]+$" (get $config "address") -}}
-{{- $protocol := default (get $config "mode" | upper) "TCP" }}
+{{- $protocol := default "TCP" (get $config "mode" | upper) }}
 - name: {{ $name }}
   port: {{ $port }}
   protocol: {{ $protocol }}
@@ -143,7 +146,7 @@ Generate a single ContainerPort based on a component configuration
 {{- $name := index . 0 | kebabcase -}}
 {{- $config := index . 1 -}}
 {{- $port := mustRegexFind "[0-9]+$" (get $config "address") -}}
-{{- $protocol := default (get $config "mode" | upper) "TCP" }}
+{{- $protocol := default "TCP" (get $config "mode" | upper) }}
 - name: {{ $name | trunc 15 | trimSuffix "-" }}
   containerPort: {{ $port }}
   protocol: {{ $protocol }}

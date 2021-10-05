@@ -17,19 +17,14 @@ spec:
     metadata:
       annotations:
       {{- if .Values.rollWorkload }}
-        {{- if .Values.existingConfig }}
-          {{- range $file, $contents := (lookup "v1" "ConfigMap" (print .Release.Namespace) (print .Values.existingConfig)).data }}
+        {{- if .Values.existingConfigMaps }}
+          {{- range .Values.existingConfigMaps }}
+            {{- range $file, $contents := (lookup "v1" "ConfigMap" (print $.Release.Namespace) (print .)).data }}
         checksum/{{ $file }}: {{ $contents | sha256sum }}
+            {{- end }}
           {{- end }}
         {{- else }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- end }}
-        {{- if .Values.extraConfigs }}
-          {{- range .Values.extraConfigs }}
-            {{- range $file, $contents := (lookup "v1" "ConfigMap" (print $.Release.Namespace) (print .)).data }}
-        checksum/extra.{{ $file }}: {{ $contents | sha256sum }}
-            {{- end }}
-          {{- end }}
         {{- end }}
       {{- end }}
       {{- with .Values.podAnnotations }}

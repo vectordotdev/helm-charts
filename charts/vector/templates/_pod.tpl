@@ -21,6 +21,10 @@ dnsConfig:
 imagePullSecrets:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.initContainers }}
+initContainers:
+{{ toYaml . | indent 2 }}
+{{- end }}
 containers:
   - name: vector
 {{- with .Values.securityContext }}
@@ -130,6 +134,9 @@ containers:
         mountPath: "/host/sys"
         readOnly: true
 {{- end }}
+{{- with .Values.extraVolumeMounts }}
+{{- toYaml . | nindent 6 }}
+{{- end }}
 terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
@@ -157,13 +164,14 @@ volumes:
   - name: config
     projected:
       sources:
-        - configMap:
-            name: {{ if .Values.existingConfig }}{{ .Values.existingConfig }}{{ else }}{{ template "vector.fullname" . }}{{ end }}
-{{- with .Values.extraConfigs }}
-  {{- range . }}
+{{- if .Values.existingConfigMaps }}
+  {{- range .Values.existingConfigMaps }}
         - configMap:
             name: {{ . }}
   {{- end }}
+{{- else }}
+        - configMap:
+            name: {{ template "vector.fullname" . }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
@@ -181,5 +189,8 @@ volumes:
   - name: sysfs
     hostPath:
       path: "/sys"
+{{- end }}
+{{- with .Values.extraVolumes }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
