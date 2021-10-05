@@ -353,6 +353,14 @@ haproxy:
     # haproxy.serviceAccount.automountToken -- Automount API credentials for the HAProxy ServiceAccount
     automountToken: true
 
+  # haproxy.strategy -- Customize the strategy used to replace HAProxy Pods
+  ## Ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/
+  strategy: {}
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+    # type: RollingUpdate
+
   # haproxy.terminationGracePeriodSeconds -- Override HAProxy's terminationGracePeriodSeconds
   terminationGracePeriodSeconds: 60
 

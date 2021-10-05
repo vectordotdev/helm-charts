@@ -12,6 +12,10 @@ spec:
   selector:
     matchLabels:
       {{- include "haproxy.selectorLabels" . | nindent 6 }}
+  {{- with .Values.haproxy.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       annotations:

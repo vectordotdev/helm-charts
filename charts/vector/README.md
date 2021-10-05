@@ -195,5 +195,6 @@ helm install --name <RELEASE_NAME> \
 | haproxy.serviceAccount.automountToken | bool | `true` | Automount API credentials for the HAProxy ServiceAccount |
 | haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
+| haproxy.strategy | object | `{}` | Customize the strategy used to replace HAProxy Pods |
 | haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
 | haproxy.tolerations | list | `[]` | Allow HAProxy to schedule on tainted nodes |
