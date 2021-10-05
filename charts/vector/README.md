@@ -170,6 +170,8 @@ helm install --name <RELEASE_NAME> \
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified This parameter supports using Helm templates to insert values dynamically |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
 | haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
+| haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers |
+| haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
