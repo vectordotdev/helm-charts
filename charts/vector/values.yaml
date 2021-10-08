@@ -405,12 +405,12 @@ haproxy:
     # haproxy.service.ports -- Manually set HAPRoxy's Service ports, overrides automated generation of Service ports
     ports: []
 
-  # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
+  # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one.
   # Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration
   ## If set, this parameter takes precedence over customConfig and the chart's default configs
   existingConfigMap: ""
 
-  # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
+  # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified.
   # This parameter supports using Helm templates to insert values dynamically
   ## By default this chart will parse Vector's configuration from customConfig to generate HAProxy's config, this generated config
   ## can be overwritten with haproxy.customConfig

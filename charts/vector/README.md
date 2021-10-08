@@ -167,9 +167,9 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for HAProxy's HPA |
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
 | haproxy.containerPorts | list | `[]` | Manually define HAProxy's Container ports, overrides automated generation of Container ports |
-| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified This parameter supports using Helm templates to insert values dynamically |
+| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
+| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
 | haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers |
 | haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
