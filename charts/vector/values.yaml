@@ -353,6 +353,14 @@ haproxy:
     # haproxy.serviceAccount.automountToken -- Automount API credentials for the HAProxy ServiceAccount
     automountToken: true
 
+  # haproxy.strategy -- Customize the strategy used to replace HAProxy Pods
+  ## Ref: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/
+  strategy: {}
+    # rollingUpdate:
+    #   maxSurge: 25%
+    #   maxUnavailable: 25%
+    # type: RollingUpdate
+
   # haproxy.terminationGracePeriodSeconds -- Override HAProxy's terminationGracePeriodSeconds
   terminationGracePeriodSeconds: 60
 
@@ -378,8 +386,15 @@ haproxy:
     # runAsNonRoot: true
     # runAsUser: 1000
 
+  # haproxy.containerPorts -- Manually define HAProxy's Container ports, overrides automated generation of Container ports
+  containerPorts: []
+
   ## HAProxy's Service configuration
   service:
+    # haproxy.service.type -- Set type of HAProxy's Service
+    type: ClusterIP
+    # haproxy.service.annotations -- Set annotations on HAProxy's Service
+    annotations: {}
     # haproxy.service.topologyKeys -- Specify the topologyKeys field on HAProxy's Service spec
     ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
     topologyKeys: []
@@ -387,18 +402,28 @@ haproxy:
     #   - "topology.kubernetes.io/zone"
     #   - "topology.kubernetes.io/region"
     #   - "*"
-    # haproxy.service.type -- Set type of HAProxy's Service
-    type: ClusterIP
+    # haproxy.service.ports -- Manually set HAPRoxy's Service ports, overrides automated generation of Service ports
+    ports: []
 
-  # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one
+  # haproxy.existingConfigMap -- Use this existing ConfigMap for HAProxy's configuration instead of creating a new one.
+  # Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration
   ## If set, this parameter takes precedence over customConfig and the chart's default configs
   existingConfigMap: ""
 
-  # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified
-  ## The chart will parse sources and sinks from customConfig to generate HAProxy config, this generated config
+  # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified.
+  # This parameter supports using Helm templates to insert values dynamically
+  ## By default this chart will parse Vector's configuration from customConfig to generate HAProxy's config, this generated config
   ## can be overwritten with haproxy.customConfig
-  ## This section supports using helm templates to populate dynamic values
   customConfig: ""
+
+  # haproxy.extraVolumes -- Additional Volumes to use with HAProxy Pods
+  extraVolumes: []
+
+  # haproxy.extraVolumeMounts -- Additional Volume to mount into HAProxy Containers
+  extraVolumeMounts: []
+
+  # haproxy.initContainers -- Init Containers to be added to the HAProxy Pod
+  initContainers: []
 
   ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:
@@ -430,6 +455,16 @@ haproxy:
     # requests:
     #   cpu: 100m
     #   memory: 128Mi
+
+  # haproxy.livenessProbe -- Override default HAProxy liveness probe settings
+  livenessProbe:
+    tcpSocket:
+      port: 1024
+
+  # haproxy.readinessProbe -- Override default HAProxy readiness probe settings
+  readinessProbe:
+    tcpSocket:
+      port: 1024
 
   # haproxy.nodeSelector -- Allow HAProxy to be scheduled on selected nodes
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector

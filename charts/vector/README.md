@@ -166,27 +166,36 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.minReplicas | int | `1` | Minimum replicas for HAProxy's HPA |
 | haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for HAProxy's HPA |
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
-| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
+| haproxy.containerPorts | list | `[]` | Manually define HAProxy's Container ports, overrides automated generation of Container ports |
+| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one |
+| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
+| haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers |
+| haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
 | haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
+| haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pod |
+| haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
 | haproxy.podLabels | object | `{}` | Set labels on HAProxy Pods |
 | haproxy.podPriorityClassName | string | `""` | Set the priorityClassName on HAProxy Pods |
 | haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
+| haproxy.readinessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy readiness probe settings |
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
+| haproxy.service.annotations | object | `{}` | Set annotations on HAProxy's Service |
+| haproxy.service.ports | list | `[]` | Manually set HAPRoxy's Service ports, overrides automated generation of Service ports |
 | haproxy.service.topologyKeys | list | `[]` | Specify the topologyKeys field on HAProxy's Service spec |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |
 | haproxy.serviceAccount.automountToken | bool | `true` | Automount API credentials for the HAProxy ServiceAccount |
 | haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
+| haproxy.strategy | object | `{}` | Customize the strategy used to replace HAProxy Pods |
 | haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
 | haproxy.tolerations | list | `[]` | Allow HAProxy to schedule on tainted nodes |

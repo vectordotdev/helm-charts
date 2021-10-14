@@ -5,14 +5,17 @@ metadata:
   name: {{ include "haproxy.fullname" . }}
   labels:
     {{- include "haproxy.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.haproxy.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ports:
-{{- if .Values.customConfig }}
+{{- if or .Values.haproxy.service.ports .Values.haproxy.existingConfig }}
+  {{- toYaml .Values.haproxy.service.ports | nindent 4 }}
+{{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}
 {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
-    - name: stats
-      port: 1024
-      protocol: TCP
     - name: datadog-agent
       port: 8282
       protocol: TCP
@@ -33,6 +36,18 @@ spec:
       protocol: TCP
     - name: vector
       port: 6000
+      protocol: TCP
+    - name: prom-exporter
+      port: 9090
+      protocol: TCP
+{{- else if (eq .Values.role "Agent") }}
+    - name: prom-exporter
+      port: 9090
+      protocol: TCP
+{{- end }}
+{{- if not .Values.haproxy.customConfig }}
+    - name: stats
+      port: 1024
       protocol: TCP
 {{- end }}
   selector:
