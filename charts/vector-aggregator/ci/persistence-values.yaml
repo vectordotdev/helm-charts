@@ -1,0 +1,2 @@
+storage:
+  mode: managedPersistentVolumeClaim

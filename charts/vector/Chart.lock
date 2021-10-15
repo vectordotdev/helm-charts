@@ -1,9 +1,0 @@
-dependencies:
-- name: vector-agent
-  repository: https://helm.vector.dev
-  version: 0.15.1
-- name: vector-aggregator
-  repository: https://helm.vector.dev
-  version: 0.16.0-beta.1
-digest: sha256:958b814fe499d02a9f8ea717a5461cb527b31cf90140e518c37508be4bea188e
-generated: "2021-08-12T15:09:07.083868-04:00"

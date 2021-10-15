@@ -1,0 +1,21 @@
+titleOnly: true
+
+scopes:
+  - vector
+  - vector-agent
+  - vector-aggregator
+  - vector-shared
+
+# Default
+types:
+  - feat
+  - fix
+  - docs
+  - style
+  - refactor
+  - perf
+  - test
+  - build
+  - ci
+  - chore
+  - revert

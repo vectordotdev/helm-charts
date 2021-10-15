@@ -1,20 +1,32 @@
 apiVersion: v2
 name: vector
+version: "0.1.0-alpha.4"
+kubeVersion: ">=1.15.0-0"
+description: A lightweight, ultra-fast tool for building observability pipelines
 type: application
-icon: https://vector.dev/press/vector-icon.svg
-description: A Helm chart for Vector observability stack
-version: "0.16.0-beta.3"
-appVersion: "0.15.1"
+keywords:
+  - vector
+  - events
+  - logs
+  - metrics
+  - observability
+  - stream-processing
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/
 maintainers:
   - name: Datadog
     email: team-vector@datadoghq.com
-dependencies:
-  - name: vector-agent
-    version: "*"
-    repository: https://helm.vector.dev
-  - name: vector-aggregator
-    version: "0.16.0-beta.1"
-    repository: https://helm.vector.dev
+icon: https://vector.dev/press/vector-icon.svg
+appVersion: "0.16.1-distroless-libc"
+annotations:
+  artifacthub.io/images: |
+    - name: vector
+      image: timberio/vector:0.16.1-distroless-libc
+    - name: haproxy
+      image: haproxytech/haproxy-alpine:2.4.4
+  artifacthub.io/license: MPL-2.0
+  artifacthub.io/links: |
+    - name: Chart Source
+      url: https://github.com/timberio/helm-charts
+  artifacthub.io/prerelease: "true"
