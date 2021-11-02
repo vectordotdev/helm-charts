@@ -1,6 +1,6 @@
 apiVersion: v2
 name: vector
-version: "0.1.0-beta.1"
+version: "0.1.0-beta.2"
 kubeVersion: ">=1.15.0-0"
 description: A lightweight, ultra-fast tool for building observability pipelines
 type: application
@@ -18,7 +18,7 @@ maintainers:
   - name: Datadog
     email: team-vector@datadoghq.com
 icon: https://vector.dev/press/vector-icon.svg
-appVersion: "0.17.2-distroless-libc"
+appVersion: "0.17.3-distroless-libc"
 annotations:
   artifacthub.io/images: |
     - name: vector
