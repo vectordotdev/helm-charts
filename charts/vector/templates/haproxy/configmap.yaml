@@ -79,7 +79,7 @@ data:
 
     frontend vector
       mode http
-      bind :::6000
+      bind :::6000 proto h2
       option httplog
       default_backend vector
 
@@ -123,6 +123,6 @@ data:
       mode http
       balance roundrobin
       option tcp-check
-      server-template srv 10 _vector._tcp.{{ include "vector.fullname" $ }}-headless.{{ $.Release.Namespace }}.svc.cluster.local resolvers coredns check
+      server-template srv 10 _vector._tcp.{{ include "vector.fullname" $ }}-headless.{{ $.Release.Namespace }}.svc.cluster.local resolvers coredns proto h2 check
   {{- end }}
 {{- end }}
