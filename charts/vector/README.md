@@ -66,7 +66,7 @@ See the [All configuration options](#all-configuration-options) section to disco
 ### Using template syntax in `customConfig`
 
 As Vector's [template syntax](https://vector.dev/docs/reference/configuration/template-syntax/) shares the same syntax as Helm templates, explicit handling is required
-if you are using Vector's template syntax in the `customConfig` option. To avoid Helm from templating configuration intended for Vector you can supply configuration like so:
+if you are using Vector's template syntax in the `customConfig` option. To avoid Helm templating configuration intended for Vector you can supply configuration like so:
 
 ```yaml
 customConfig: |
