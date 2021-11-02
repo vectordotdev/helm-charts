@@ -63,6 +63,25 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 
 See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
 
+### Using template syntax in `customConfig`
+
+As Vector's [template syntax](https://vector.dev/docs/reference/configuration/template-syntax/) shares the same syntax as Helm templates, explicit handling is required
+if you are using Vector's template syntax in the `customConfig` option. To avoid Helm templating configuration intended for Vector you can supply configuration like so:
+
+```yaml
+customConfig:
+  #...
+  sinks:
+    loki:
+      #...
+      labels:
+        foo: bar
+        host: |
+          {{ host }}
+        source: |
+          {{ source_type }}
+```
+
 ## All configuration options
 
 The following table lists the configurable parameters of the Vector chart and their default values. Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
