@@ -69,7 +69,7 @@ As Vector's [template syntax](https://vector.dev/docs/reference/configuration/te
 if you are using Vector's template syntax in the `customConfig` option. To avoid Helm templating configuration intended for Vector you can supply configuration like so:
 
 ```yaml
-customConfig: |
+customConfig:
   #...
   sinks:
     loki:
