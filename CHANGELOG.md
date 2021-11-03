@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.1.0-beta.0] - 2021-11-02
+
+### Vector
+
+#### Bug Fixes
+
+- Fix vector proto in haproxy config (#94) ([b0a7d7d](https://github.com/vectordotdev/helm-charts/commit/b0a7d7d6e430c93376e498ce1653ac9a331d5e60))
+
+#### Documentation
+
+- Document how to use Vector's template syntax in customConfig (#91) ([cf67558](https://github.com/vectordotdev/helm-charts/commit/cf675581854210d128160bd787e9040a96809538))
+
+#### Features
+
+- Add support for user defined initContainers for Vector Pods (#79) ([44a2e5e](https://github.com/vectordotdev/helm-charts/commit/44a2e5ed0877a12a4906947926ea8d576174f006))
+- Update secrets.generic to take unencoded values (#84) ([5f66c18](https://github.com/vectordotdev/helm-charts/commit/5f66c1865851894df9d682ffea688f2c95662cf7))
+  - **BREAKING**: Update secrets.generic to take unencoded values (#84)
+- Ensure good feature parity for HAProxy (#85) ([0cb3798](https://github.com/vectordotdev/helm-charts/commit/0cb379805e464f5dc3ba4180636ba05eefb935ca))
+- Allow HPA to be used with statefulsets (#92) ([73ae867](https://github.com/vectordotdev/helm-charts/commit/73ae867c31397db64765792a87b2c67c07873919))
+
 ## [vector-0.1.0-alpha.4] - 2021-10-01
 
 ### Unscoped
