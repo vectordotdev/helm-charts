@@ -1,5 +1,7 @@
 # Migrate from `vector-aggregator` guide
 
+By default the chart will deploy Vector as a `StatefulSet` and the default `role` option should remain "Aggregator".
+
 ## Vector values
 
 | Old parameter  | New parameter | Comment |

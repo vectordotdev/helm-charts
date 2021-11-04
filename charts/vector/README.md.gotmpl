@@ -17,7 +17,7 @@ helm repo update
 
 ## Quick start
 
-By default, Vector runs in the Aggregator role. It can alternatively run as a DaemonSet for the Agent role.
+By default, Vector runs as a `StatefulSet` in the "Aggregator" role. It can alternatively run as a `Deployment` for the "Stateless-Aggregator" role or a `DaemonSet` for the "Agent" role.
 
 ### Installing the Vector chart
 
@@ -57,6 +57,34 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 **Vector recommends that your `values.yaml` only contain values that need to be overridden, as it allows a smoother experience when upgrading chart versions.**
 
 See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
+
+### Running on Control Plane nodes
+
+Depending on your Kubernetes distribution, you may need to configure `tolerations` to run Vector on nodes acting as the control plane.
+
+For example to run Vector on [Openshift](https://www.redhat.com/en/technologies/cloud-computing/openshift) control plane nodes you can set:
+
+```yaml
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Exists
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/infra
+    operator: Exists
+```
+
+Or for [RKE](https://rancher.com/products/rke) control plane nodes set:
+
+```yaml
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/controlplane
+    operator: Exists
+  - effect: NoExecute
+    key: node-role.kubernetes.io/etcd
+    operator: Exists
+```
 
 ## All configuration options
 

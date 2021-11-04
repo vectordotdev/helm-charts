@@ -1,5 +1,15 @@
 # Migrate from `vector-agent` guide
 
+To deploy the chart as a `DaemonSet`, set `role: "Agent"` in your `values.yaml` or with Helm arguments.
+The `tolerations` option is no longer populated with default values, to match previous behavior you
+can use the following:
+
+```yaml
+tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+```
+
 ## Vector values
 
 | Old parameter | New parameter | Comment |
