@@ -140,7 +140,7 @@ helm install --name <RELEASE_NAME> \
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims |
 | podAnnotations | object | `{}` | Set annotations on Vector Pods |
 | podDisruptionBudget.enabled | bool | `false` | Enable a PodDisruptionBudget for Vector |
-| podDisruptionBudget.maxUnavailable | string | `nil` | The number of Pods that can be unavailable after an eviction |
+| podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction |
 | podDisruptionBudget.minAvailable | int | `1` | The number of Pods that must still be available after an eviction |
 | podLabels | object | `{}` | Set labels on Vector Pods |
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
