@@ -1,3 +1,4 @@
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
 {{- if and .Values.autoscaling.enabled (.Capabilities.APIVersions.Has "autoscaling/v2beta2") }}
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
@@ -8,7 +9,11 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
+    {{- if (eq .Values.role "Aggregator") }}
+    kind: Statefulset
+    {{- else if (eq .Values.role "Stateless-Aggregator") }}
     kind: Deployment
+    {{- end }}
     name: {{ include "vector.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
@@ -32,4 +37,5 @@ spec:
     {{- with .Values.autoscaling.customMetric -}}
     {{ toYaml . | nindent 4 }}
     {{- end }}
+{{- end }}
 {{- end }}

@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.16.1--distroless--libc-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.17.3-distroless-libc](https://img.shields.io/badge/AppVersion-0.17.3--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -60,6 +60,7 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 
 See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
 
+<<<<<<< HEAD
 ### Running on Control Plane nodes
 
 Depending on your Kubernetes distribution, you may need to configure `tolerations` to run Vector on nodes acting as the control plane.
@@ -86,6 +87,25 @@ tolerations:
   - effect: NoExecute
     key: node-role.kubernetes.io/etcd
     operator: Exists
+=======
+### Using template syntax in `customConfig`
+
+As Vector's [template syntax](https://vector.dev/docs/reference/configuration/template-syntax/) shares the same syntax as Helm templates, explicit handling is required
+if you are using Vector's template syntax in the `customConfig` option. To avoid Helm templating configuration intended for Vector you can supply configuration like so:
+
+```yaml
+customConfig:
+  #...
+  sinks:
+    loki:
+      #...
+      labels:
+        foo: bar
+        host: |
+          {{ host }}
+        source: |
+          {{ source_type }}
+>>>>>>> develop
 ```
 
 ## All configuration options
@@ -146,7 +166,7 @@ helm install --name <RELEASE_NAME> \
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims |
 | podAnnotations | object | `{}` | Set annotations on Vector Pods |
 | podDisruptionBudget.enabled | bool | `false` | Enable a PodDisruptionBudget for Vector |
-| podDisruptionBudget.maxUnavailable | int | `1` | The number of Pods that can be unavailable after an eviction |
+| podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction |
 | podDisruptionBudget.minAvailable | int | `1` | The number of Pods that must still be available after an eviction |
 | podLabels | object | `{}` | Set labels on Vector Pods |
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
@@ -191,27 +211,36 @@ helm install --name <RELEASE_NAME> \
 | haproxy.autoscaling.minReplicas | int | `1` | Minimum replicas for HAProxy's HPA |
 | haproxy.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for HAProxy's HPA |
 | haproxy.autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for HAProxy's HPA |
-| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified |
+| haproxy.containerPorts | list | `[]` | Manually define HAProxy's Container ports, overrides automated generation of Container ports |
+| haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
-| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one |
+| haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration |
+| haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers |
+| haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
 | haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
+| haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pod |
+| haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
 | haproxy.podLabels | object | `{}` | Set labels on HAProxy Pods |
 | haproxy.podPriorityClassName | string | `""` | Set the priorityClassName on HAProxy Pods |
 | haproxy.podSecurityContext | object | `{}` | Allows you to overwrite the default PodSecurityContext for HAProxy |
+| haproxy.readinessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy readiness probe settings |
 | haproxy.replicas | int | `1` | Set the number of HAProxy Pods to create |
 | haproxy.resources | object | `{}` | Set HAProxy resource requests and limits. |
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers |
+| haproxy.service.annotations | object | `{}` | Set annotations on HAProxy's Service |
+| haproxy.service.ports | list | `[]` | Manually set HAPRoxy's Service ports, overrides automated generation of Service ports |
 | haproxy.service.topologyKeys | list | `[]` | Specify the topologyKeys field on HAProxy's Service spec |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service |
 | haproxy.serviceAccount.annotations | object | `{}` | Annotations to add to the HAProxy ServiceAccount |
 | haproxy.serviceAccount.automountToken | bool | `true` | Automount API credentials for the HAProxy ServiceAccount |
 | haproxy.serviceAccount.create | bool | `true` | If true, create a HAProxy ServiceAccount |
 | haproxy.serviceAccount.name | string | `nil` | The name of the HAProxy ServiceAccount to use. |
+| haproxy.strategy | object | `{}` | Customize the strategy used to replace HAProxy Pods |
 | haproxy.terminationGracePeriodSeconds | int | `60` | Override HAProxy's terminationGracePeriodSeconds |
 | haproxy.tolerations | list | `[]` | Allow HAProxy to schedule on tainted nodes |
