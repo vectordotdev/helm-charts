@@ -2,6 +2,39 @@
 
 By default the chart will deploy Vector as a `StatefulSet` and the default `role` option should remain "Aggregator".
 
+There have been a number of changes to the default configuration:
+
+- Vector's API is enabled
+- A `datadog_agent` source is now included
+- A `fluent` source is now included
+- A `logstash` source is now included
+- A `splunk_hec` source is now included
+- A `statsd` source is now included
+- A `syslog` source is now included
+- A `console` sink is now included
+- The default `prometheus_exporter` sink was renamed from "prometheus_sink" to "prom_exporter"
+
+To keep the original defaults, use the following `customConfig`:
+
+```yaml
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: false
+  sources:
+    vector:
+      address: 0.0.0.0:9000
+      type: vector
+      version: "2"
+    internal_metrics:
+      type: internal_metrics
+  sinks:
+    prometheus_sink:
+      type: prometheus_exporter
+      inputs: [internal_metrics]
+      address: 0.0.0.0:9090
+```
+
 ## Vector values
 
 | Old parameter  | New parameter | Comment |

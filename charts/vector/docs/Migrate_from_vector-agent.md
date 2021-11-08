@@ -10,6 +10,40 @@ tolerations:
     effect: NoSchedule
 ```
 
+There have been a couple minor changes to the default configuration:
+
+- Vector's API is enabled
+- A `console` sink is now included
+- The default `prometheus_exporter` sink was renamed from "prometheus_sink" to "prom_exporter"
+
+To keep the original defaults, use the following `customConfig`:
+
+```yaml
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: false
+  sources:
+    kubernetes_logs:
+      type: kubernetes_logs
+    host_metrics:
+      filesystem:
+        devices:
+          excludes: [binfmt_misc]
+        filesystems:
+          excludes: [binfmt_misc]
+        mountPoints:
+          excludes: ["*/proc/sys/fs/binfmt_misc"]
+      type: host_metrics
+    internal_metrics:
+      type: internal_metrics
+  sinks:
+    prometheus_sink:
+      type: prometheus_exporter
+      inputs: [host_metrics, internal_metrics]
+      address: 0.0.0.0:9090
+```
+
 ## Vector values
 
 | Old parameter | New parameter | Comment |
