@@ -60,8 +60,7 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 
 See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
 
-<<<<<<< HEAD
-### Running on Control Plane nodes
+### Running on control plane nodes
 
 Depending on your Kubernetes distribution, you may need to configure `tolerations` to run Vector on nodes acting as the control plane.
 
@@ -87,7 +86,8 @@ tolerations:
   - effect: NoExecute
     key: node-role.kubernetes.io/etcd
     operator: Exists
-=======
+```
+
 ### Using template syntax in `customConfig`
 
 As Vector's [template syntax](https://vector.dev/docs/reference/configuration/template-syntax/) shares the same syntax as Helm templates, explicit handling is required
@@ -105,7 +105,6 @@ customConfig:
           {{ host }}
         source: |
           {{ source_type }}
->>>>>>> develop
 ```
 
 ## All configuration options
