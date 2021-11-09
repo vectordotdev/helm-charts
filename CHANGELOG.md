@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.1.0] - 2021-11-09
+
+### Vector
+
+#### Bug Fixes
+
+- Provide default value for only minAvailable in PDB (#98) ([6fcb9de](https://github.com/vectordotdev/helm-charts/commit/6fcb9de045f2c0b0b01bf99082413b7574114ed1))
+- Fix type for podDisruptionBudget.maxUnavailable (#104) ([190c2b4](https://github.com/vectordotdev/helm-charts/commit/190c2b437eaea344d037622d8dc5b129e60626d2))
+- Toggle both service and headless service with service.enabled (#101) ([a8b7daf](https://github.com/vectordotdev/helm-charts/commit/a8b7dafa4fc6e9bc93ca3669ece7c666a398dc88))
+
+#### Documentation
+
+- Add example customConfig in values.yaml (#102) ([59161b9](https://github.com/vectordotdev/helm-charts/commit/59161b94b1540699c87d18b2eb27a7f8ad4a7adc))
+- Add upgrade docs (#75) ([a40bdcc](https://github.com/vectordotdev/helm-charts/commit/a40bdcc5673e7bfe295bcf80690dbc73d6221f43))
+
 ## [vector-0.1.0-beta.2] - 2021-11-02
 
 ### Vector
