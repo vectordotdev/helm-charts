@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.1.0-beta.3](https://img.shields.io/badge/Version-0.1.0--beta.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.17.3-distroless-libc](https://img.shields.io/badge/AppVersion-0.17.3--distroless--libc-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.17.3-distroless-libc](https://img.shields.io/badge/AppVersion-0.17.3--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -19,7 +19,7 @@ Kubernetes: `>=1.15.0-0`
 
 ## Quick start
 
-By default, Vector runs in the Aggregator role. It can alternatively run as a DaemonSet for the Agent role.
+By default, Vector runs as a `StatefulSet` in the "Aggregator" role. It can alternatively run as a `Deployment` for the "Stateless-Aggregator" role or a `DaemonSet` for the "Agent" role.
 
 ### Installing the Vector chart
 
@@ -32,15 +32,12 @@ helm install --name <RELEASE_NAME> \
 
 ### Upgrading
 
-#### From vector-agent
+#### From original charts
 
-TODO
+* [Migrate from the `vector-agent` chart](docs/Migrate_from_vector-agent.md)
+* [Migrate from the `vector-aggregator` chart](docs/Migrate_from_vector-aggregator.md)
 
-#### From vector-aggregator
-
-TODO
-
-### Uninstalling the Chart
+### Uninstalling the chart
 
 To uninstall/delete the `<RELEASE_NAME>` deployment:
 
@@ -62,6 +59,34 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 **Vector recommends that your `values.yaml` only contain values that need to be overridden, as it allows a smoother experience when upgrading chart versions.**
 
 See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
+
+### Running on control plane nodes
+
+Depending on your Kubernetes distribution, you may need to configure `tolerations` to run Vector on nodes acting as the control plane.
+
+For example to run Vector on [Openshift](https://www.redhat.com/en/technologies/cloud-computing/openshift) control plane nodes you can set:
+
+```yaml
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Exists
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/infra
+    operator: Exists
+```
+
+Or for [RKE](https://rancher.com/products/rke) control plane nodes set:
+
+```yaml
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/controlplane
+    operator: Exists
+  - effect: NoExecute
+    key: node-role.kubernetes.io/etcd
+    operator: Exists
+```
 
 ### Using template syntax in `customConfig`
 
