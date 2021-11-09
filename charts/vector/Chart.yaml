@@ -13,7 +13,7 @@ keywords:
   - stream-processing
 home: https://vector.dev/
 sources:
-  - https://github.com/timberio/vector/
+  - https://github.com/vectordotdev/vector/
 maintainers:
   - name: Datadog
     email: team-vector@datadoghq.com
@@ -22,11 +22,11 @@ appVersion: "0.17.3-distroless-libc"
 annotations:
   artifacthub.io/images: |
     - name: vector
-      image: timberio/vector:0.17.2-distroless-libc
+      image: timberio/vector:0.17.3-distroless-libc
     - name: haproxy
       image: haproxytech/haproxy-alpine:2.4.4
   artifacthub.io/license: MPL-2.0
   artifacthub.io/links: |
     - name: Chart Source
-      url: https://github.com/timberio/helm-charts
-  artifacthub.io/prerelease: "true"
+      url: https://github.com/vectordotdev/helm-charts
+  artifacthub.io/prerelease: "false"
