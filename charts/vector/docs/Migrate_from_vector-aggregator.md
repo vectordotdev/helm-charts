@@ -35,6 +35,14 @@ customConfig:
       address: 0.0.0.0:9090
 ```
 
+## Upgrading
+
+Once you have determined the changes you need to make to your `values.yaml` the upgrade is as simple as:
+
+```bash
+helm upgrade -f values.yaml <ORIGINAL_RELEASE_NAME> vector/vector -n <ORIGINAL_NAMESPACE>
+```
+
 ## Vector values
 
 | Old parameter  | New parameter | Comment |
