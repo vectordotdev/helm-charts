@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.1.1] - 2021-11-10
+
+### Vector
+
+#### Documentation
+
+- Handle helm-docs processing of vector template example (#107) ([34cb0eb](https://github.com/vectordotdev/helm-charts/commit/34cb0ebeecde276b67ee943a7559543434508930))
+
 ## [vector-0.1.0] - 2021-11-09
 
 ### Vector
