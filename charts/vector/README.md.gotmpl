@@ -100,9 +100,9 @@ customConfig:
       labels:
         foo: bar
         host: |
-          {{ print "{{ host }}" }}
+          {{ print "{{ print \"{{ host }}\" }}" }}
         source: |
-          {{ print "{{ source_type }}" }}
+          {{ print "{{ print \"{{ source_type }}\" }}" }}
 ```
 
 ## All configuration options
