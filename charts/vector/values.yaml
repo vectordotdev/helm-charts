@@ -334,6 +334,8 @@ podMonitor:
   # podMonitor.metricRelabelings -- MetricRelabelConfigs to apply to samples before ingestion
   ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
   metricRelabelings: []
+  # podMonitor.additionalLabels -- Adds additional labels to the PodMonitor
+  additionalLabels: {}
 
 ## Optional built-in HAProxy load balancer
 haproxy:
