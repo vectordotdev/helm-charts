@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.2.0] - 2021-11-19
+
+### Vector
+
+#### Features
+
+- Include option to add additionalLabels to PodMonitor (#111) ([0a71e9e](https://github.com/vectordotdev/helm-charts/commit/0a71e9e653431c02ac0273e0b5556fbf1e5e8ded))
+- Upgrade Vector to 0.18.0 (#114) ([27b9e98](https://github.com/vectordotdev/helm-charts/commit/27b9e9804a26893a84a46affa69b6f6738ba3b31))
+
 ## [vector-0.1.1] - 2021-11-10
 
 ### Vector
