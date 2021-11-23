@@ -7,7 +7,7 @@ serviceAccountName: {{ include "vector.serviceAccountName" . }}
 securityContext:
 {{ toYaml . | indent 2 }}
 {{- end }}
-{{- with .Values.priorityClassName }}
+{{- with .Values.podPriorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
 {{- with .Values.dnsPolicy }}
