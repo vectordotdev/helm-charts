@@ -4,7 +4,7 @@ type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A Helm chart to aggregate data with Vector
 version: "0.20.0"
-appVersion: "0.18.0"
+appVersion: "0.18.1"
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/
