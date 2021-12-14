@@ -46,8 +46,11 @@ podManagementPolicy: OrderedReady
 ## Create a Secret resource for Vector to use
 secrets:
   # secrets.generic -- Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded
+  ## Any secrets can be provided here, it's commonly used for credentials and other access related values.
   ## NOTE: Don't commit unencrypted secrets to git!
   generic: {}
+    # my_variable: "my-secret-value"
+    # datadog_api_key: "api-key"
     # awsAccessKeyId: "access-key"
     # awsSecretAccessKey: "secret-access-key"
 
@@ -126,11 +129,17 @@ args:
   - "/etc/vector/"
 
 # env -- Set environment variables in Vector containers
+## The examples below leverage examples from secrets.generic and assume no name overrides with a Release name of "vector"
 env: []
+  # - name: MY_VARIABLE
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: vector
+  #       key: my_variable
   # - name: AWS_ACCESS_KEY_ID
   #   valueFrom:
   #     secretKeyRef:
-  #       name: vector-aggregator
+  #       name: vector
   #       key: awsAcessKeyId
 
 # containerPorts -- Manually define Vector's Container ports, overrides automated generation of Container ports
