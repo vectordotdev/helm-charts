@@ -436,6 +436,25 @@ entries:
   vector-agent:
   - apiVersion: v2
     appVersion: 0.19.0
+    created: "2021-12-28T19:58:45.485590479Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    deprecated: true
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 259673918a8520f8af6628be8f3b1c2a1e250b61e97bef2b76fac7c707f6ac56
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-agent-0.21.0/vector-agent-0.21.0.tgz
+    version: 0.21.0
+  - apiVersion: v2
+    appVersion: 0.19.0
     created: "2021-12-28T19:14:42.398632036Z"
     dependencies:
     - name: vector-shared
@@ -857,6 +876,25 @@ entries:
   vector-aggregator:
   - apiVersion: v2
     appVersion: 0.19.0
+    created: "2021-12-28T19:58:45.634821002Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    deprecated: true
+    description: A Helm chart to aggregate data with Vector
+    digest: 54884a49d3c4d510d98b9c0c91ce7338045ea0429d8434c2e2e019d8abea1d7c
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-aggregator-0.21.0/vector-aggregator-0.21.0.tgz
+    version: 0.21.0
+  - apiVersion: v2
+    appVersion: 0.19.0
     created: "2021-12-28T19:14:42.601006356Z"
     dependencies:
     - name: vector-shared
@@ -1067,6 +1105,20 @@ entries:
     version: 0.16.0-beta.1
   vector-shared:
   - apiVersion: v2
+    created: "2021-12-28T19:58:45.785983554Z"
+    deprecated: true
+    description: Shared dependencies of Vector Helm charts
+    digest: d975ceb6d484849408e43e2ed26baa10b374f312f0633a252d7d17375d97dc1f
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-shared
+    sources:
+    - https://github.com/timberio/vector/
+    type: library
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-shared-0.2.0/vector-shared-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2021-08-11T17:10:15.963213-04:00"
     description: Shared dependencies of Vector Helm charts
     digest: 9ace9ef67c15e620b4f9d78444c4afbe30e90009db1444bb5b78be80057f928a
@@ -1082,4 +1134,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-12-28T19:14:42.601311262Z"
+generated: "2021-12-28T19:58:45.786311759Z"
