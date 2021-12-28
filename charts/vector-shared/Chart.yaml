@@ -7,7 +7,7 @@ version: "0.2.0"
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/
-maintainers:
-  - name: Datadog
-    email: team-vector@datadoghq.com
+# maintainers:
+#   - name: Datadog
+#     email: team-vector@datadoghq.com
 deprecated: true
