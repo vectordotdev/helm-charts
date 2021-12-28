@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.3.0] - 2021-12-28
+
+### Vector
+
+#### Documentation
+
+- Fix example and CI for Vector templating (#126) ([e28ba32](https://github.com/vectordotdev/helm-charts/commit/e28ba3284089d26359d7ea7e87918dc5b9b33257))
+- Clarify usage of secrets.generic and env (#129) ([1396dd4](https://github.com/vectordotdev/helm-charts/commit/1396dd42309c8aeded6d20be2a2cc2b9c4e26d1b))
+
+#### Features
+
+- Update charts to Vector 0.19.0 (#131) ([26f9779](https://github.com/vectordotdev/helm-charts/commit/26f9779f49dfc67d76c6b33cfd126f2458a8dc20))
+
+### Vector-aggregator
+
+#### Bug Fixes
+
+- Fix the conditions for enable/disable SA on the HAProxy (#122) ([83cf509](https://github.com/vectordotdev/helm-charts/commit/83cf5091825fbff872819251e00808befc41a331))
+
 ## [vector-0.2.2] - 2021-11-30
 
 ### Vector
