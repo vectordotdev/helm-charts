@@ -4,6 +4,42 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: vector
+          image: timberio/vector:0.19.0-distroless-libc
+        - name: haproxy
+          image: haproxytech/haproxy-alpine:2.4.4
+      artifacthub.io/license: MPL-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/vectordotdev/helm-charts
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 0.19.0-distroless-libc
+    created: "2021-12-28T19:14:42.210461677Z"
+    description: A lightweight, ultra-fast tool for building observability pipelines
+    digest: fd889732fae06eb0d34f7f80811855eb7b6da8b4edbb13eeaf1824ccaa01477f
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    keywords:
+    - vector
+    - events
+    - logs
+    - metrics
+    - observability
+    - stream-processing
+    kubeVersion: '>=1.15.0-0'
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector
+    sources:
+    - https://github.com/vectordotdev/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-0.3.0/vector-0.3.0.tgz
+    version: 0.3.0
+  - annotations:
+      artifacthub.io/images: |
+        - name: vector
           image: timberio/vector:0.18.1-distroless-libc
         - name: haproxy
           image: haproxytech/haproxy-alpine:2.4.4
@@ -398,6 +434,27 @@ entries:
     - https://github.com/timberio/helm-charts/releases/download/vector-0.1.0-alpha.0/vector-0.1.0-alpha.0.tgz
     version: 0.1.0-alpha.0
   vector-agent:
+  - apiVersion: v2
+    appVersion: 0.19.0
+    created: "2021-12-28T19:14:42.398632036Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: 4835e1c620e0fa6f7e60604e5f420707f1b2d7cbe5436cc123df36b566bd3569
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-agent-0.20.0/vector-agent-0.20.0.tgz
+    version: 0.20.0
   - apiVersion: v2
     appVersion: 0.18.1
     created: "2021-11-30T20:57:31.353260521Z"
@@ -799,6 +856,27 @@ entries:
     version: 0.11.0
   vector-aggregator:
   - apiVersion: v2
+    appVersion: 0.19.0
+    created: "2021-12-28T19:14:42.601006356Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    description: A Helm chart to aggregate data with Vector
+    digest: 195b2c961b674ed99582db65b951a80594b252dc5805a1a23590fe367182a5a8
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    maintainers:
+    - email: team-vector@datadoghq.com
+      name: Datadog
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-aggregator-0.20.0/vector-aggregator-0.20.0.tgz
+    version: 0.20.0
+  - apiVersion: v2
     appVersion: 0.18.1
     created: "2021-11-30T20:57:31.517567961Z"
     dependencies:
@@ -1004,4 +1082,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-30T20:57:31.518138965Z"
+generated: "2021-12-28T19:14:42.601311262Z"
