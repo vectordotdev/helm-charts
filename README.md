@@ -27,3 +27,4 @@ convenient when updating the chart after a Vector release.
 - `.github/release-changelog.sh` pulls the current `vector` chart version and
 uses `git-cliff` to update the [CHANGELOG.md](CHANGELOG.md). Run this to generate
 the final commit merged into `develop` before merging `develop` into `master`.
+This script requires [`yq`](https://github.com/mikefarah/yq) to be installed.
