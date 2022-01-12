@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.4.0] - 2022-01-12
+
+### Vector
+
+#### Bug Fixes
+
+- Include common labels on ClusterRole resource (#144) ([01773ba](https://github.com/vectordotdev/helm-charts/commit/01773baf98257c056f42793bb5f4c136a2926d2a))
+
+#### Documentation
+
+- Fix comment on autoscaling option (#145) ([9d1c3c2](https://github.com/vectordotdev/helm-charts/commit/9d1c3c29575c14b8d2d1a85fe611332d96816d18))
+
 ## [vector-0.3.0] - 2021-12-28
 
 ### Vector
