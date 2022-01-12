@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Add timberio helm repo
+      - name: Add vector helm repo
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
