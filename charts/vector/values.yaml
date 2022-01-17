@@ -345,6 +345,10 @@ podMonitor:
   metricRelabelings: []
   # podMonitor.additionalLabels -- Adds additional labels to the PodMonitor
   additionalLabels: {}
+  # podmonitor.honorLabels -- Set if honor_labels should be set for scape config https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+  honorLabels: false
+  # podmonitor.honorTimestamps -- Set if honor_timestamps should be set for scape config https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
+  honorTimestamps: true
 
 ## Optional built-in HAProxy load balancer
 haproxy:
