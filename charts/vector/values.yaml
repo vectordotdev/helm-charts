@@ -345,10 +345,10 @@ podMonitor:
   metricRelabelings: []
   # podMonitor.additionalLabels -- Adds additional labels to the PodMonitor
   additionalLabels: {}
-  # podmonitor.honorLabels -- If true, honor_labels is set to true in scrape config
+  # podMonitor.honorLabels -- If true, honor_labels is set to true in scrape config
   ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
   honorLabels: false
-  # podmonitor.honorTimestamps -- If true, honor_timestamps is set to true in scrape config
+  # podMonitor.honorTimestamps -- If true, honor_timestamps is set to true in scrape config
   ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config
   honorTimestamps: true
 

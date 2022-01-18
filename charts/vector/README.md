@@ -171,8 +171,8 @@ helm install --name <RELEASE_NAME> \
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
 | podMonitor.additionalLabels | object | `{}` | Adds additional labels to the PodMonitor |
 | podMonitor.enabled | bool | `false` | If true, create a PodMonitor for Vector |
-| podMonitor.honorLabels | bool | `false` |  |
-| podMonitor.honorTimestamps | bool | `true` |  |
+| podMonitor.honorLabels | bool | `false` | If true, honor_labels is set to true in scrape config |
+| podMonitor.honorTimestamps | bool | `true` | If true, honor_timestamps is set to true in scrape config |
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from |
 | podMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape |
