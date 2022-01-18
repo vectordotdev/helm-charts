@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.19.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.19.0--distroless--libc-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.19.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.19.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -171,6 +171,8 @@ helm install --name <RELEASE_NAME> \
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
 | podMonitor.additionalLabels | object | `{}` | Adds additional labels to the PodMonitor |
 | podMonitor.enabled | bool | `false` | If true, create a PodMonitor for Vector |
+| podMonitor.honorLabels | bool | `false` |  |
+| podMonitor.honorTimestamps | bool | `true` |  |
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from |
 | podMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape |
