@@ -19,6 +19,8 @@ spec:
   podMetricsEndpoints:
     - port: {{ .Values.podMonitor.port }}
       path: {{ .Values.podMonitor.path }}
+      honorLabels: {{ .Values.podMonitor.honorLabels }}
+      honorTimestamps: {{ .Values.podMonitor.honorTimestamps }}
       {{- with .Values.podMonitor.relabelings }}
       relabelings:
         {{- toYaml . | nindent 8 }}
