@@ -64,13 +64,13 @@ jobs:
     strategy:
       matrix:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
-        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml
+        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
           - v1.23.3
-          - v1.22.5
-          - v1.21.8
-          - v1.20.14
-          - v1.19.8
+          - v1.22.4
+          - v1.21.2
+          - v1.20.7
+          - v1.19.11
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -94,13 +94,13 @@ jobs:
     strategy:
       matrix:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
-        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml
+        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
           - v1.23.3
-          - v1.22.5
-          - v1.21.8
-          - v1.20.14
-          - v1.19.8
+          - v1.22.4
+          - v1.21.2
+          - v1.20.7
+          - v1.19.11
     steps:
       - name: Checkout
         uses: actions/checkout@v2
