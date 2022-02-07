@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.5.0] - 2022-02-07
+
+### Vector
+
+#### Bug Fixes
+
+- Include common labels on ClusterRole resource (#144) ([01773ba](https://github.com/vectordotdev/helm-charts/commit/01773baf98257c056f42793bb5f4c136a2926d2a))
+
+#### Documentation
+
+- Fix comment on autoscaling option (#145) ([9d1c3c2](https://github.com/vectordotdev/helm-charts/commit/9d1c3c29575c14b8d2d1a85fe611332d96816d18))
+- Fix loki label ends with new line (#154) ([e59c63b](https://github.com/vectordotdev/helm-charts/commit/e59c63be55aa0712aa6b9a35e3c5901d27593770))
+
+#### Features
+
+- Add honorLabels and honorTimestamps to PodMonitor (#153) ([5a92272](https://github.com/vectordotdev/helm-charts/commit/5a9227209d33efc513f5e282d076d8df438205c6))
+- Upgrade Vector to 0.19.1 (#157) ([be0dc41](https://github.com/vectordotdev/helm-charts/commit/be0dc411693bd2001b443a1545d9fb810403feeb))
+
 ## [vector-0.4.0] - 2022-01-12
 
 ### Vector
