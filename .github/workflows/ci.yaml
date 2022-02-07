@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'charts/**'
+      - '.github/workflows/ci.yaml'
 
 jobs:
   changed:
@@ -67,7 +68,9 @@ jobs:
         # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
           - v1.23.3
-          - v1.22.4
+          # fails on `kind` but not `minikube`; we weren't able to track down why
+          # possibly related to https://github.com/kubernetes-sigs/kind/issues/2532
+          # - v1.22.4
           - v1.21.2
           - v1.20.7
           - v1.19.11
@@ -97,7 +100,9 @@ jobs:
         # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
           - v1.23.3
-          - v1.22.4
+          # fails on `kind` but not `minikube`; we weren't able to track down why
+          # possibly related to https://github.com/kubernetes-sigs/kind/issues/2532
+          # - v1.22.4
           - v1.21.2
           - v1.20.7
           - v1.19.11
