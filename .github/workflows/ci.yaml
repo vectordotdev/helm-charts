@@ -112,8 +112,6 @@ jobs:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.0
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
 
