@@ -3,14 +3,14 @@ name: vector-aggregator
 type: application
 icon: https://vector.dev/press/vector-icon.svg
 description: A Helm chart to aggregate data with Vector
-version: "0.21.2"
+version: "0.21.3"
 appVersion: "0.19.1"
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/
 # maintainers:
 #   - name: Datadog
-#     email: team-vector@datadoghq.com
+#     email: vector@datadoghq.com
 dependencies:
   - name: vector-shared
     version: "~0.1.0"
