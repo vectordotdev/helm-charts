@@ -4,6 +4,42 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: vector
+          image: timberio/vector:0.19.3-distroless-libc
+        - name: haproxy
+          image: haproxytech/haproxy-alpine:2.4.4
+      artifacthub.io/license: MPL-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/vectordotdev/helm-charts
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 0.19.3-distroless-libc
+    created: "2022-02-11T20:40:34.990153787Z"
+    description: A lightweight, ultra-fast tool for building observability pipelines
+    digest: b9b59eca4d5bb3ee739cd0cc7b8d05c760d8c494a9c29deeabb9f12f38831a13
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    keywords:
+    - vector
+    - events
+    - logs
+    - metrics
+    - observability
+    - stream-processing
+    kubeVersion: '>=1.15.0-0'
+    maintainers:
+    - email: vector@datadoghq.com
+      name: Datadog
+    name: vector
+    sources:
+    - https://github.com/vectordotdev/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-0.5.2/vector-0.5.2.tgz
+    version: 0.5.2
+  - annotations:
+      artifacthub.io/images: |
+        - name: vector
           image: timberio/vector:0.19.1-distroless-libc
         - name: haproxy
           image: haproxytech/haproxy-alpine:2.4.4
@@ -507,6 +543,25 @@ entries:
     version: 0.1.0-alpha.0
   vector-agent:
   - apiVersion: v2
+    appVersion: 0.19.3
+    created: "2022-02-11T20:40:35.174043344Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    deprecated: true
+    description: A Helm chart to collect Kubernetes logs with Vector
+    digest: ec764a9c6a18b7c943fc25f94fe08d33ee730f273a6c32f104681eabb7e99c0f
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-agent
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-agent-0.21.3/vector-agent-0.21.3.tgz
+    version: 0.21.3
+  - apiVersion: v2
     appVersion: 0.19.1
     created: "2022-02-07T23:25:58.397039441Z"
     dependencies:
@@ -966,6 +1021,25 @@ entries:
     version: 0.11.0
   vector-aggregator:
   - apiVersion: v2
+    appVersion: 0.19.3
+    created: "2022-02-11T20:40:35.368671279Z"
+    dependencies:
+    - name: vector-shared
+      repository: https://helm.vector.dev
+      version: ~0.1.0
+    deprecated: true
+    description: A Helm chart to aggregate data with Vector
+    digest: aa087200a2c3f28acce02fe478478079eef5bbd327a3acab98c9c0291b3a84cf
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-aggregator
+    sources:
+    - https://github.com/timberio/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-aggregator-0.21.3/vector-aggregator-0.21.3.tgz
+    version: 0.21.3
+  - apiVersion: v2
     appVersion: 0.19.1
     created: "2022-02-07T23:25:58.518025134Z"
     dependencies:
@@ -1215,6 +1289,20 @@ entries:
     version: 0.16.0-beta.1
   vector-shared:
   - apiVersion: v2
+    created: "2022-02-11T20:40:35.582076713Z"
+    deprecated: true
+    description: Shared dependencies of Vector Helm charts
+    digest: ec2c4022c2b0bc9aec430b975d0e64b667052a85ba19cce963dd49863547ef85
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    name: vector-shared
+    sources:
+    - https://github.com/timberio/vector/
+    type: library
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-shared-0.2.1/vector-shared-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
     created: "2021-12-28T19:58:45.785983554Z"
     deprecated: true
     description: Shared dependencies of Vector Helm charts
@@ -1244,4 +1332,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2022-02-07T23:25:58.518556437Z"
+generated: "2022-02-11T20:40:35.582740256Z"
