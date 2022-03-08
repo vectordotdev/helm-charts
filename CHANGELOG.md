@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.7.0-rc.0] - 2022-03-08
+
+### Vector
+
+#### Features
+
+- Add list verb for upcoming kube-rs change ([e390ead](https://github.com/vectordotdev/helm-charts/commit/e390ead62dcc5e2736d9fb7cb1f19ac7684f3d92))
+
 ## [vector-0.6.0] - 2022-02-11
 
 ### Vector
