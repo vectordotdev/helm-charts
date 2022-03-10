@@ -57,7 +57,7 @@ secrets:
 ## Configure a HorizontalPodAutoscaler for Vector
 ## Valid for Aggregator and Stateless-Aggregator roles
 autoscaling:
-  # autoscaling.enabled -- Enabled autoscaling for the Stateless-Aggregator
+  # autoscaling.enabled -- Enabled autoscaling for the Aggregator and Stateless-Aggregator
   enabled: false
   # autoscaling.minReplicas -- Minimum replicas for Vector's HPA
   minReplicas: 1
