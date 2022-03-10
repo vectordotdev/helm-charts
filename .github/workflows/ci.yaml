@@ -3,9 +3,6 @@ name: Lint and Test Charts
 
 on:
   pull_request:
-    paths:
-      - 'charts/**'
-      - '.github/workflows/ci.yaml'
 
 jobs:
   changed:
