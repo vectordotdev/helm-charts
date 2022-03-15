@@ -1,6 +1,7 @@
 titleOnly: true
 
 scopes:
+  - deps
   - vector
   - vector-agent
   - vector-aggregator
