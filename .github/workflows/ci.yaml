@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.0
+        uses: helm/chart-testing-action@v2.2.1
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -39,7 +39,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.0
+        uses: helm/chart-testing-action@v2.2.1
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct.yaml
 
@@ -113,7 +113,7 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.2.0
+        uses: helm/chart-testing-action@v2.2.1
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
 
