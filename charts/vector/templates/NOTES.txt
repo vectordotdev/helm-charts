@@ -3,3 +3,42 @@
 {{ template "_divider" }}
 
 {{ include "_vector.top" . }}
+
+{{/*
+Configuring Datadog Agents to forward to Vector
+*/}}
+{{- $hasSourceDatadogAgent := false }}
+{{- $sourceDatadogAgentPort := "" }}
+{{- range $componentKind, $configs := .Values.customConfig }}
+  {{- if eq $componentKind "sources" }}
+    {{- range $componentId, $componentConfig := $configs }}
+      {{- if eq (get $componentConfig "type") "datadog_agent" }}
+	{{- $hasSourceDatadogAgent = true }}
+        {{- $sourceDatadogAgentPort = (get $componentConfig "address") }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+datadog_agent source: {{ $hasSourceDatadogAgent }}
+datadog_agent address: {{ $sourceDatadogAgentPort }}
+{{ if not .Values.customConfig }}
+To forward logs from Datadog Agents deployed with the `datadog` Helm chart, include the following in the `values.yaml` for your `datadog` chart:
+
+datadog:
+  env:
+    - name: DD_LOGS_ENABLED
+      value: "true"
+    - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+      value: "true"
+    - name: DD_CONTAINER_EXCLUDE
+      value: "image:vector"
+    - name: DD_LOGS_CONFIG_DD_URL
+      {{- if not .Values.haproxy.enabled }}
+      value: "{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:8282"
+      {{- else }}
+      value: "{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:8282"
+      {{- end }}
+    - name: DD_LOGS_CONFIG_USE_HTTP
+      value: "true"
+{{- end }}
+
