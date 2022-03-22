@@ -14,7 +14,7 @@ Common labels
 helm.sh/chart: {{ include "vector.chart" . }}
 {{ include "haproxy.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
