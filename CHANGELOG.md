@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.7.0] - 2022-03-23
+
+### Vector
+
+#### Bug Fixes
+
+- Update app.kubernetes.io/version to be the image.tag if it is set. (#179) ([782a50a](https://github.com/vectordotdev/helm-charts/commit/782a50aebf7bbd4d73ca06dccd8a704b5e561b9b))
+- Fix conditionals for existingConfigMaps and haproxy.existingConfigMap (#182) ([87ca537](https://github.com/vectordotdev/helm-charts/commit/87ca537b54f9956c434ddbbd3cfcc9942d7e9c07))
+  - **BREAKING**: Several templates were referencing a previously removed `existingConfig`, they've been updated to use either `existingConfigMaps` or `haproxy.existingConfigMap`
+- Use haproxy.image.tag as its version label value (#183) ([3983653](https://github.com/vectordotdev/helm-charts/commit/39836533d6f8c41c07ddb341641e0fe328537234))
+  - **BREAKING**: Labels on HAProxy resources were being passed the `AppVersion` value, leading them to be labeled with Vector's version rather than HAProxy's version
+
+#### Documentation
+
+- Update comment for autoscaling.enabled (#169) ([d226dd2](https://github.com/vectordotdev/helm-charts/commit/d226dd224eef9e2e598a62702162d774562778ed))
+
+#### Features
+
+- Add list verb for upcoming kube-rs change (#166) ([068af80](https://github.com/vectordotdev/helm-charts/commit/068af80e688214ca84325717e4c13e09830c765c))
+
 ## [vector-0.7.0-rc.0] - 2022-03-08
 
 ### Vector
