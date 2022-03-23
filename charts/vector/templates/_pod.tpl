@@ -64,7 +64,7 @@ containers:
         value: "/host/sys"
 {{- end }}
     ports:
-{{- if or .Values.containerPorts .Values.existingConfig }}
+{{- if or .Values.containerPorts .Values.existingConfigMaps }}
     {{- toYaml .Values.containerPorts | nindent 6 }}
 {{- else if .Values.customConfig }}
     {{- include "vector.containerPorts" . | indent 6 }}
@@ -112,8 +112,8 @@ containers:
 {{- end }}
     volumeMounts:
       - name: data
-        {{- if .Values.existingConfig }}
-        mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfig`" }}{{ end }}"
+        {{- if .Values.existingConfigMaps }}
+        mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfigMaps`" }}{{ end }}"
         {{- else }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
         {{- end }}
