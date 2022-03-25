@@ -10,11 +10,10 @@ _NOTE: The instructions here assume the use of Helm v3, and Bash._
 ### Prerequisites
 
 Verify you have `helm` and `kubectl` installed locally to proceed. `helm` should
-be `v3.0+` and `kubectl` should be `v1.15.0+`.
+be `v3.0+`.
 
 ```bash
 helm version
-kubectl version
 ```
 
 Ensure you have both the Datadog and Vector charts, and they are up to date.
