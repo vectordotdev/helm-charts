@@ -14,31 +14,59 @@ Configuring Datadog Agents to forward to Vector
     {{- range $componentId, $componentConfig := $configs }}
       {{- if eq (get $componentConfig "type") "datadog_agent" }}
 	{{- $hasSourceDatadogAgent = true }}
-        {{- $sourceDatadogAgentPort = (get $componentConfig "address") }}
+        {{- $sourceDatadogAgentPort = mustRegexFind "[0-9]+$" (get $componentConfig "address") }}
       {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
-datadog_agent source: {{ $hasSourceDatadogAgent }}
-datadog_agent address: {{ $sourceDatadogAgentPort }}
-{{ if not .Values.customConfig }}
+{{- if or (not .Values.customConfig) (and .Values.customConfig $hasSourceDatadogAgent) }}
 To forward logs from Datadog Agents deployed with the `datadog` Helm chart, include the following in the `values.yaml` for your `datadog` chart:
 
+For Datadog Agents version `7.35`/`6.35` or greater:
+
 datadog:
-  env:
-    - name: DD_LOGS_ENABLED
-      value: "true"
-    - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
-      value: "true"
-    - name: DD_CONTAINER_EXCLUDE
-      value: "image:vector"
-    - name: DD_LOGS_CONFIG_DD_URL
+  containerExclude: "name:vector"
+  logs:
+    enabled: true
+    containerCollectAll: true
+agents:
+  useConfigMap: true
+  customAgentConfig:
+    kubelet_tls_verify: false
+    vector:
+      logs:
+        enabled: true
+        {{- if not .Values.haproxy.enabled }}
+        url: "http://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        {{- else }}
+        url: "http://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        {{- end }}
+      metrics:
+        enabled: true
+        {{- if not .Values.haproxy.enabled }}
+        url: "http://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        {{- else }}
+        url: "http://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        {{- end }}
+
+For Datadog Agents version `7.34`/`6.34` and older:
+
+datadog:
+  containerExclude: "name:vector"
+  logs:
+    enabled: true
+    containerCollectAll: true
+agents:
+  useConfigMap: true
+  customAgentConfig:
+    kubelet_tls_verify: false
+    logs_config:
       {{- if not .Values.haproxy.enabled }}
-      value: "{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:8282"
+      logs_dd_url: "{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
       {{- else }}
-      value: "{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:8282"
+      logs_dd_url: "{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
       {{- end }}
-    - name: DD_LOGS_CONFIG_USE_HTTP
-      value: "true"
+      logs_no_ssl: true
+      use_http: true
 {{- end }}
 
