@@ -3,8 +3,6 @@
 
 ## Configuration for Vector's Service
 service:
-  # service.enabled -- If true, create and use a Service resource
-  enabled: true
   # service.type -- Set type of Vector's Service
   type: "LoadBalancer"
   # service.annotations -- Set annotations on Vector's Service

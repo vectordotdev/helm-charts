@@ -13,6 +13,7 @@ secrets:
 autoscaling:
   enabled: true
   minReplicas: 2
+  ## The provided HAProxy config is limited to 10 backends 
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
 
@@ -28,6 +29,16 @@ env:
       secretKeyRef:
         name: vector
         key: datadog_api_key
+
+# resources -- Set Vector resource requests and limits.
+resources:
+  ## Required for HPA to function
+  requests:
+    cpu: 1000m
+    memory: 512Mi
+  # limits:
+  #   cpu: 200m
+  #   memory: 256Mi
 
 # affinity -- Allow Vector to schedule using affinity rules
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -70,14 +81,25 @@ customConfig:
   transforms:
     remap_logs:
       type: remap
-      inputs: [datadog_agent.logs]
+      inputs:
+        - datadog_agent.logs
+        - internal_logs
       source: |
+        # TODO: Having Datadog Agents collect Aggregator logs would provide better enrichment,
+        # internal_logs will also provide the Pod's name as the host facet in Datadog rather
+        # than the name of the Node
+
+        # Add ddtags for internal_logs
+        if .source_type == "internal_logs" {
+          .ddtags = "service:vector"
+        } 
+
         # Parse the received .ddtags field so we can more easily access the contained tags
         .ddtags = parse_key_value!(.ddtags, key_value_delimiter: ":", field_delimiter: ",")
         .ddtags.sender = "vector"
         .ddtags.vector_aggregator = get_hostname!()
         # Re-encode Datadog tags as a string for the `datadog_logs` sink
-        .ddtags = encode_key_value(.ddtags, key_value_delimiter: ":", field_delimiter: ",")
+        .ddtags = encode_key_value!(.ddtags, key_value_delimiter: ":", field_delimiter: ",")
 
         # Datadog Agents pass a "status" field that is stripped when ingested
         del(.status)
