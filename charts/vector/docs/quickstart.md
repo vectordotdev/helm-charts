@@ -92,6 +92,9 @@ VALUES
 
 For Datadog Agents version `7.34`/`6.34` and older:
 
+_NOTE: Metrics will not be routed through Vector for Datadog Agent versions older
+than `7.35`/`6.35`._
+
 ```bash
 cat <<-'VALUES' > dd-agent.yaml
 datadog:
@@ -117,7 +120,6 @@ real certificates are available, the `kubelet_tls_verify` option should be remov
 _NOTE: When you have the `datadog_agent` source configured, a `helm install` or
 `helm upgrade` will output the appropriate values to provide to the datadog helm
 chart._
-
 
 ```bash
 helm install datadog datadog/datadog --namespace datadog --create-namespace \
