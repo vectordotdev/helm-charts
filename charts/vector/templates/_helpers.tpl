@@ -31,7 +31,7 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels
+Common labels.
 */}}
 {{- define "vector.labels" -}}
 helm.sh/chart: {{ include "vector.chart" . }}
@@ -46,7 +46,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Selector labels.
 */}}
 {{- define "vector.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vector.name" . }}
@@ -57,7 +57,7 @@ app.kubernetes.io/component: {{ .Values.role }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the service account to use.
 */}}
 {{- define "vector.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
@@ -68,35 +68,40 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Generate an array of ServicePorts based on customConfig
+Generate an array of ServicePorts based on `.Values.customConfig`.
 */}}
 {{- define "vector.ports" -}}
-  {{- range $componentKind, $configs := .Values.customConfig }}
+  {{- range $componentKind, $components := .Values.customConfig }}
     {{- if eq $componentKind "sources" }}
-      {{- range $componentId, $componentConfig := $configs }}
-        {{- if (hasKey $componentConfig "address") }}
-        {{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
-        {{- end }}
-      {{- end }}
+      {{- tuple $components "_helper.generatePort" | include "_helper.componentIter" }}
     {{- else if eq $componentKind "sinks" }}
-      {{- range $componentId, $componentConfig := $configs }}
-        {{- if (hasKey $componentConfig "address") }}
-        {{- tuple $componentId $componentConfig | include "_helper.generatePort" -}}
-        {{- end }}
-      {{- end }}
+      {{- tuple $components "_helper.generatePort" | include "_helper.componentIter" }}
     {{- else if eq $componentKind "api" }}
-      {{- if $configs.enabled }}
+      {{- if $components.enabled }}
 - name: api
-  port: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+  port: {{ mustRegexFind "[0-9]+$" (get $components "address") }}
   protocol: TCP
-  targetPort: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+  targetPort: {{ mustRegexFind "[0-9]+$" (get $components "address") }}
       {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
 
 {{/*
-Generate a single ServicePort based on a component configuration
+Iterate over the components defined in `.Values.customConfig`.
+*/}}
+{{- define "_helper.componentIter" -}}
+{{- $components := index . 0 }}
+{{- $helper := index . 1 }}
+  {{- range $id, $options := $components }}
+    {{- if (hasKey $options "address") }}
+      {{- tuple $id $options | include $helper -}}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{/*
+Generate a single ServicePort based on a component configuration.
 */}}
 {{- define "_helper.generatePort" -}}
 {{- $name := index . 0 | kebabcase -}}
@@ -108,31 +113,23 @@ Generate a single ServicePort based on a component configuration
   protocol: {{ $protocol }}
   targetPort: {{ $port }}
 {{- if not (mustHas $protocol (list "TCP" "UDP")) }}
-{{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/timberio/vector" }}
+{{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/vectordotdev/vector" }}
 {{- end }}
 {{- end }}
 
 {{/*
-Generate an array of ContainerPorts based on customConfig
+Generate an array of ContainerPorts based on `.Values.customConfig`.
 */}}
 {{- define "vector.containerPorts" -}}
-  {{- range $componentKind, $configs := .Values.customConfig }}
+  {{- range $componentKind, $components := .Values.customConfig }}
     {{- if eq $componentKind "sources" }}
-      {{- range $componentId, $componentConfig := $configs }}
-        {{- if (hasKey $componentConfig "address") }}
-        {{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
-        {{- end }}
-      {{- end }}
+      {{- tuple $components "_helper.generateContainerPort" | include "_helper.componentIter" }}
     {{- else if eq $componentKind "sinks" }}
-      {{- range $componentId, $componentConfig := $configs }}
-        {{- if (hasKey $componentConfig "address") }}
-        {{- tuple $componentId $componentConfig | include "_helper.generateContainerPort" -}}
-        {{- end }}
-      {{- end }}
+      {{- tuple $components "_helper.generateContainerPort" | include "_helper.componentIter" }}
     {{- else if eq $componentKind "api" }}
-      {{- if $configs.enabled }}
+      {{- if $components.enabled }}
 - name: api
-  containerPort: {{ mustRegexFind "[0-9]+$" (get $configs "address") }}
+  containerPort: {{ mustRegexFind "[0-9]+$" (get $components "address") }}
   protocol: TCP
       {{- end }}
     {{- end }}
@@ -140,7 +137,7 @@ Generate an array of ContainerPorts based on customConfig
 {{- end }}
 
 {{/*
-Generate a single ContainerPort based on a component configuration
+Generate a single ContainerPort based on a component configuration.
 */}}
 {{- define "_helper.generateContainerPort" -}}
 {{- $name := index . 0 | kebabcase -}}
@@ -151,6 +148,102 @@ Generate a single ContainerPort based on a component configuration
   containerPort: {{ $port }}
   protocol: {{ $protocol }}
 {{- if not (mustHas $protocol (list "TCP" "UDP")) }}
-{{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/timberio/vector" }}
+{{ fail "Component's `mode` is not a supported protocol, please raise a issue at https://github.com/vectordotdev/vector" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Print Vector's logo.
+*/}}
+{{- define "_logo" -}}
+{{ print "\033[36m" }}
+{{ print "__   __  __" }}
+{{ print "\\ \\ / / / /" }}
+{{ print " \\ V / / /  " }}
+{{ print "  \\_/  \\/  " }}
+{{ print "\033[0m" }}
+{{ print "V E C T O R" }}
+{{- end }}
+
+{{/*
+Print line divider.
+*/}}
+{{- define "_divider" -}}
+{{ print "--------------------------------------------------------------------------------" }}
+{{- end }}
+
+{{/*
+Print the supplied value in yellow.
+*/}}
+{{- define "_fmt.yellow" -}}
+{{ print "\033[0;33m" . "\033[0m" }}
+{{- end }}
+
+{{/*
+Print the supplied value in blue.
+*/}}
+{{- define "_fmt.blue" -}}
+{{ print "\033[36m" . "\033[0m" }}
+{{- end }}
+
+{{/*
+Print `vector top` instructions.
+*/}}
+{{- define "_vector.top" -}}
+  {{- if eq "true" (include "_vector.apiEnabled" $) -}}
+{{ print "Vector is starting in your cluster. After a few minutes, you can use Vector's" }}
+{{ println "API to view internal metrics by running:" }}
+  {{- $resource := include "_vector.role" $ -}}
+  {{- $url := include "_vector.url" $ }}
+  {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} exec -it {{ $resource }}/{{ include "vector.fullname" $ }} -- vector top {{ $url }}
+  {{- else -}}
+  {{- $resource := include "_vector.role" $ -}}
+{{ print "Vector is starting in your cluster. After a few minutes, you can vew Vector's" }}
+{{ println "internal logs by running:" }}
+  {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} logs -f {{ $resource }}/{{ include "vector.fullname" $ }}
+  {{- end }}
+{{- end }}
+
+{{/*
+Return `true` if we can determine if Vector's API is enabled.
+*/}}
+{{- define "_vector.apiEnabled" -}}
+  {{- if $.Values.existingConfigMaps -}}
+false
+  {{- else if $.Values.customConfig -}}
+    {{- if $.Values.customConfig.api -}}
+      {{- if $.Values.customConfig.api.enabled -}}
+true
+      {{- end }}
+    {{- end }}
+  {{- else -}}
+true
+  {{- end }}
+{{- end }}
+
+{{/*
+Return Vector's Resource type based on its `.Values.role`.
+*/}}
+{{- define "_vector.role" -}}
+  {{- if eq $.Values.role "Stateless-Aggregator" -}}
+deployment
+  {{- else if eq $.Values.role "Agent" -}}
+daemonset
+  {{- else -}}
+statefulset
+  {{- end -}}
+{{- end }}
+
+{{/*
+Print the `url` option for the Vector command.
+*/}}
+{{- define "_vector.url" -}}
+  {{- if $.Values.customConfig -}}
+    {{- if $.Values.customConfig.api -}}
+      {{- if $.Values.customConfig.api.address -}}
+--url {{ printf "http://%s/graphql" $.Values.customConfig.api.address }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
