@@ -40,6 +40,8 @@ jobs:
           fetch-depth: 0
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.1
+      - name: Copy example values into ci/
+        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct.yaml
 
@@ -80,6 +82,8 @@ jobs:
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
+      - name: Copy example values into ci/
+        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run kubeval
         env:
           KUBERNETES_VERSION: ${{ matrix.k8s }}
@@ -114,6 +118,8 @@ jobs:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.1
+      - name: Copy example values into ci/
+        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
 
