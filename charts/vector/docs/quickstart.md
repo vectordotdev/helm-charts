@@ -72,6 +72,7 @@ For Datadog Agents version `7.35`/`6.35` or greater:
 
 ```bash
 cat <<-'VALUES' > dd-agent.yaml
+---
 datadog:
   logs:
     enabled: true
@@ -79,15 +80,19 @@ datadog:
 agents:
   useConfigMap: true
   customAgentConfig:
-    # NOTE: If you're using a quickstart environment like `minikube`, uncomment the line below; otherwise, we recommend leaving it with the default setting of `true`.
+    # NOTE: If you're using a quickstart environment like `minikube`,
+    # uncomment the line below; otherwise, we recommend leaving it with the
+    # default setting of `true`.
     # kubelet_tls_verify: false
     vector:
       logs:
         enabled: true
-        url: http://vector-haproxy.vector:8282 # Use https if SSL is enabled in Vector source configuration
+	# Use https if SSL is enabled in Vector source configuration
+        url: http://vector-haproxy.vector:8282
       metrics:
         enabled: true
-        url: http://vector-haproxy.vector:8282 # Use https if SSL is enabled in Vector source configuration
+	# Use https if SSL is enabled in Vector source configuration
+        url: http://vector-haproxy.vector:8282
 VALUES
 ```
 
@@ -98,6 +103,7 @@ than `7.35`/`6.35`._
 
 ```bash
 cat <<-'VALUES' > dd-agent.yaml
+---
 datadog:
   logs:
     enabled: true
@@ -105,11 +111,14 @@ datadog:
 agents:
   useConfigMap: true
   customAgentConfig:
-    # NOTE: If you're using a quickstart environment like `minikube`, uncomment the line below; otherwise, we recommend leaving it with the default setting of `true`.
+    # NOTE: If you're using a quickstart environment like `minikube`,
+    # uncomment the line below; otherwise, we recommend leaving it with the
+    # default setting of `true`.
     # kubelet_tls_verify: false
     logs_config:
       logs_dd_url: vector-haproxy.vector:8282
-      logs_no_ssl: true # Set to false if SSL is enabled in Vector source configuration
+      # Set to false if SSL is enabled in Vector source configuration
+      logs_no_ssl: true
       use_http: true
 VALUES
 ```
