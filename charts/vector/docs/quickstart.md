@@ -44,7 +44,7 @@ environment variable.
 
 ```bash
 helm install vector vector/vector --namespace vector --create-namespace \
-	--values docs/datadog_quickstart.yaml  --set secrets.generic.datadog_api_key="${DATADOG_API_KEY}"
+	--values examples/datadog-values.yaml  --set secrets.generic.datadog_api_key="${DATADOG_API_KEY}"
 ```
 
 Run the next command to confirm Vector has been configured properly and can
@@ -105,17 +105,14 @@ datadog:
 agents:
   useConfigMap: true
   customAgentConfig:
-    kubelet_tls_verify: false
+    # NOTE: If you're using a quickstart environment like `minikube`, include the line below; otherwise, we recommend leaving it with the default setting of `true`.
+    # kubelet_tls_verify: false
     logs_config:
       logs_dd_url: vector-haproxy.vector:8282
       logs_no_ssl: true # Set to false if SSL is enabled in Vector source configuration
       use_http: true
 VALUES
 ```
-
-**WARNING:** The above config disables TLS verification of the connection to the
-Kubelet. This is useful in a quickstart environment like `minikube`, but when
-real certificates are available, the `kubelet_tls_verify` option should be removed.
 
 _NOTE: When you have the `datadog_agent` source configured, a `helm install` or
 `helm upgrade` will output the appropriate values to provide to the datadog helm
@@ -157,12 +154,3 @@ For the Vector Aggregators:
 kubectl --namespace vector exec --stdin --tty statefulset/vector -- vector tap internal_logs
 ```
 
-## Moving to the cloud
-
-### Elastic Kubernetes Service
-
-#### Prerequisites
-
-#### Installing
-
-#### Troubleshooting

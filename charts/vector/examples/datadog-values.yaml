@@ -29,6 +29,10 @@ env:
       secretKeyRef:
         name: vector
         key: datadog_api_key
+  - name: NODE_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: spec.nodeName
 
 # resources -- Set Vector resource requests and limits.
 resources:
@@ -92,6 +96,8 @@ customConfig:
         # Add ddtags for internal_logs
         if .source_type == "internal_logs" {
           .ddtags = "service:vector"
+          .ddsource = "vector"
+          .host = get_env_var!("NODE_NAME")
         } 
 
         # Parse the received .ddtags field so we can more easily access the contained tags
