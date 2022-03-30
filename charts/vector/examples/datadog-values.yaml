@@ -1,6 +1,9 @@
 ## See Vector helm documentation to learn more:
 ## https://vector.dev/docs/setup/installation/package-managers/helm/
 
+# nameOverride -- Override name of app
+fullnameOverride: vector
+
 ## Create a Secret resource for Vector to use
 secrets:
   # secrets.generic -- Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded
