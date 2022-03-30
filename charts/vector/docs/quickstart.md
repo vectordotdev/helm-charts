@@ -24,6 +24,15 @@ helm repo add vector https://helm.vector.dev
 helm repo update
 ```
 
+Access to a pre-existing Kubernetes cluster, or start a new cluster locally
+with `minikube`.
+
+```bash
+minikube start
+minikube addons enable metrics-server
+minikube status
+```
+
 Clone this repository locally to have access to the quickstart values files.
 
 ```bash
