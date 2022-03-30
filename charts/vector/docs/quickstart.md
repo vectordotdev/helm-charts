@@ -55,11 +55,12 @@ kubectl logs statefulset/vector --namespace vector --follow
 ```
 
 Running the above will tail Vector's logs and allow to confirm your API key
-is correct. In the logs you should only see INFO messages, and three instances
-of the following log (one for each configured sink):
+is correct. In the logs you should only see INFO messages, and the following
+logs (one for each configured sink):
 
-```
-INFO vector::topology::builder: Healthcheck: Passed.
+```json
+{"timestamp":"2022-03-30T20:25:48.016522Z","level":"INFO","message":"Healthcheck: Passed.","target":"vector::topology::builder"}
+{"timestamp":"2022-03-30T20:25:48.024391Z","level":"INFO","message":"Healthcheck: Passed.","target":"vector::topology::builder"}
 ```
 
 Once Vector has been installed and configured, you can install your Datadog Agents.
