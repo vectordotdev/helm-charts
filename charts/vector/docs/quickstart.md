@@ -72,14 +72,14 @@ For Datadog Agents version `7.35`/`6.35` or greater:
 ```bash
 cat <<-'VALUES' > dd-agent.yaml
 datadog:
-  containerExclude: "name:vector"
   logs:
     enabled: true
     containerCollectAll: true
 agents:
   useConfigMap: true
   customAgentConfig:
-    kubelet_tls_verify: false
+    # NOTE: If you're using a quickstart environment like `minikube`, uncomment the line below; otherwise, we recommend leaving it with the default setting of `true`.
+    # kubelet_tls_verify: false
     vector:
       logs:
         enabled: true
@@ -98,14 +98,13 @@ than `7.35`/`6.35`._
 ```bash
 cat <<-'VALUES' > dd-agent.yaml
 datadog:
-  containerExclude: "name:vector"
   logs:
     enabled: true
     containerCollectAll: true
 agents:
   useConfigMap: true
   customAgentConfig:
-    # NOTE: If you're using a quickstart environment like `minikube`, include the line below; otherwise, we recommend leaving it with the default setting of `true`.
+    # NOTE: If you're using a quickstart environment like `minikube`, uncomment the line below; otherwise, we recommend leaving it with the default setting of `true`.
     # kubelet_tls_verify: false
     logs_config:
       logs_dd_url: vector-haproxy.vector:8282
