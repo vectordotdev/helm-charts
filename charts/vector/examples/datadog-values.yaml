@@ -89,10 +89,6 @@ customConfig:
         - datadog_agent.logs
         - internal_logs
       source: |
-        # TODO: Having Datadog Agents collect Aggregator logs would provide better enrichment,
-        # internal_logs will also provide the Pod's name as the host facet in Datadog rather
-        # than the name of the Node
-
         # Add ddtags for internal_logs
         if .source_type == "internal_logs" {
           .ddtags = "service:vector"
@@ -114,7 +110,6 @@ customConfig:
       type: datadog_logs
       inputs:
         - remap_logs
-        - internal_logs
       default_api_key: ${DATADOG_API_KEY}
       compression: gzip
     datadog_metrics:
@@ -130,7 +125,6 @@ customConfig:
       type: console
       inputs:
         - remap_logs
-        # TODO: do we want to print these?
         # - datadog_agent.metrics
         # - internal_metrics
       encoding:
