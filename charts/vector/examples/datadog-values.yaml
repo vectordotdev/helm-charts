@@ -13,7 +13,7 @@ secrets:
 autoscaling:
   enabled: true
   minReplicas: 2
-  ## The provided HAProxy config is limited to 10 backends 
+  ## The provided HAProxy config is limited to 10 backends
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
 
