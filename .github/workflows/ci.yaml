@@ -82,8 +82,6 @@ jobs:
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
-      - name: Copy example values into ci/
-        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run kubeval
         env:
           KUBERNETES_VERSION: ${{ matrix.k8s }}
