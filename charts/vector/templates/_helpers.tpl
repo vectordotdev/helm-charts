@@ -241,7 +241,8 @@ Print the `url` option for the Vector command.
   {{- if $.Values.customConfig -}}
     {{- if $.Values.customConfig.api -}}
       {{- if $.Values.customConfig.api.address -}}
---url {{ printf "http://%s/graphql" $.Values.customConfig.api.address }}
+{{ print "\\" }}
+        --url {{ printf "http://%s/graphql" $.Values.customConfig.api.address }}
       {{- end }}
     {{- end }}
   {{- end }}
