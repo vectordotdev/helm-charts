@@ -29,4 +29,4 @@ annotations:
   artifacthub.io/links: |
     - name: Chart Source
       url: https://github.com/vectordotdev/helm-charts
-  artifacthub.io/prerelease: "true"
+  artifacthub.io/prerelease: "false"
