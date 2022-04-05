@@ -3,3 +3,6 @@
 {{ template "_divider" }}
 
 {{ include "_vector.top" . }}
+
+{{ if not .Values.quiet }}{{ include "_configure.datadog" . }}{{ end }}
+
