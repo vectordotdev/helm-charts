@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.9.0] - 2022-04-12
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.20.1 ([8a03f17](https://github.com/vectordotdev/helm-charts/commit/8a03f1728c1007b02e8ad6e029a41bb01d1f2d8d))
+
+#### Documentation
+
+- Add quickstart values and docs (#176) ([ce17ab6](https://github.com/vectordotdev/helm-charts/commit/ce17ab665824768634fa1cab0c31d8b3b3e97b0e))
+
+#### Features
+
+- Improve help text printed by NOTES.txt and reduce duplication of internal templates (#189) ([e5d994c](https://github.com/vectordotdev/helm-charts/commit/e5d994c84a74be029061c55caa986d913b2f060a))
+- Add help output for configurations with datadog_agent source (#178) ([13aadfb](https://github.com/vectordotdev/helm-charts/commit/13aadfb10163fa7c36698acd9a492b4023d73a7b))
+
 ## [vector-0.7.0] - 2022-03-23
 
 ### Vector
