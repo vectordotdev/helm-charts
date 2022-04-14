@@ -18,11 +18,11 @@ maintainers:
   - name: Datadog
     email: vector@datadoghq.com
 icon: https://vector.dev/press/vector-icon.svg
-appVersion: "0.20.1-distroless-libc"
+appVersion: "0.21.0-distroless-libc"
 annotations:
   artifacthub.io/images: |
     - name: vector
-      image: timberio/vector:0.20.1-distroless-libc
+      image: timberio/vector:0.21.0-distroless-libc
     - name: haproxy
       image: haproxytech/haproxy-alpine:2.4.4
   artifacthub.io/license: MPL-2.0
