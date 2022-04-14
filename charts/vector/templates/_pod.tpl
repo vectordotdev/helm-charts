@@ -2,7 +2,7 @@
 Defines the PodSpec for Vector.
 */}}
 {{- define "vector.pod" -}}
-serviceAccountName: {{ include "vector.serviceAccountName" . }} 
+serviceAccountName: {{ include "vector.serviceAccountName" . }}
 {{- with .Values.podSecurityContext }}
 securityContext:
 {{ toYaml . | indent 2 }}
