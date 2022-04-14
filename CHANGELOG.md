@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.10.0] - 2022-04-14
+
+### Vector
+
+#### Features
+
+- Switch policy version based on capabilities and k8s version (#197) ([347403e](https://github.com/vectordotdev/helm-charts/commit/347403e4ad810ccde77f2927b675ed04b6a2f322))
+- Bump image to 0.21.0 ([28f48bd](https://github.com/vectordotdev/helm-charts/commit/28f48bd0577109395ccffad279e6d81a72bab1de))
+
 ## [vector-0.9.0] - 2022-04-12
 
 ### Vector
