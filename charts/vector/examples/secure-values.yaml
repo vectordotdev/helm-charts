@@ -1,0 +1,85 @@
+---
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 85
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+podAnnotations:
+  # Requires AppArmor enabled on the node
+  # container.apparmor.security.beta.kubernetes.io/vector: "runtime/default"
+  seccomp.security.alpha.kubernetes.io/pod: "runtime/default"  # Deprecated
+
+podSecurityContext:
+  runAsUser: 111
+  runAsNonRoot: true
+  runAsGroup: 1000
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+  seccompProfile:
+    type: "RuntimeDefault"
+  seLinuxOptions:
+    type: container_t
+
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+    add: ["NET_BIND_SERVICE"]
+
+resources:
+  requests:
+    cpu: 8000m
+    memory: 16Gi
+  limits:
+    cpu: 8000m
+    memory: 16Gi
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - vector
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - Aggregator
+          topologyKey: "kubernetes.io/hostname"
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - vector
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - Aggregator
+          topologyKey: "topology.kubernetes.io/zone"
+
+persistence:
+  enabled: true
+  size: 288Gi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: api
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: api
