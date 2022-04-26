@@ -1,5 +1,7 @@
 # [Vector](https://vector.dev) Helm Chart
 
+**DEPRECATED** This chart has been deprecated for the [`vector` chart](../vector).
+
 This is an opinionated Helm Chart for running [Vector](https://vector.dev) as an [aggregator](https://vector.dev/docs/about/concepts/#aggregator) in Kubernetes.
 
 To get started check out our [documentation](https://master.vector.dev/docs/setup/installation/platforms/kubernetes/)

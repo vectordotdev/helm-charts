@@ -3,6 +3,152 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.10.1] - 2022-04-22
+
+### Vector
+
+#### Bug Fixes
+
+- Bump image to 0.21.1 ([9d4fdb3](https://github.com/vectordotdev/helm-charts/commit/9d4fdb3fb89262d5f30f908abae70472e00b92f8))
+
+## [vector-0.10.0] - 2022-04-14
+
+### Vector
+
+#### Features
+
+- Switch policy version based on capabilities and k8s version (#197) ([347403e](https://github.com/vectordotdev/helm-charts/commit/347403e4ad810ccde77f2927b675ed04b6a2f322))
+- Bump image to 0.21.0 ([28f48bd](https://github.com/vectordotdev/helm-charts/commit/28f48bd0577109395ccffad279e6d81a72bab1de))
+
+## [vector-0.9.0] - 2022-04-12
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.20.1 ([8a03f17](https://github.com/vectordotdev/helm-charts/commit/8a03f1728c1007b02e8ad6e029a41bb01d1f2d8d))
+
+#### Documentation
+
+- Add quickstart values and docs (#176) ([ce17ab6](https://github.com/vectordotdev/helm-charts/commit/ce17ab665824768634fa1cab0c31d8b3b3e97b0e))
+
+#### Features
+
+- Improve help text printed by NOTES.txt and reduce duplication of internal templates (#189) ([e5d994c](https://github.com/vectordotdev/helm-charts/commit/e5d994c84a74be029061c55caa986d913b2f060a))
+- Add help output for configurations with datadog_agent source (#178) ([13aadfb](https://github.com/vectordotdev/helm-charts/commit/13aadfb10163fa7c36698acd9a492b4023d73a7b))
+
+## [vector-0.7.0] - 2022-03-23
+
+### Vector
+
+#### Bug Fixes
+
+- Update app.kubernetes.io/version to be the image.tag if it is set. (#179) ([782a50a](https://github.com/vectordotdev/helm-charts/commit/782a50aebf7bbd4d73ca06dccd8a704b5e561b9b))
+- Fix conditionals for existingConfigMaps and haproxy.existingConfigMap (#182) ([87ca537](https://github.com/vectordotdev/helm-charts/commit/87ca537b54f9956c434ddbbd3cfcc9942d7e9c07))
+  - **BREAKING**: Several templates were referencing a previously removed `existingConfig`, they've been updated to use either `existingConfigMaps` or `haproxy.existingConfigMap`
+- Use haproxy.image.tag as its version label value (#183) ([3983653](https://github.com/vectordotdev/helm-charts/commit/39836533d6f8c41c07ddb341641e0fe328537234))
+  - **BREAKING**: Labels on HAProxy resources were being passed the `AppVersion` value, leading them to be labeled with Vector's version rather than HAProxy's version
+
+#### Documentation
+
+- Update comment for autoscaling.enabled (#169) ([d226dd2](https://github.com/vectordotdev/helm-charts/commit/d226dd224eef9e2e598a62702162d774562778ed))
+
+#### Features
+
+- Add list verb for upcoming kube-rs change (#166) ([068af80](https://github.com/vectordotdev/helm-charts/commit/068af80e688214ca84325717e4c13e09830c765c))
+
+## [vector-0.7.0-rc.0] - 2022-03-08
+
+### Vector
+
+#### Features
+
+- Add list verb for upcoming kube-rs change ([e390ead](https://github.com/vectordotdev/helm-charts/commit/e390ead62dcc5e2736d9fb7cb1f19ac7684f3d92))
+
+## [vector-0.6.0] - 2022-02-11
+
+### Vector
+
+#### Features
+
+- Update to use 0.20.0 (#164) ([e0f7573](https://github.com/vectordotdev/helm-charts/commit/e0f7573eb84ec2000b4601540076733d93b6148a))
+
+## [vector-0.5.2] - 2022-02-11
+
+## [vector-0.5.1] - 2022-02-09
+
+### Vector
+
+#### Documentation
+
+- Update maintainer email (#161) ([a3dc59a])(https://github.com/vectordotdev/helm-charts/commit/a3dc59aaeaa36bd9f25c527023dbad394e0d3c58)
+
+## [vector-0.5.0] - 2022-02-07
+
+### Vector
+
+#### Bug Fixes
+
+- Include common labels on ClusterRole resource (#144) ([01773ba](https://github.com/vectordotdev/helm-charts/commit/01773baf98257c056f42793bb5f4c136a2926d2a))
+
+#### Documentation
+
+- Fix comment on autoscaling option (#145) ([9d1c3c2](https://github.com/vectordotdev/helm-charts/commit/9d1c3c29575c14b8d2d1a85fe611332d96816d18))
+- Fix loki label ends with new line (#154) ([e59c63b](https://github.com/vectordotdev/helm-charts/commit/e59c63be55aa0712aa6b9a35e3c5901d27593770))
+
+#### Features
+
+- Add honorLabels and honorTimestamps to PodMonitor (#153) ([5a92272](https://github.com/vectordotdev/helm-charts/commit/5a9227209d33efc513f5e282d076d8df438205c6))
+- Upgrade Vector to 0.19.1 (#157) ([be0dc41](https://github.com/vectordotdev/helm-charts/commit/be0dc411693bd2001b443a1545d9fb810403feeb))
+
+## [vector-0.4.0] - 2022-01-12
+
+### Vector
+
+#### Bug Fixes
+
+- Include common labels on ClusterRole resource (#144) ([01773ba](https://github.com/vectordotdev/helm-charts/commit/01773baf98257c056f42793bb5f4c136a2926d2a))
+
+#### Documentation
+
+- Fix comment on autoscaling option (#145) ([9d1c3c2](https://github.com/vectordotdev/helm-charts/commit/9d1c3c29575c14b8d2d1a85fe611332d96816d18))
+
+## [vector-0.3.0] - 2021-12-28
+
+### Vector
+
+#### Documentation
+
+- Fix example and CI for Vector templating (#126) ([e28ba32](https://github.com/vectordotdev/helm-charts/commit/e28ba3284089d26359d7ea7e87918dc5b9b33257))
+- Clarify usage of secrets.generic and env (#129) ([1396dd4](https://github.com/vectordotdev/helm-charts/commit/1396dd42309c8aeded6d20be2a2cc2b9c4e26d1b))
+
+#### Features
+
+- Update charts to Vector 0.19.0 (#131) ([26f9779](https://github.com/vectordotdev/helm-charts/commit/26f9779f49dfc67d76c6b33cfd126f2458a8dc20))
+
+### Vector-aggregator
+
+#### Bug Fixes
+
+- Fix the conditions for enable/disable SA on the HAProxy (#122) ([83cf509](https://github.com/vectordotdev/helm-charts/commit/83cf5091825fbff872819251e00808befc41a331))
+
+## [vector-0.2.2] - 2021-11-30
+
+### Vector
+
+#### Features
+
+- Upgrade Vector to 0.18.1. (#124) ([20f1f0e](https://github.com/vectordotdev/helm-charts/commit/20f1f0e91ac9142d958f112022c9448b62cd46ce))
+
+## [vector-0.2.1] - 2021-11-23
+
+### Vector
+
+#### Bug Fixes
+
+- Switch metric list order in HPA. (#117) ([0a214bb](https://github.com/vectordotdev/helm-charts/commit/0a214bb9f49cf35d4c7d891becdecf84433b9e25))
+- Typo podPriorityClassName & StatefulSet (#116) ([31d7eb4](https://github.com/vectordotdev/helm-charts/commit/31d7eb4154fc7ebd81573d6dcbf6de35cd303771))
+
 ## [vector-0.2.0] - 2021-11-19
 
 ### Vector

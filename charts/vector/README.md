@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.18.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.18.0--distroless--libc-informational?style=flat-square)
+![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.21.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.21.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -101,9 +101,9 @@ customConfig:
       #...
       labels:
         foo: bar
-        host: |
+        host: |-
           {{ print "{{ host }}" }}
-        source: |
+        source: |-
           {{ print "{{ source_type }}" }}
 ```
 
@@ -126,7 +126,7 @@ helm install --name <RELEASE_NAME> \
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules |
 | args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments |
 | autoscaling.customMetric | object | `{}` | Target a custom metric |
-| autoscaling.enabled | bool | `false` | Enabled autoscaling for the Stateless-Aggregator |
+| autoscaling.enabled | bool | `false` | Enabled autoscaling for the Aggregator and Stateless-Aggregator |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |
 | autoscaling.minReplicas | int | `1` | Minimum replicas for Vector's HPA |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization for Vector's HPA |
@@ -171,6 +171,8 @@ helm install --name <RELEASE_NAME> \
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role |
 | podMonitor.additionalLabels | object | `{}` | Adds additional labels to the PodMonitor |
 | podMonitor.enabled | bool | `false` | If true, create a PodMonitor for Vector |
+| podMonitor.honorLabels | bool | `false` | If true, honor_labels is set to true in scrape config |
+| podMonitor.honorTimestamps | bool | `true` | If true, honor_timestamps is set to true in scrape config |
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from |
 | podMonitor.metricRelabelings | list | `[]` | MetricRelabelConfigs to apply to samples before ingestion |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape |

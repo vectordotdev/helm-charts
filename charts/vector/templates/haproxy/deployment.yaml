@@ -55,7 +55,7 @@ spec:
             - -f
             - /usr/local/etc/haproxy/haproxy.cfg
           ports:
-          {{- if or .Values.haproxy.containerPorts .Values.haproxy.existingConfig }}
+          {{- if or .Values.haproxy.containerPorts .Values.haproxy.existingConfigMap }}
             {{- toYaml .Values.haproxy.containerPorts | nindent 12 }}
           {{- else if .Values.customConfig }}
             {{- include "vector.containerPorts" . | indent 12 }}

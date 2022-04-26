@@ -3,8 +3,6 @@ name: Lint and Test Charts
 
 on:
   pull_request:
-    paths:
-      - 'charts/**'
 
 jobs:
   changed:
@@ -13,11 +11,11 @@ jobs:
       charts: ${{ steps.list-changed.outputs.changed }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
+        uses: helm/chart-testing-action@v2.2.1
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -37,11 +35,13 @@ jobs:
       - changed
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
+        uses: helm/chart-testing-action@v2.2.1
+      - name: Copy example values into ci/
+        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct.yaml
 
@@ -51,7 +51,7 @@ jobs:
       - changed
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Run helm-docs
@@ -64,18 +64,21 @@ jobs:
     strategy:
       matrix:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
+        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
-          - v1.15.12
-          - v1.16.15
-          - v1.17.17
-          - v1.18.19
+          - v1.23.3
+          # fails on `kind` but not `minikube`; we weren't able to track down why
+          # possibly related to https://github.com/kubernetes-sigs/kind/issues/2532
+          # - v1.22.4
+          - v1.21.2
+          - v1.20.7
           - v1.19.11
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Add timberio helm repo
+      - name: Add vector helm repo
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
@@ -93,15 +96,18 @@ jobs:
     strategy:
       matrix:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
+        # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
-          - v1.15.12
-          - v1.16.15
-          - v1.17.17
-          - v1.18.19
+          - v1.23.3
+          # fails on `kind` but not `minikube`; we weren't able to track down why
+          # possibly related to https://github.com/kubernetes-sigs/kind/issues/2532
+          # - v1.22.4
+          - v1.21.2
+          - v1.20.7
           - v1.19.11
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Create kind ${{ matrix.k8s }}
@@ -109,7 +115,9 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.1.0
+        uses: helm/chart-testing-action@v2.2.1
+      - name: Copy example values into ci/
+        run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
 

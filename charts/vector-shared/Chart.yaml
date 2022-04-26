@@ -3,10 +3,11 @@ name: vector-shared
 type: library
 icon: https://vector.dev/press/vector-icon.svg
 description: Shared dependencies of Vector Helm charts
-version: "0.1.0"
+version: "0.2.1"
 home: https://vector.dev/
 sources:
   - https://github.com/timberio/vector/
-maintainers:
-  - name: Datadog
-    email: team-vector@datadoghq.com
+# maintainers:
+#   - name: Datadog
+#     email: vector@datadoghq.com
+deprecated: true

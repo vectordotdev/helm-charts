@@ -52,3 +52,4 @@ commit_parsers = [
 filter_commits = true
 # glob pattern for matching git tags
 tag_pattern = "vector-*"
+date_order = true

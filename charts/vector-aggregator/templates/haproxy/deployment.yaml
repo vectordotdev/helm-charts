@@ -27,7 +27,7 @@ spec:
 {{ toYaml .Values.haproxy.podAnnotations | indent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ include "libvector.serviceAccountName" . }}-haproxy
+      serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
       terminationGracePeriodSeconds: {{ .Values.haproxy.terminationGracePeriodSeconds }}
       securityContext:
         {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}

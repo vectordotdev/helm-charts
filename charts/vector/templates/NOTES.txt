@@ -1,37 +1,8 @@
-__   __  __
-\ \ / / / /
- \ V / / /
-  \_/  \/
-V E C T O R
+{{ include "_logo" . | indent 34 }}
 
-{{ if (eq .Values.role "Aggregator") }}
-  {{- if not .Values.customConfig }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
+{{ template "_divider" }}
 
-	kubectl -n {{ .Release.Namespace }} exec -it statefulset/{{ include "vector.fullname" . }} -- vector top 
-  {{- else if .Values.customConfig.api.enabled }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
+{{ include "_vector.top" . }}
 
-	kubectl -n {{ .Release.Namespace }} exec -it statefulset/{{ include "vector.fullname" . }} -- vector top --url {{ printf "http://%s/graphql" .Values.customConfig.api.address | default "http://127.0.0.1:8686/graphql" }}
-  {{- end }}
-{{ else if (eq .Values.role "Stateless-Aggregator") }}
-  {{- if not .Values.customConfig }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
+{{ if not .Values.quiet }}{{ include "_configure.datadog" . }}{{ end }}
 
-	kubectl -n {{ .Release.Namespace }} exec -it deployment/{{ include "vector.fullname" . }} -- vector top 
-  {{- else if .Values.customConfig.api.enabled }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
-
-	kubectl -n {{ .Release.Namespace }} exec -it deployment/{{ include "vector.fullname" . }} -- vector top --url {{ printf "http://%s/graphql" .Values.customConfig.api.address | default "http://127.0.0.1:8686/graphql" }}
-  {{- end }}
-{{ else if (eq .Values.role "Agent") }}
-  {{- if not .Values.customConfig }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
-
-	kubectl -n {{ .Release.Namespace }} exec -it daemonset/{{ include "vector.fullname" . }} -- vector top 
-  {{- else if .Values.customConfig.api.enabled }}
-Vector is starting in your cluster. After a few minutes, you can use Vector's API to view internal metrics by running:
-
-	kubectl -n {{ .Release.Namespace }} exec -it daemonset/{{ include "vector.fullname" . }} -- vector top --url {{ printf "http://%s/graphql" .Values.customConfig.api.address | default "http://127.0.0.1:8686/graphql" }}
-  {{- end }}
-{{- end }}

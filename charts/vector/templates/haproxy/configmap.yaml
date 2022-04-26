@@ -1,4 +1,4 @@
-{{- if and .Values.haproxy.enabled (not .Values.existingConfig) }}
+{{- if and .Values.haproxy.enabled (not .Values.haproxy.existingConfigMap) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
