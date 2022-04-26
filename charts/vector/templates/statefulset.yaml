@@ -6,7 +6,9 @@ metadata:
   labels:
     {{- include "vector.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
+  {{- end }}
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   selector:
     matchLabels:
