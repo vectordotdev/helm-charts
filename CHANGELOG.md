@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.10.2] - 2022-04-27
+
+### Vector
+
+#### Bug Fixes
+
+- No need to set replicas to Statefulset when using autoscaling ([9d4fdb3](https://github.com/vectordotdev/helm-charts/pull/203/commits/7d01231b484f080df31efda465dc0cb1b31262b5))
+
 ## [vector-0.10.1] - 2022-04-22
 
 ### Vector
