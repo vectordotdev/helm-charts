@@ -12,6 +12,7 @@ rules:
       - ""
     resources:
       - namespaces
+      - nodes
       - pods
     verbs:
       - list
