@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.11.0] - 2022-05-20
+
+### Vector
+
+#### Features
+
+- Add ability to list and watch nodes ([081fa33](https://github.com/vectordotdev/helm-charts/commit/081fa33118f63cfde6e6cae0c0e1a430e53948eb))
+
 ## [vector-0.10.3] - 2022-05-06
 
 ### Vector
