@@ -367,7 +367,7 @@ haproxy:
     ## Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
     pullSecrets: []
     # haproxy.image.tag -- HAProxy image tag to use
-    tag: "2.4.4"
+    tag: "2.4.17"
 
   # haproxy.rollWorkload -- Add a checksum of the generated ConfigMap to the HAProxy Deployment
   rollWorkload: true
