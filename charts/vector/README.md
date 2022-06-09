@@ -222,7 +222,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
 | haproxy.image.pullSecrets | list | `[]` | HAProxy repository pullSecret (ex: specify docker registry credentials) |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
-| haproxy.image.tag | string | `"2.4.4"` | HAProxy image tag to use |
+| haproxy.image.tag | string | `"2.4.17"` | HAProxy image tag to use |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pod |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes |
