@@ -34,6 +34,8 @@ image:
   # image.tag -- Vector image tag to use
   # @default -- Chart's appVersion
   tag: ""
+  # image.sha -- Vector image sha to use
+  sha: ""
 
 # replicas -- Set the number of Pods to create
 ## Valid for Aggregator and Stateless-Aggregator
