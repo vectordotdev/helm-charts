@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.13.0] - 2022-06-13
+
+### Vector
+
+#### Features
+
+- Add digest option to vector image ([6e54a0a](https://github.com/vectordotdev/helm-charts/commit/6e54a0a463c47ec57e5f8b315e40a07ae584b878))
+
 ## [vector-0.12.0] - 2022-06-01
 
 ### Vector

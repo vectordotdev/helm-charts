@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.12.1](https://img.shields.io/badge/Version-0.12.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.22.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.22.0--distroless--libc-informational?style=flat-square)
+![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.22.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.22.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -146,6 +146,7 @@ helm install --name <RELEASE_NAME> \
 | image.pullPolicy | string | `"IfNotPresent"` | Vector image pullPolicy |
 | image.pullSecrets | list | `[]` | Agent repository pullSecret (ex: specify docker registry credentials) # Ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod |
 | image.repository | string | `"timberio/vector"` | Override default registry + name for Vector |
+| image.sha | string | `""` | Vector image sha to use |
 | image.tag | string | Chart's appVersion | Vector image tag to use |
 | ingress.annotations | object | `{}` | Set annotations on the Ingress |
 | ingress.className | string | `""` | Specify the ingressClassName, requires Kubernetes >= 1.18 # Ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress |
