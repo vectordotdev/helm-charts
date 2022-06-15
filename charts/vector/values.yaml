@@ -14,7 +14,7 @@ fullnameOverride: ""
 ## Agent - DaemonSet
 ## Aggregator - StatefulSet
 ## Stateless-Aggregator - Deployment
-role: "Aggregator"
+role: "Agent"
 
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations
 rollWorkload: true
@@ -58,6 +58,7 @@ secrets:
 
 ## Configure a HorizontalPodAutoscaler for Vector
 ## Valid for Aggregator and Stateless-Aggregator roles
+## You can't enable both HorizontalPodAutoscaler and Kubernetes Event-driven Autoscaling
 autoscaling:
   # autoscaling.enabled -- Enabled autoscaling for the Aggregator and Stateless-Aggregator
   enabled: false
@@ -78,6 +79,44 @@ autoscaling:
     #      target:
     #        type: AverageValue
     #        averageValue: 95
+
+## Configure a Kubernetes Event-driven Autoscaling for Vector
+## Ref: https://keda.sh/
+## Valid for Aggregator and Stateless-Aggregator roles
+## You can't enable both Kubernetes Event-driven Autoscaling and HorizontalPodAutoscaler
+keda:
+  # keda.enabled -- Enabled KEDA for the Aggregator and Stateless-Aggregator
+  enabled: false
+  # keda.minReplicas -- Minimum replicas for Vector's KEDA
+  minReplicas: 2
+  # keda.maxReplicas -- Maximum replicas for Vector's KEDA
+  maxReplicas: 20
+  # keda.pollingInterval -- Interval to check each trigger for Vector's KEDA
+  pollingInterval: 30
+  # keda.cooldownPeriod -- Interval to wait after the last trigger reported active before scaling back to 0 for Vector's KEDA
+  cooldownPeriod: 300
+  # keda.scaledObject -- Anotations to add to KEDA ScaledObject resource
+  ## Ref: https://keda.sh/docs/2.7/concepts/scaling-deployments/#scaledobject-spec
+  scaledObject:
+    annotations: {}
+  # keda.behavior -- Used to modify HPA's scaling behavior
+  ## Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#configurable-scaling-behavior
+  behavior: {}
+  #  scaleDown:
+  #    stabilizationWindowSeconds: 300
+  #    policies:
+  #    - type: Percent
+  #      value: 100
+  #      periodSeconds: 15
+  # keda.triggers -- List of triggers to activate scaling of the target resource.
+  ## Ref: https://keda.sh/docs/2.7/concepts/scaling-deployments/#triggers
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://<prometheus-host>:9090
+        metricName: vector_utilization_scaler
+        threshold: '0.85'
+        query: avg(vector_utilization{component_type="remap"}[5m])
 
 podDisruptionBudget:
   # podDisruptionBudget.enabled -- Enable a PodDisruptionBudget for Vector

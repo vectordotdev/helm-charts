@@ -154,6 +154,14 @@ helm install --name <RELEASE_NAME> \
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pod |
+| keda.behavior | object | `{}` | Used to modify HPA's scaling behavior # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#configurable-scaling-behavior |
+| keda.cooldownPeriod | int | `300` | Interval to wait after the last trigger reported active before scaling back to 0 for Vector's KEDA |
+| keda.enabled | bool | `false` | Enabled KEDA for the Aggregator and Stateless-Aggregator |
+| keda.maxReplicas | int | `20` | Maximum replicas for Vector's KEDA |
+| keda.minReplicas | int | `2` | Minimum replicas for Vector's KEDA |
+| keda.pollingInterval | int | `30` | Interval to check each trigger for Vector's KEDA |
+| keda.scaledObject | object | `{"annotations":{}}` | Anotations to add to KEDA ScaledObject resource # Ref: https://keda.sh/docs/2.7/concepts/scaling-deployments/#scaledobject-spec |
+| keda.triggers | list | `[]` | List of triggers to activate scaling of the target resource. # Ref: https://keda.sh/docs/2.7/concepts/scaling-deployments/#triggers |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true # Requires Vector's API to be enabled |
 | nameOverride | string | `""` | Override name of app |
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector # Ref: https://kubernetes.io/docs/user-guide/node-selection/ |

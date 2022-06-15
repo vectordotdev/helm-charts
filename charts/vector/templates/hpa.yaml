@@ -1,5 +1,5 @@
 {{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
-{{- if and .Values.autoscaling.enabled (.Capabilities.APIVersions.Has "autoscaling/v2beta2") }}
+{{- if and .Values.autoscaling.enabled (.Capabilities.APIVersions.Has "autoscaling/v2beta2") (not .Values.keda.enabled)}}
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:

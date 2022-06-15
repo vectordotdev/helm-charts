@@ -1,0 +1,34 @@
+{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
+{{- if and .Values.keda.enabled (not .Values.autoscaling.enabled)}}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "vector.fullname" . }}
+  labels:
+    {{- include "vector.labels" . | nindent 4 }}
+  {{- if .Values.keda.scaledObject.annotations }}
+  annotations: {{ toYaml .Values.keda.scaledObject.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "vector.fullname" . }}
+  pollingInterval: {{ .Values.keda.pollingInterval }}
+  cooldownPeriod: {{ .Values.keda.cooldownPeriod }}
+  minReplicaCount: {{ .Values.keda.minReplicas }}
+  maxReplicaCount: {{ .Values.keda.maxReplicas }}
+  triggers:
+{{- with .Values.keda.triggers }}
+{{ toYaml . | indent 2 }}
+{{ end }}
+{{- if .Values.keda.behavior }}
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+{{ with .Values.keda.behavior -}}
+{{ toYaml . | indent 8 }}
+{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}
