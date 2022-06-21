@@ -4,6 +4,42 @@ entries:
   - annotations:
       artifacthub.io/images: |
         - name: vector
+          image: timberio/vector:0.22.2-distroless-libc
+        - name: haproxy
+          image: haproxytech/haproxy-alpine:2.4.17
+      artifacthub.io/license: MPL-2.0
+      artifacthub.io/links: |
+        - name: Chart Source
+          url: https://github.com/vectordotdev/helm-charts
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 0.22.2-distroless-libc
+    created: "2022-06-21T16:47:23.364153019Z"
+    description: A lightweight, ultra-fast tool for building observability pipelines
+    digest: d927f4edc30f2ada1fb7f5441f9f997a9855c0876684d1ea25fa96f1682c26f1
+    home: https://vector.dev/
+    icon: https://vector.dev/press/vector-icon.svg
+    keywords:
+    - vector
+    - events
+    - logs
+    - metrics
+    - observability
+    - stream-processing
+    kubeVersion: '>=1.15.0-0'
+    maintainers:
+    - email: vector@datadoghq.com
+      name: Datadog
+    name: vector
+    sources:
+    - https://github.com/vectordotdev/vector/
+    type: application
+    urls:
+    - https://github.com/vectordotdev/helm-charts/releases/download/vector-0.13.1/vector-0.13.1.tgz
+    version: 0.13.1
+  - annotations:
+      artifacthub.io/images: |
+        - name: vector
           image: timberio/vector:0.22.0-distroless-libc
         - name: haproxy
           image: haproxytech/haproxy-alpine:2.4.17
@@ -1728,4 +1764,4 @@ entries:
     urls:
     - https://github.com/timberio/helm-charts/releases/download/vector-shared-0.1.0/vector-shared-0.1.0.tgz
     version: 0.1.0
-generated: "2022-06-14T14:51:46.608840394Z"
+generated: "2022-06-21T16:47:23.364575014Z"
