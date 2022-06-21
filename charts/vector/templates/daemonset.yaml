@@ -32,7 +32,6 @@ spec:
       {{- end }}
       labels:
         {{- include "vector.selectorLabels" . | nindent 8 }}
-        vector.dev/exclude: "true"
       {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

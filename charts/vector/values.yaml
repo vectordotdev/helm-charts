@@ -111,7 +111,8 @@ serviceAccount:
 podAnnotations: {}
 
 # podLabels -- Set labels on Vector Pods
-podLabels: {}
+podLabels:
+  vector.dev/exclude: "true"
 
 # podPriorityClassName -- Set the priorityClassName on Vector Pods
 podPriorityClassName: ""
