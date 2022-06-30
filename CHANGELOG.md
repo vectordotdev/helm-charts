@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.13.2] - 2022-06-30
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector version to 0.22.3 ([3177be3](https://github.com/vectordotdev/helm-charts/commit/3177be318994dd2d4d8ce466e723d13266f1f271))
+
+#### Features
+
+- Allow enabling of collection vector container logs by vector (#222) ([a4e9b7a](https://github.com/vectordotdev/helm-charts/commit/a4e9b7adcf780928fb0a4f5f989c760f75e53d9d))
+
 ## [vector-0.13.1] - 2022-06-17
 
 ### Vector
