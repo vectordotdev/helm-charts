@@ -1,5 +1,6 @@
 {{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
-{{- if and .Values.keda.enabled (not .Values.autoscaling.enabled)}}
+{{ if and .Values.keda.enabled .Values.autoscaling.enabled}}{{ fail "You can't enable both KEDA and HPA, please choose only one"}}{{end}}
+{{- if and .Values.keda.enabled (.Capabilities.APIVersions.Has "keda.sh/v1alpha1") (not .Values.autoscaling.enabled)}}
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
