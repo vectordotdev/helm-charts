@@ -157,6 +157,14 @@ resources: {}
   #   cpu: 200m
   #   memory: 256Mi
 
+# lifecycle -- Set vector lifecycle hooks
+lifecycle: {}
+  # preStop:
+  #   exec:
+  #     command:
+  #     - /bin/sleep
+  #     - "10"
+
 # updateStrategy -- Customize the updateStrategy used to replace Vector Pods
 ## Also used for the DeploymentStrategy for Stateless-Aggregators
 ## Valid options are used depending on the chosen role
