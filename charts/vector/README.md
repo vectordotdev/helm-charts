@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.0--distroless--libc-informational?style=flat-square)
+![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -154,6 +154,7 @@ helm install --name <RELEASE_NAME> \
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pod |
+| lifecycle | object | `{}` | Set vector lifecycle hooks |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true # Requires Vector's API to be enabled |
 | nameOverride | string | `""` | Override name of app |
 | nodeSelector | object | `{}` | Allow Vector to be scheduled on selected nodes # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector # Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
