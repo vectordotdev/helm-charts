@@ -1,6 +1,6 @@
 {{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
-{{- if and .Values.autoscaling.enabled (.Capabilities.APIVersions.Has "autoscaling/v2beta2") }}
-apiVersion: autoscaling/v2beta2
+{{- if .Values.autoscaling.enabled }}
+apiVersion: {{ template "autoscaling.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "vector.fullname" . }}

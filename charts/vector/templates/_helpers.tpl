@@ -79,6 +79,17 @@ Return the appropriate apiVersion for PodDisruptionBudget policy APIs.
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for HPA autoscaling APIs.
+*/}}
+{{- define "autoscaling.apiVersion" -}}
+{{- if or (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">=1.23" .Capabilities.KubeVersion.Version) -}}
+"autoscaling/v2"
+{{- else -}}
+"autoscaling/v2beta2"
+{{- end -}}
+{{- end -}}
+
+{{/*
 Generate an array of ServicePorts based on `.Values.customConfig`.
 */}}
 {{- define "vector.ports" -}}
