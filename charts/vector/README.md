@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.0--distroless--libc-informational?style=flat-square)
+![Version: 0.15.0](https://img.shields.io/badge/Version-0.15.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -125,6 +125,7 @@ helm install --name <RELEASE_NAME> \
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity |
 | args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments |
+| autoscaling.behavior | object | `{}` | Configure separate scale-up and scale-down behaviors |
 | autoscaling.customMetric | object | `{}` | Target a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Aggregator and Stateless-Aggregator |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |

@@ -78,6 +78,7 @@ autoscaling:
     #      target:
     #        type: AverageValue
     #        averageValue: 95
+  # autoscaling.behavior -- Configure separate scale-up and scale-down behaviors
   behavior: {}
     # scaleDown:
     #   stabilizationWindowSeconds: 300
