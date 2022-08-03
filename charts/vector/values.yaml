@@ -78,6 +78,9 @@ autoscaling:
     #      target:
     #        type: AverageValue
     #        averageValue: 95
+  behavior: {}
+    # scaleDown:
+    #   stabilizationWindowSeconds: 300
 
 podDisruptionBudget:
   # podDisruptionBudget.enabled -- Enable a PodDisruptionBudget for Vector
