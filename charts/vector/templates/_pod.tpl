@@ -114,6 +114,10 @@ containers:
     resources:
 {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- with .Values.lifecycle }}
+    lifecycle:
+{{- toYaml . | nindent 6 }}
+{{- end }}
     volumeMounts:
       - name: data
         {{- if .Values.existingConfigMaps }}
