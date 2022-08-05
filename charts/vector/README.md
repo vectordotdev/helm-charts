@@ -125,6 +125,7 @@ helm install --name <RELEASE_NAME> \
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Allow Vector to schedule using affinity rules # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity |
 | args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments |
+| autoscaling.behavior | object | `{}` | Configure separate scale-up and scale-down behaviors |
 | autoscaling.customMetric | object | `{}` | Target a custom metric |
 | autoscaling.enabled | bool | `false` | Enabled autoscaling for the Aggregator and Stateless-Aggregator |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA |
