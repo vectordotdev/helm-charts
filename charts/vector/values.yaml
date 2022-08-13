@@ -121,6 +121,9 @@ podLabels:
 # podPriorityClassName -- Set the priorityClassName on Vector Pods
 podPriorityClassName: ""
 
+# podHostNetwork -- Set the hostNetwork on Vector Pods
+podHostNetwork: false
+
 # podSecurityContext -- Allows you to overwrite the default PodSecurityContext for Vector
 podSecurityContext: {}
 
