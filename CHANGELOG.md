@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.16.0] - 2022-08-15
+
+### Vector
+
+#### Features
+
+- Add support for setting the pod hostNetwork (#213) ([8b2e73a](https://github.com/vectordotdev/helm-charts/commit/8b2e73a3ef6bd175b9602f915dbf3684d244e126))
+
 ## [vector-0.15.1] - 2022-08-11
 
 ### Vector
