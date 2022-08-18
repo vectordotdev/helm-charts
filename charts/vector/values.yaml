@@ -279,6 +279,10 @@ extraVolumeMounts: []
 # initContainers -- Init Containers to be added to the Vector Pod
 initContainers: []
 
+# extraContainers -- Extra Containers to be added to the Vector Pod
+## this section allows you to run one or more sidecar containers along with the main Vector container
+extraContainers: []
+
 ## Configuration for Vector's data persistence
 persistence:
   # persistence.enabled -- If true, create and use PersistentVolumeClaims
@@ -472,6 +476,10 @@ haproxy:
 
   # haproxy.initContainers -- Init Containers to be added to the HAProxy Pod
   initContainers: []
+
+  # haproxy.extraContainers -- Extra Containers to be added to the HAProxy Pod
+  ## this section allows you to run one or more sidecar containers along with the main HAPproxy container
+  extraContainers: []
 
   ## Configure a HorizontalPodAutoscaler for HAProxy
   autoscaling:

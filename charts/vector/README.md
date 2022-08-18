@@ -155,6 +155,7 @@ helm install --name <RELEASE_NAME> \
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pod |
+| extraContainers | list | `[]` | Extra Containers to be addded to the Vector Pod. This section allows you to run one or more sidecar containers along with the main Vector container |
 | lifecycle | object | `{}` | Set vector lifecycle hooks |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true # Requires Vector's API to be enabled |
 | nameOverride | string | `""` | Override name of app |
@@ -227,6 +228,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
 | haproxy.image.tag | string | `"2.4.17"` | HAProxy image tag to use |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pod |
+| haproxy.extraContainers | list | `[]` | Extra Containers to be addded to the HAProxy Pod. This section allows you to run one or more sidecar containers along with the main HAProxy container |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector # Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
