@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.15.1](https://img.shields.io/badge/Version-0.15.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.3-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.3--distroless--libc-informational?style=flat-square)
+![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.23.3-distroless-libc](https://img.shields.io/badge/AppVersion-0.23.3--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -141,6 +141,7 @@ helm install --name <RELEASE_NAME> \
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy |
 | env | list | `[]` | Set environment variables in Vector containers # The examples below leverage examples from secrets.generic and assume no name overrides with a Release name of "vector" |
 | existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration # If set, this parameter takes precedence over customConfig and the chart's default configs |
+| extraContainers | list | `[]` | Extra Containers to be added to the Vector Pod |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods |
 | fullnameOverride | string | `""` | Override the full qualified app name |
@@ -155,7 +156,6 @@ helm install --name <RELEASE_NAME> \
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pod |
-| extraContainers | list | `[]` | Extra Containers to be addded to the Vector Pod. This section allows you to run one or more sidecar containers along with the main Vector container |
 | lifecycle | object | `{}` | Set vector lifecycle hooks |
 | livenessProbe | object | `{}` | Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled true # Requires Vector's API to be enabled |
 | nameOverride | string | `""` | Override name of app |
@@ -221,6 +221,7 @@ helm install --name <RELEASE_NAME> \
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically # By default this chart will parse Vector's configuration from customConfig to generate HAProxy's config, this generated config # can be overwritten with haproxy.customConfig |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer |
 | haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration # If set, this parameter takes precedence over customConfig and the chart's default configs |
+| haproxy.extraContainers | list | `[]` | Extra Containers to be added to the HAProxy Pod |
 | haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers |
 | haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy |
@@ -228,7 +229,6 @@ helm install --name <RELEASE_NAME> \
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry + name for HAProxy |
 | haproxy.image.tag | string | `"2.4.17"` | HAProxy image tag to use |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pod |
-| haproxy.extraContainers | list | `[]` | Extra Containers to be addded to the HAProxy Pod. This section allows you to run one or more sidecar containers along with the main HAProxy container |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings |
 | haproxy.nodeSelector | object | `{}` | Allow HAProxy to be scheduled on selected nodes # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector # Ref: https://kubernetes.io/docs/user-guide/node-selection/ |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods |
