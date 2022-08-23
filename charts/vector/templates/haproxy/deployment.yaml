@@ -112,6 +112,9 @@ spec:
           {{- with .Values.haproxy.extraVolumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
+        {{- with .Values.haproxy.extraContainers }}
+        {{ toYaml . | indent 8 }}
+        {{- end }}
       volumes:
         - name: haproxy-config
           configMap:

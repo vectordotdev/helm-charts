@@ -142,6 +142,9 @@ containers:
         mountPath: "/host/sys"
         readOnly: true
 {{- end }}
+{{- with .Values.extraContainers }}
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.extraVolumeMounts }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
