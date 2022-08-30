@@ -3,6 +3,9 @@ Defines the PodSpec for Vector.
 */}}
 {{- define "vector.pod" -}}
 serviceAccountName: {{ include "vector.serviceAccountName" . }}
+{{- with .Values.podHostNetwork }}
+hostNetwork: {{ . }}
+{{- end }}
 {{- with .Values.podSecurityContext }}
 securityContext:
 {{ toYaml . | indent 2 }}

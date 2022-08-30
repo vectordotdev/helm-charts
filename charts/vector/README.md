@@ -171,6 +171,7 @@ helm install --name <RELEASE_NAME> \
 | podDisruptionBudget.enabled | bool | `false` | Enable a PodDisruptionBudget for Vector |
 | podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction |
 | podDisruptionBudget.minAvailable | int | `1` | The number of Pods that must still be available after an eviction |
+| podHostNetwork | bool | `false` | Set the hostNetwork on Vector Pods |
 | podLabels | object | `{"vector.dev/exclude":"true"}` | Set labels on Vector Pods |
 | podManagementPolicy | string | `"OrderedReady"` | Specify the podManagementPolicy for the Aggregator role # Valid for Aggregator role |
 | podMonitor.additionalLabels | object | `{}` | Adds additional labels to the PodMonitor |
