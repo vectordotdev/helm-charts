@@ -20,5 +20,5 @@ customConfig:
         {{ print "{{kubernetes.pod_labels.app\\.kubernetes\\.io/client-id}}/%Y/%m/%d/{{kubernetes.pod_name}}/" }}
       compression: gzip
       encoding:
-        codec: ndjson
+        codec: json
       region: us-east-1

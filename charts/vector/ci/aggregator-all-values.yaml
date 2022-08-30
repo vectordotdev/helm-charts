@@ -83,7 +83,7 @@ customConfig:
       key_prefix: date=%F/
       compression: gzip
       encoding:
-        codec: ndjson
+        codec: json
       region: us-east-1
     elasticsearch:
       type: elasticsearch
