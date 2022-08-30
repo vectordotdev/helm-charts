@@ -3,13 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [vector-0.16.0] - 2022-08-15
+## [vector-0.16.0] - 2022-08-30
 
 ### Vector
 
 #### Features
 
 - Add support for setting the pod hostNetwork (#213) ([8b2e73a](https://github.com/vectordotdev/helm-charts/commit/8b2e73a3ef6bd175b9602f915dbf3684d244e126))
+- Add extraContainers option for vector & haproxy pods (#230) ([0750512](https://github.com/vectordotdev/helm-charts/commit/07505124ba27f5ec5a23f9dcb5f29c07d92de475))
+- Bump to Vector 0.24.0 ([8714641](https://github.com/vectordotdev/helm-charts/commit/87146419ba801e558fd4fe0c6b563c689757cb8a))
 
 ## [vector-0.15.1] - 2022-08-11
 
