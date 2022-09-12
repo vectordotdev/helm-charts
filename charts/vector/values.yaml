@@ -150,7 +150,7 @@ env: []
   #   valueFrom:
   #     secretKeyRef:
   #       name: vector
-  #       key: awsAcessKeyId
+  #       key: awsAccessKeyId
 
 # containerPorts -- Manually define Vector's Container ports, overrides automated generation of Container ports
 containerPorts: []
