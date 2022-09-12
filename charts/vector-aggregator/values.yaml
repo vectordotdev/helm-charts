@@ -93,7 +93,7 @@ env: []
   #   valueFrom:
   #     secretKeyRef:
   #       name: vector-aggregator
-  #       key: awsAcessKeyId
+  #       key: awsAccessKeyId
 
 # Extra arguments to pass to the `vector` container.
 args: []
