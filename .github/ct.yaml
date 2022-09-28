@@ -2,4 +2,5 @@ chart-repos:
   - vector=https://helm.vector.dev
 check-version-increment: true
 debug: true
+exclude-deprecated: true
 helm-extra-args: --timeout 300s
