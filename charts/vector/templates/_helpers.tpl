@@ -220,7 +220,7 @@ Print `vector top` instructions.
   {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} exec -it {{ $resource }}/{{ include "vector.fullname" $ }} -- vector top {{ $url }}
   {{- else -}}
   {{- $resource := include "_vector.role" $ -}}
-{{ print "Vector is starting in your cluster. After a few minutes, you can vew Vector's" }}
+{{ print "Vector is starting in your cluster. After a few minutes, you can view Vector's" }}
 {{ println "internal logs by running:" }}
   {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} logs -f {{ $resource }}/{{ include "vector.fullname" $ }}
   {{- end }}
