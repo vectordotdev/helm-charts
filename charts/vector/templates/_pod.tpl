@@ -52,6 +52,10 @@ containers:
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
 {{- end }}
+    envFrom:
+{{- with .Values.envFrom }}
+    {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
       - name: VECTOR_SELF_NODE_NAME
         valueFrom:

@@ -152,6 +152,11 @@ env: []
   #       name: vector
   #       key: awsAccessKeyId
 
+# envFrom -- Define all Secret's data as container environment variables
+envFrom: []
+  # - secretRef:
+  #     name: vector
+
 # containerPorts -- Manually define Vector's Container ports, overrides automated generation of Container ports
 containerPorts: []
 
