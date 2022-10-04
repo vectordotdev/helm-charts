@@ -140,6 +140,7 @@ helm install --name <RELEASE_NAME> \
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy |
 | env | list | `[]` | Set environment variables in Vector containers # The examples below leverage examples from secrets.generic and assume no name overrides with a Release name of "vector" |
+| envFrom | list | `[]` | Define all Secret's data as container environment variables |
 | existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration # If set, this parameter takes precedence over customConfig and the chart's default configs |
 | extraContainers | list | `[]` | Extra Containers to be added to the Vector Pod |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers |
