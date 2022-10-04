@@ -48,12 +48,9 @@ containers:
     args:
     {{- toYaml . | nindent 6 }}
 {{- end }}
+{{- if .Values.env }}
     env:
 {{- with .Values.env }}
-    {{- toYaml . | nindent 6 }}
-{{- end }}
-    envFrom:
-{{- with .Values.envFrom }}
     {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
@@ -73,6 +70,13 @@ containers:
         value: "/host/proc"
       - name: SYSFS_ROOT
         value: "/host/sys"
+{{- end }}
+{{- end }}
+{{- if .Values.envFrom }}
+{{- with .Values.envFrom }}
+    envFrom:
+    {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}
     ports:
 {{- if or .Values.containerPorts .Values.existingConfigMaps }}

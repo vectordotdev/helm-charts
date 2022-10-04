@@ -35,6 +35,11 @@ env:
   - name: VECTOR_LOG_FORMAT
     value: json
 
+# envFrom -- Define all Secret's data as container environment variables
+envFrom:
+  - secretRef:
+      name: vector
+
 # resources -- Set Vector resource requests and limits.
 resources:
   ## Required for HPA to function
