@@ -35,7 +35,7 @@ env:
   - name: VECTOR_LOG_FORMAT
     value: json
 
-# envFrom -- Define all Secret's data as container environment variables
+# envFrom -- Define environment variables from Secrets or ConfigMaps
 envFrom:
   - secretRef:
       name: vector
