@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.16.1] - 2022-10-04
+
+### Vector
+
+#### Bug Fixes
+
+- Fix typos in NOTES.txt (#242) ([29f99d7](https://github.com/vectordotdev/helm-charts/commit/29f99d7bdb3cea913cf43f7501c284d1b3185b78))
+- Allow both extraContainers and extraVolumeMounts (#243) ([09a18dd](https://github.com/vectordotdev/helm-charts/commit/09a18dd5b4a55fa3d195664a1e38abfce0e529d2))
+
+#### Features
+
+- :sparkles: add envFrom support (#246) ([89be2e2](https://github.com/vectordotdev/helm-charts/commit/89be2e2a77e7f11c57c829c6c49809bc3ab26eda))
+
 ## [vector-0.16.0] - 2022-08-30
 
 ### Vector
