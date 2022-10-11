@@ -48,8 +48,8 @@ containers:
     args:
     {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- if .Values.env }}
     env:
+{{- if .Values.env }}
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
 {{- end }}
