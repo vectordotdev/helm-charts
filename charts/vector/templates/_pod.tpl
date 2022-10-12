@@ -48,10 +48,11 @@ containers:
     args:
     {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- if .Values.env }}
     env:
+{{- if .Values.env }}
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
+{{- end }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
       - name: VECTOR_SELF_NODE_NAME
@@ -70,7 +71,6 @@ containers:
         value: "/host/proc"
       - name: SYSFS_ROOT
         value: "/host/sys"
-{{- end }}
 {{- end }}
 {{- if .Values.envFrom }}
 {{- with .Values.envFrom }}

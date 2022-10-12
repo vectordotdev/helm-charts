@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.16.3] - 2022-10-11
+
+### Vector
+
+#### Bug Fixes
+
+- :bug: pod tpl ([73dddcd](https://github.com/vectordotdev/helm-charts/commit/73dddcded166d31b17f28a2a46b226cda403c8be))
+
 ## [vector-0.16.2] - 2022-10-11
 
 ### Ci
