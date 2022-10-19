@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.16.3](https://img.shields.io/badge/Version-0.16.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.24.1--distroless--libc-informational?style=flat-square)
+![Version: 0.16.4](https://img.shields.io/badge/Version-0.16.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.24.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -50,7 +50,7 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Configuration
 
 1. Using our [`default-values.yaml`](values.yaml) configuration file as a reference, create your own `values.yaml`.
-1. Upgrade the Vector chart with your new `values.yaml` file:
+2. Upgrade the Vector chart with your new `values.yaml` file:
 
 ```bash
 helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
@@ -58,7 +58,7 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 
 **Vector recommends that your `values.yaml` only contain values that need to be overridden, as it allows a smoother experience when upgrading chart versions.**
 
-See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
+See the [configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
 
 ### Running on control plane nodes
 

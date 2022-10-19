@@ -16,7 +16,7 @@ be `v3.0+`.
 helm version
 ```
 
-Ensure you have both the Datadog and Vector charts, and they are up to date.
+Ensure you have both the Datadog and Vector charts, and they are up-to-date.
 
 ```bash
 helm repo add datadog https://helm.datadoghq.com
@@ -67,13 +67,13 @@ Running the above will tail Vector's logs and allow to confirm your API key
 is correct. In the logs you should only see INFO messages, and the following
 logs (one for each configured sink):
 
-```json
+```json lines
 {"timestamp":"2022-03-30T20:25:48.016522Z","level":"INFO","message":"Healthcheck: Passed.","target":"vector::topology::builder"}
 {"timestamp":"2022-03-30T20:25:48.024391Z","level":"INFO","message":"Healthcheck: Passed.","target":"vector::topology::builder"}
 ```
 
 Once Vector has been installed and configured, you can install your Datadog Agents.
-By default the Agents will forward their logs and metrics directly to Datadog's
+By default, the Agents will forward their logs and metrics directly to Datadog's
 hosted intake, we'll create a values file to override that behavior to forward to
 your new Vector Aggregators.
 
