@@ -178,12 +178,10 @@ Generate a single ContainerPort based on a component configuration.
 Print Vector's logo.
 */}}
 {{- define "_logo" -}}
-{{ print "\033[36m" }}
 {{ print "__   __  __" }}
 {{ print "\\ \\ / / / /" }}
 {{ print " \\ V / / /  " }}
 {{ print "  \\_/  \\/  " }}
-{{ print "\033[0m" }}
 {{ print "V E C T O R" }}
 {{- end }}
 
@@ -195,20 +193,6 @@ Print line divider.
 {{- end }}
 
 {{/*
-Print the supplied value in yellow.
-*/}}
-{{- define "_fmt.yellow" -}}
-{{ print "\033[0;33m" . "\033[0m" }}
-{{- end }}
-
-{{/*
-Print the supplied value in blue.
-*/}}
-{{- define "_fmt.blue" -}}
-{{ print "\033[36m" . "\033[0m" }}
-{{- end }}
-
-{{/*
 Print `vector top` instructions.
 */}}
 {{- define "_vector.top" -}}
@@ -217,12 +201,12 @@ Print `vector top` instructions.
 {{ println "API to view internal metrics by running:" }}
   {{- $resource := include "_vector.role" $ -}}
   {{- $url := include "_vector.url" $ }}
-  {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} exec -it {{ $resource }}/{{ include "vector.fullname" $ }} -- vector top {{ $url }}
+  $ kubectl -n {{ $.Release.Namespace }} exec -it {{ $resource }}/{{ include "vector.fullname" $ }} -- vector top {{ $url }}
   {{- else -}}
   {{- $resource := include "_vector.role" $ -}}
 {{ print "Vector is starting in your cluster. After a few minutes, you can view Vector's" }}
 {{ println "internal logs by running:" }}
-  {{ include "_fmt.yellow" "$" }} kubectl -n {{ $.Release.Namespace }} logs -f {{ $resource }}/{{ include "vector.fullname" $ }}
+  $ kubectl -n {{ $.Release.Namespace }} logs -f {{ $resource }}/{{ include "vector.fullname" $ }}
   {{- end }}
 {{- end }}
 
@@ -298,60 +282,60 @@ to be more generally usable for other components.
 {{- if or (not .Values.customConfig) (and .Values.customConfig $hasSourceDatadogAgent) }}
 {{- template "_divider" }}
 
-{{ print "\033[36;1mdatadog_agent:\033[0m" }}
+{{ print "datadog_agent:" }}
 
-To forward logs from Datadog Agents deployed with the {{ include "_fmt.yellow" "datadog" }} Helm chart,
-include the following in the {{ include "_fmt.yellow" "values.yaml" }} for your {{ include "_fmt.yellow" "datadog" }} chart:
+To forward logs from Datadog Agents deployed with the "datadog" Helm chart,
+include the following in the "values.yaml" for your "datadog" chart:
 
-For Datadog Agents version {{ include "_fmt.yellow" "7.34" }}/{{ include "_fmt.yellow" "6.34" }} or lower:
+For Datadog Agents version "7.34"/"6.34" or lower:
 
-{{ include "_fmt.blue" "datadog:" }}
-  {{ include "_fmt.blue" "containerExclude:" }} "name:vector"
-  {{ include "_fmt.blue" "logs:" }}
-    {{ include "_fmt.blue" "enabled:" }} {{ include "_fmt.yellow" "true" }}
-    {{ include "_fmt.blue" "containerCollectAll:" }} {{ include "_fmt.yellow" "true" }}
-{{ include "_fmt.blue" "agents:" }}
-  {{ include "_fmt.blue" "useConfigMap:" }} {{ include "_fmt.yellow" "true" }}
-  {{ include "_fmt.blue" "customAgentConfig:" }}
-    {{ include "_fmt.blue" "kubelet_tls_verify:" }} {{ include "_fmt.yellow" "false" }}
-    {{ include "_fmt.blue" "logs_config:" }}
+datadog:
+  containerExclude: "name:vector"
+  logs:
+    enabled: true
+    containerCollectAll: true
+agents:
+  useConfigMap: true
+  customAgentConfig:
+    kubelet_tls_verify: false
+    logs_config:
       {{- if .Values.haproxy.enabled }}
-      {{ include "_fmt.blue" "logs_dd_url:" }} "{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+      logs_dd_url: "{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
       {{- else }}
-      {{ include "_fmt.blue" "logs_dd_url:" }} "{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+      logs_dd_url: "{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
       {{- end }}
       {{- if $hasTls }}
-      {{ include "_fmt.blue" "logs_no_ssl:" }} {{ include "_fmt.yellow" "false" }}
+      logs_no_ssl: false
       {{- else }}
-      {{ include "_fmt.blue" "logs_no_ssl:" }} {{ include "_fmt.yellow" "true" }}
+      logs_no_ssl: true
       {{- end }}
-      {{ include "_fmt.blue" "use_http:" }} {{ include "_fmt.yellow" "true" }}
+      use_http: true
 {{- end }}
 
-For Datadog Agents version {{ include "_fmt.yellow" "7.35" }}/{{ include "_fmt.yellow" "6.35" }} or greater:
+For Datadog Agents version "7.35"/"6.35" or greater:
 
-{{ include "_fmt.blue" "datadog:" }}
-  {{ include "_fmt.blue" "containerExclude:" }} "name:vector"
-  {{ include "_fmt.blue" "logs:" }}
-    {{ include "_fmt.blue" "enabled:" }} {{ include "_fmt.yellow" "true" }}
-    {{ include "_fmt.blue" "containerCollectAll:" }} {{ include "_fmt.yellow" "true" }}
-{{ include "_fmt.blue" "agents:" }}
-  {{ include "_fmt.blue" "useConfigMap:" }} {{ include "_fmt.yellow" "true" }}
-  {{ include "_fmt.blue" "customAgentConfig:" }}
-    {{ include "_fmt.blue" "kubelet_tls_verify:" }} {{ include "_fmt.yellow" "false" }}
-    {{ include "_fmt.blue" "vector:" }}
-      {{ include "_fmt.blue" "logs:" }}
-        {{ include "_fmt.blue" "enabled:" }} {{ include "_fmt.yellow" "true" }}
+datadog:
+  containerExclude: "name:vector"
+  logs:
+    enabled: true
+    containerCollectAll: true
+agents:
+  useConfigMap: true
+  customAgentConfig:
+    kubelet_tls_verify: false
+    vector:
+      logs:
+        enabled: true
         {{- if .Values.haproxy.enabled }}
-        {{ include "_fmt.blue" "url:" }} "{{ $protocol }}://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        url: "{{ $protocol }}://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
         {{- else }}
-        {{ include "_fmt.blue" "url:" }} "{{ $protocol }}://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        url: "{{ $protocol }}://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
         {{- end }}
-      {{ include "_fmt.blue" "metrics:" }}
-        {{ include "_fmt.blue" "enabled:" }} {{ include "_fmt.yellow" "true" }}
+      metrics:
+        enabled: true
         {{- if .Values.haproxy.enabled }}
-        {{ include "_fmt.blue" "url:" }} "{{ $protocol }}://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        url: "{{ $protocol }}://{{ include "haproxy.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
         {{- else }}
-        {{ include "_fmt.blue" "url:" }} "{{ $protocol }}://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
+        url: "{{ $protocol }}://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
         {{- end }}
 {{- end }}
