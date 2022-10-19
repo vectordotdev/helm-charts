@@ -221,6 +221,22 @@ service:
   # service.ports -- Manually set Service ports, overrides automated generation of Service ports
   ports: []
 
+## Configuration for Vector's Headless Service
+serviceHeadless:
+  # serviceHeadless.enabled -- If true, create and use a Headless Service resource
+  enabled: true
+  # serviceHeadless.annotations -- Set annotations on Vector's Headless Service
+  annotations: {}
+  # serviceHeadless.topologyKeys -- Specify the topologyKeys field on Vector's Headless Service spec
+  ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
+  topologyKeys: []
+  #   - "kubernetes.io/hostname"
+  #   - "topology.kubernetes.io/zone"
+  #   - "topology.kubernetes.io/region"
+  #   - "*"
+  # serviceHeadless.ports -- Manually set Headless Service ports, overrides automated generation of Headless Service ports
+  ports: []
+
 ## Configuration for Vector's Ingress
 ingress:
   # ingress.enabled -- If true, create and use an Ingress resource
@@ -250,15 +266,15 @@ ingress:
   #      - chart-example.local
 
 # existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set.
-# Additionally, containerPorts and service.ports should be specified based on your supplied configuration
-## If set, this parameter takes precedence over customConfig and the chart's default configs
+# Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration
+# If set, this parameter takes precedence over customConfig and the chart's default configs
 existingConfigMaps: []
 
 # dataDir -- Specify the path for Vector's data, only used when existingConfigMaps are used
 dataDir: ""
 
-# customConfig -- Override Vector's default configs, if used **all** options need to be specified
-## This section supports using helm templates to populate dynamic values
+# customConfig -- Override Vector's default configs, if used **all** options need to be specified.
+# This section supports using helm templates to populate dynamic values.
 ## Ref: https://vector.dev/docs/reference/configuration/
 customConfig: {}
   # data_dir: /vector-data-dir

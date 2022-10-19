@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.16.4](https://img.shields.io/badge/Version-0.16.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.24.1--distroless--libc-informational?style=flat-square)
+![Version: 0.17.0](https://img.shields.io/badge/Version-0.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.24.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.24.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -135,13 +135,13 @@ helm install --name <RELEASE_NAME> \
 | command | list | `[]` | Override Vector's default command |
 | commonLabels | object | `{}` | Add additional labels to all created resources |
 | containerPorts | list | `[]` | Manually define Vector's Container ports, overrides automated generation of Container ports |
-| customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified # This section supports using helm templates to populate dynamic values # Ref: https://vector.dev/docs/reference/configuration/ |
+| customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. # Ref: https://vector.dev/docs/reference/configuration/ |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used |
 | dnsConfig | object | `{}` | Specify DNS configuration options for Vector Pods # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config |
 | dnsPolicy | string | `"ClusterFirst"` | Specify DNS policy for Vector Pods # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy |
 | env | list | `[]` | Set environment variables in Vector containers # The examples below leverage examples from secrets.generic and assume no name overrides with a Release name of "vector" |
 | envFrom | list | `[]` | Define environment variables from Secrets or ConfigMaps |
-| existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts and service.ports should be specified based on your supplied configuration # If set, this parameter takes precedence over customConfig and the chart's default configs |
+| existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration If set, this parameter takes precedence over customConfig and the chart's default configs |
 | extraContainers | list | `[]` | Extra Containers to be added to the Vector Pod |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods |
@@ -204,6 +204,10 @@ helm install --name <RELEASE_NAME> \
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for the Vector ServiceAccount |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. # If not set and create is true, a name is generated using the fullname template |
+| serviceHeadless.annotations | object | `{}` | Set annotations on Vector's Headless Service |
+| serviceHeadless.enabled | bool | `true` | If true, create and use a Headless Service resource |
+| serviceHeadless.ports | list | `[]` | Manually set Headless Service ports, overrides automated generation of Headless Service ports |
+| serviceHeadless.topologyKeys | list | `[]` | Specify the topologyKeys field on Vector's Headless Service spec # Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods # Also used for the DeploymentStrategy for Stateless-Aggregators # Valid options are used depending on the chosen role # Agent (DaemonSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec) # Aggregator (StatefulSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/#StatefulSetSpec # Stateless-Aggregator (DeploymentStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/ |
