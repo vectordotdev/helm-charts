@@ -48,7 +48,7 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Configuration
 
 1. Using our [`default-values.yaml`](values.yaml) configuration file as a reference, create your own `values.yaml`.
-1. Upgrade the Vector chart with your new `values.yaml` file:
+2. Upgrade the Vector chart with your new `values.yaml` file:
 
 ```bash
 helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
@@ -56,7 +56,7 @@ helm upgrade -f values.yaml <RELEASE_NAME> vector/vector
 
 **Vector recommends that your `values.yaml` only contain values that need to be overridden, as it allows a smoother experience when upgrading chart versions.**
 
-See the [All configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
+See the [configuration options](#all-configuration-options) section to discover all possibilities offered by the Vector chart.
 
 ### Running on control plane nodes
 

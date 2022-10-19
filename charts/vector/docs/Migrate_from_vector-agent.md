@@ -54,29 +54,29 @@ helm upgrade -f values.yaml <ORIGINAL_RELEASE_NAME> vector/vector -n <ORIGINAL_N
 
 ## Vector values
 
-| Old parameter | New parameter | Comment |
-| ------------- | ------------- | ------- |
-| `dataVolume.hostPath.path` | `persistence.hostPath.path` | |
-| `existingConfigMap` and `extraConfigDirSources` | `existingConfigMaps` | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory |
-| `extraContainersPorts` | `containerPorts` | Ports will be automatically generated from `customConfig` but can be manually set with `containerPorts` |
-| `globalOptions.*` | ∅ | Deprecated |
-| `hostMetricsSource.*` | ∅ | Deprecated |
-| `internalMetricsSource.*` | ∅ | Deprecated |
-| `image.version`, `image.base` | ∅ | Only `image.tag` is now used to set the Vector tag |
-| `imagePullSecrets` | `image.pullSecrets` | |
-| `logSchema.*` | ∅ | Deprecated |
-| `kubernetesLogsSource.*` | ∅ | Deprecated |
-| `maxUnavailable` | ∅ | `maxUnavailable` should be passed in as part of the `updateStrategy` object |
-| `podMonitor.additionalLabels` | ∅ | |
-| `podMonitor.extraRelabelings` | `podMonitor.relabelings` | The chart adds no default relabelings |
-| `podRollmeAnnotation` and`podValuesChecksumAnnotation` | ∅ | Replaced by `rollWorkload`, enabled by default |
-| `prometheusSink.*` | ∅ | Deprecated |
-| `psp.enabled` | `psp.create` | |
-| `rbac.enabled` | `rbac.create` | |
-| `secrets.generic` | ⚠️ | `secrets.generic` now takes raw values rather than base64 encoded values |
-| `sinks.*` | ∅ | Deprecated |
-| `sources.*` | ∅ | Deprecated |
-| `transforms.*` | ∅ | Deprecated |
-| `updateStrategy` | ⚠️ | `updateStrategy` now takes an object instead of a string |
-| `vectorApi.*` | ∅ | Deprecated |
-| `vectorSink.*` | ∅ | Deprecated |
+| Old parameter                                          | New parameter               | Comment                                                                                                 |
+|--------------------------------------------------------|-----------------------------|---------------------------------------------------------------------------------------------------------|
+| `dataVolume.hostPath.path`                             | `persistence.hostPath.path` |                                                                                                         |
+| `existingConfigMap` and `extraConfigDirSources`        | `existingConfigMaps`        | All ConfigMaps in the `existingConfigMaps` list are projected into Vector's configuration directory     |
+| `extraContainersPorts`                                 | `containerPorts`            | Ports will be automatically generated from `customConfig` but can be manually set with `containerPorts` |
+| `globalOptions.*`                                      | ∅                           | Deprecated                                                                                              |
+| `hostMetricsSource.*`                                  | ∅                           | Deprecated                                                                                              |
+| `internalMetricsSource.*`                              | ∅                           | Deprecated                                                                                              |
+| `image.version`, `image.base`                          | ∅                           | Only `image.tag` is now used to set the Vector tag                                                      |
+| `imagePullSecrets`                                     | `image.pullSecrets`         |                                                                                                         |
+| `logSchema.*`                                          | ∅                           | Deprecated                                                                                              |
+| `kubernetesLogsSource.*`                               | ∅                           | Deprecated                                                                                              |
+| `maxUnavailable`                                       | ∅                           | `maxUnavailable` should be passed in as part of the `updateStrategy` object                             |
+| `podMonitor.additionalLabels`                          | ∅                           |                                                                                                         |
+| `podMonitor.extraRelabelings`                          | `podMonitor.relabelings`    | The chart adds no default relabelings                                                                   |
+| `podRollmeAnnotation` and`podValuesChecksumAnnotation` | ∅                           | Replaced by `rollWorkload`, enabled by default                                                          |
+| `prometheusSink.*`                                     | ∅                           | Deprecated                                                                                              |
+| `psp.enabled`                                          | `psp.create`                |                                                                                                         |
+| `rbac.enabled`                                         | `rbac.create`               |                                                                                                         |
+| `secrets.generic`                                      | ⚠️                          | `secrets.generic` now takes raw values rather than base64 encoded values                                |
+| `sinks.*`                                              | ∅                           | Deprecated                                                                                              |
+| `sources.*`                                            | ∅                           | Deprecated                                                                                              |
+| `transforms.*`                                         | ∅                           | Deprecated                                                                                              |
+| `updateStrategy`                                       | ⚠️                          | `updateStrategy` now takes an object instead of a string                                                |
+| `vectorApi.*`                                          | ∅                           | Deprecated                                                                                              |
+| `vectorSink.*`                                         | ∅                           | Deprecated                                                                                              |
