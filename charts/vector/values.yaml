@@ -225,17 +225,6 @@ service:
 serviceHeadless:
   # serviceHeadless.enabled -- If true, create and use a Headless Service resource
   enabled: true
-  # serviceHeadless.annotations -- Set annotations on Vector's Headless Service
-  annotations: {}
-  # serviceHeadless.topologyKeys -- Specify the topologyKeys field on Vector's Headless Service spec
-  ## Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology
-  topologyKeys: []
-  #   - "kubernetes.io/hostname"
-  #   - "topology.kubernetes.io/zone"
-  #   - "topology.kubernetes.io/region"
-  #   - "*"
-  # serviceHeadless.ports -- Manually set Headless Service ports, overrides automated generation of Headless Service ports
-  ports: []
 
 ## Configuration for Vector's Ingress
 ingress:

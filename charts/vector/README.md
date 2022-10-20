@@ -204,10 +204,7 @@ helm install --name <RELEASE_NAME> \
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for the Vector ServiceAccount |
 | serviceAccount.create | bool | `true` | If true, create ServiceAccount |
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. # If not set and create is true, a name is generated using the fullname template |
-| serviceHeadless.annotations | object | `{}` | Set annotations on Vector's Headless Service |
 | serviceHeadless.enabled | bool | `true` | If true, create and use a Headless Service resource |
-| serviceHeadless.ports | list | `[]` | Manually set Headless Service ports, overrides automated generation of Headless Service ports |
-| serviceHeadless.topologyKeys | list | `[]` | Specify the topologyKeys field on Vector's Headless Service spec # Ref: https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds |
 | tolerations | list | `[]` | Allow Vector to schedule on tainted nodes |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods # Also used for the DeploymentStrategy for Stateless-Aggregators # Valid options are used depending on the chosen role # Agent (DaemonSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/daemon-set-v1/#DaemonSetSpec) # Aggregator (StatefulSetUpdateStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/#StatefulSetSpec # Stateless-Aggregator (DeploymentStrategy): https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/ |
