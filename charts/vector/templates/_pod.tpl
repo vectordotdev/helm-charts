@@ -172,6 +172,10 @@ affinity:
 tolerations:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with  .Values.topologySpreadConstraints }}
+topologySpreadConstraints:
+{{- toYaml . | nindent 2 }}
+{{- end }}
 volumes:
 {{- if and .Values.persistence.enabled (eq .Values.role "Aggregator") }}
 {{- with .Values.persistence.existingClaim }}
