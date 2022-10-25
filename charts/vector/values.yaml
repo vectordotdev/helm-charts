@@ -49,7 +49,7 @@ podManagementPolicy: OrderedReady
 # Create a Secret resource for Vector to use.
 secrets:
   # secrets.generic -- Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64
-  # encoded. Any secrets can be provided here, and it's commonly used for credentials and other access related values.
+  # encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values.
   # **NOTE: Don't commit unencrypted secrets to git!**
   generic: {}
     # my_variable: "my-secret-value"
@@ -208,7 +208,7 @@ affinity: {}
 
 # Configuration for Vector's Service.
 service:
-  # service.enabled -- If true, create and use a Service resource.
+  # service.enabled -- If true, create and provide a Service resource for Vector.
   enabled: true
   # service.type -- Set the type for Vector's Service.
   type: "ClusterIP"
@@ -257,10 +257,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one, if used
-# requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified
-# based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's
-# default configs.
+# existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires
+# dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on
+# your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs.
 existingConfigMaps: []
 
 # dataDir -- Specify the path for Vector's data, only used when existingConfigMaps are used.
@@ -342,15 +341,15 @@ dnsConfig: {}
   #     value: "2"
   #   - name: edns0
 
-# livenessProbe -- Override default liveness probe settings, if customConfig is used requires customConfig.api.enabled
+# livenessProbe -- Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled
 # to be set to true.
 livenessProbe: {}
   # httpGet:
   #   path: /health
   #   port: api
 
-# readinessProbe -- Override default readiness probe settings, if customConfig is used requires customConfig.api.enabled
-# to be set to true.
+# readinessProbe -- Override default readiness probe settings. If customConfig is used,
+# requires customConfig.api.enabled to be set to true.
 readinessProbe: {}
   # httpGet:
   #   path: /health
@@ -472,7 +471,7 @@ haproxy:
 
   # haproxy.customConfig -- Override HAProxy's default configs, if used **all** options need to be specified.
   # This parameter supports using Helm templates to insert values dynamically. By default, this chart will parse
-  # Vector's configuration from customConfig to generate HAProxy's config, this generated config can be overwritten with
+  # Vector's configuration from customConfig to generate HAProxy's config, which can be overwritten with
   # haproxy.customConfig.
   customConfig: ""
 
