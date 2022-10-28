@@ -15,6 +15,15 @@ metadata:
   {{- end }}
 spec:
   clusterIP: None
+{{- if .Values.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
+{{- end }}
+{{- if .Values.service.ipFamilies }}
+{{- with .Values.service.ipFamilies }}
+  ipFamilies:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
@@ -70,6 +79,15 @@ metadata:
   {{- end }}
 spec:
   clusterIP: None
+{{- if .Values.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
+{{- end }}
+{{- if .Values.service.ipFamilies }}
+{{- with .Values.service.ipFamilies }}
+  ipFamilies:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
