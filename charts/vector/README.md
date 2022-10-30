@@ -197,6 +197,10 @@ helm install --name <RELEASE_NAME> \
 | securityContext | object | `{}` | Specify securityContext on Vector containers. |
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
 | service.enabled | bool | `true` | If true, create and provide a Service resource for Vector. |
+| service.externalTrafficPolicy | string | `""` | Specify the [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip). |
+| service.ipFamilies | list | `[]` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
+| service.ipFamilyPolicy | string | `""` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
+| service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
 | service.ports | list | `[]` | Manually set the Service ports, overriding automated generation of Service ports. |
 | service.topologyKeys | list | `[]` | Specify the [topologyKeys](https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology) field on Vector's Service. |
 | service.type | string | `"ClusterIP"` | Set the type for Vector's Service. |
@@ -244,6 +248,10 @@ helm install --name <RELEASE_NAME> \
 | haproxy.rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to the HAProxy Deployment. |
 | haproxy.securityContext | object | `{}` | Specify securityContext on HAProxy containers. |
 | haproxy.service.annotations | object | `{}` | Set annotations on HAProxy's Service. |
+| haproxy.service.externalTrafficPolicy | string | `""` | Specify the [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip). |
+| haproxy.service.ipFamilies | list | `[]` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
+| haproxy.service.ipFamilyPolicy | string | `""` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
+| haproxy.service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
 | haproxy.service.ports | list | `[]` | Manually set HAPRoxy's Service ports, overrides automated generation of Service ports. |
 | haproxy.service.topologyKeys | list | `[]` | Specify the [topologyKeys](https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology) field on HAProxy's Service spec. |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service. |
