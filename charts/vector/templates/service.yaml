@@ -10,6 +10,21 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+{{- if .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+{{- end }}
+{{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
+{{- end }}
+{{- if .Values.service.ipFamilies }}
+{{- with .Values.service.ipFamilies }}
+  ipFamilies:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}

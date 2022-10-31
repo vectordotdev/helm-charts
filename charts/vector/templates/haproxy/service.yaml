@@ -10,6 +10,21 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+{{- if .Values.haproxy.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.haproxy.service.externalTrafficPolicy }}
+{{- end }}
+{{- if .Values.haproxy.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.haproxy.service.loadBalancerIP }}
+{{- end }}
+{{- if .Values.haproxy.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.haproxy.service.ipFamilyPolicy }}
+{{- end }}
+{{- if .Values.haproxy.service.ipFamilies }}
+{{- with .Values.haproxy.service.ipFamilies }}
+  ipFamilies:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
   ports:
 {{- if or .Values.haproxy.service.ports .Values.haproxy.existingConfigMap }}
   {{- toYaml .Values.haproxy.service.ports | nindent 4 }}
