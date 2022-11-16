@@ -9,7 +9,7 @@ customConfig:
     enabled: false
   sources:
     generator:
-      type: generator
+      type: demo_logs
       format: json
   sinks:
     s3:
