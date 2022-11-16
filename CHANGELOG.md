@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.17.0] - 2022-11-16
+
+### Vector
+
+#### Bug Fixes
+
+- Apply various suggested changes from JetBrains markdown and proofreading inspections (#256) ([b5a1a52](https://github.com/vectordotdev/helm-charts/commit/b5a1a52c5f4fe21454c5855e09c8a09010f8250e))
+- Remove color codes in NOTES.txt (#255) ([42bf5b0](https://github.com/vectordotdev/helm-charts/commit/42bf5b0dad3f0e832838ae652583a9c6f553f7c2))
+- Update haproxy to use image.pullSecrets (#265) ([d71856d](https://github.com/vectordotdev/helm-charts/commit/d71856d83160219a131525095af7e4197645634f))
+
+#### Features
+
+- Support enable for both the normal and headless service (#257) ([9842060](https://github.com/vectordotdev/helm-charts/commit/9842060229173076b2a316fca17c9273cde660be))
+- Update Vector image to 0.24.2 (#259) ([f3ff02c](https://github.com/vectordotdev/helm-charts/commit/f3ff02c30acc257ebcad5b12617fe7c7e23a74c0))
+- Refresh chart documentation and comments (#258) ([19af990](https://github.com/vectordotdev/helm-charts/commit/19af990992bcc4cac2caeab1aa552fc5eee083ee))
+- Update Vector image to 0.25.1 ([c9d2f0e](https://github.com/vectordotdev/helm-charts/commit/c9d2f0e377676cf246fba5b0ed730d1075271729))
+
 ## [vector-0.16.3] - 2022-10-11
 
 ### Vector
