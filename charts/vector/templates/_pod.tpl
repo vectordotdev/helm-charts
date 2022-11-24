@@ -170,7 +170,11 @@ affinity:
 {{- end }}
 {{- with .Values.tolerations }}
 tolerations:
+{{- if .Values.tolerations }}
 {{ toYaml . | indent 2 }}
+{{ else }}
+  - operator: Exists
+{{- end }}
 {{- end }}
 {{- with  .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
