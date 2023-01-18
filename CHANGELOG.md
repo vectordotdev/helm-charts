@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.19.0] - 2023-01-18
+
+### Vector
+
+#### Features
+
+- Bump to v0.27.0 release of Vector ([6a987bc](https://github.com/vectordotdev/helm-charts/commit/6a987bc7521dd898312402179fc87bc20a83d0e5))
+
 ## [vector-0.18.0] - 2022-12-05
 
 ### Vector
