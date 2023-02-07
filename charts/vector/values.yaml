@@ -393,7 +393,7 @@ podMonitor:
   # podMonitor.honorTimestamps -- If true, honor_timestamps is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
   honorTimestamps: true
 
-# Optional built-in HAProxy load.
+# Optional built-in HAProxy load balancer.
 haproxy:
   # haproxy.enabled -- If true, create a HAProxy load balancer.
   enabled: false
