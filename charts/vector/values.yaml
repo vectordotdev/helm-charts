@@ -131,6 +131,9 @@ podHostNetwork: false
 # for Vector Pods.
 podSecurityContext: {}
 
+# workloadResouceAnnotations -- Set annotations on the Vector Daemonset, Deployment or Statefulset.
+workloadResouceAnnotations: {}
+
 # securityContext -- Specify securityContext on Vector containers.
 securityContext: {}
 
