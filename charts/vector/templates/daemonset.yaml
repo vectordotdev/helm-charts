@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
-    {{- include ".Values.workloadResourceAnnotations" . | nindent 4 }}
+    {{- toYaml .Values.workloadResourceAnnotations | nindent 4 }}
 spec:
   selector:
     matchLabels:
