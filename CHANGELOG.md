@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.19.2] - 2023-02-22
+
+### Vector
+
+#### Features
+
+- Add annotations for deployment, daemonset, statefulset (#280) ([bce0b77](https://github.com/vectordotdev/helm-charts/commit/bce0b77319df7bac0b0ba0743438f0e0ce338dda))
+
 ## [vector-0.19.0] - 2023-01-18
 
 ### Vector
