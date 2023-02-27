@@ -7,17 +7,25 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Vector
 
-#### Bug Fixes
+#### Features
 
-- Bump Vector to 0.27.1 (#284) ([bca819f](https://github.com/vectordotdev/helm-charts/commit/bca819f25e4ee3733b9f20d8ddfc7bf35ae5db1f))
+- Bump Vector version to 0.28.0 ([59413e8](https://github.com/vectordotdev/helm-charts/commit/59413e85ec820a381a73f30dea977af9f9c09284))
+
+## [vector-0.20.0] - 2023-02-27
+
+### Vector
 
 #### Features
 
-- Add annotations for deployment, daemonset, statefulset (#280) ([bce0b77](https://github.com/vectordotdev/helm-charts/commit/bce0b77319df7bac0b0ba0743438f0e0ce338dda))
+- Bump Vector version to 0.28.0 ([59413e8](https://github.com/vectordotdev/helm-charts/commit/59413e85ec820a381a73f30dea977af9f9c09284))
 
 ## [vector-0.19.2] - 2023-02-22
 
 ### Vector
+
+#### Bug Fixes
+
+- Bump Vector to 0.27.1 (#284) ([bca819f](https://github.com/vectordotdev/helm-charts/commit/bca819f25e4ee3733b9f20d8ddfc7bf35ae5db1f))
 
 #### Features
 
