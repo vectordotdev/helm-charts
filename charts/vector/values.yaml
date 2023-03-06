@@ -380,6 +380,10 @@ podMonitor:
   port: prom-exporter
   # podMonitor.path -- Override the path to scrape.
   path: /metrics
+  # podMonitor.interval -- Override the interval to scrape.
+  interval: 60s
+  # podMonitor.scrapeTimeout -- Override the scrapeTimeout to scrape.
+  # scrapeTimeout: 30s
   # podMonitor.relabelings -- [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config)
   # to apply to samples before scraping.
   relabelings: []
