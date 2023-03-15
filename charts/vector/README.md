@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.28.1--distroless--libc-informational?style=flat-square)
+![Version: 0.20.2](https://img.shields.io/badge/Version-0.20.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.28.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -179,11 +179,13 @@ helm install --name <RELEASE_NAME> \
 | podMonitor.enabled | bool | `false` | If true, create a PodMonitor for Vector. |
 | podMonitor.honorLabels | bool | `false` | If true, honor_labels is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config). |
 | podMonitor.honorTimestamps | bool | `true` | If true, honor_timestamps is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config). |
+| podMonitor.interval | string | `nil` | Override the interval at which metrics should be scraped. |
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from. |
 | podMonitor.metricRelabelings | list | `[]` | [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion. |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape. |
 | podMonitor.port | string | `"prom-exporter"` | Override the port to scrape. |
 | podMonitor.relabelings | list | `[]` | [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping. |
+| podMonitor.scrapeTimeout | string | `nil` | Override the timeout after which the scrape is ended. |
 | podPriorityClassName | string | `""` | Set the [priorityClassName](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass) on Vector Pods. |
 | podSecurityContext | object | `{}` | Allows you to overwrite the default [PodSecurityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for Vector Pods. |
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
