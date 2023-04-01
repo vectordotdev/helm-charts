@@ -183,6 +183,11 @@ lifecycle: {}
   #     - /bin/sleep
   #     - "10"
 
+
+# Specify the minimum number of seconds a newly spun up DaemonSet pod should wait to pass healthchecks before it is 
+# considered available: 
+minReadySeconds: 0
+
 # updateStrategy -- Customize the updateStrategy used to replace Vector Pods, this is also used for the
 # DeploymentStrategy for the "Stateless-Aggregators". Valid options depend on the chosen role.
 

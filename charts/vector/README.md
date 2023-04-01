@@ -159,6 +159,7 @@ helm install --name <RELEASE_NAME> \
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
 | livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| minReadySeconds| int | `0` | Specify the minimum number of seconds a newly spun up DaemonSet pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
 | nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for Vector Pods. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role. |
