@@ -412,7 +412,7 @@ haproxy:
     # to reference for the HAProxy Pods.
     pullSecrets: []
     # haproxy.image.tag -- The tag to use for HAProxy's image.
-    tag: "2.4.17"
+    tag: "2.6.12"
 
   # haproxy.rollWorkload -- Add a checksum of the generated ConfigMap to the HAProxy Deployment.
   rollWorkload: true
