@@ -3,6 +3,31 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.21.0] - 2023-04-20
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.29.1 ([a8cc94b](https://github.com/vectordotdev/helm-charts/commit/a8cc94b34694121321abac52b1e26f6dc51af7fb))
+
+## [vector-0.21.0] - 2023-04-12
+
+### Vector
+
+#### Features
+
+- Bump Vector to 0.29.0 ([94ac584](https://github.com/vectordotdev/helm-charts/commit/94ac5848d074285120fbfe643b44f411c6a223f1))
+
+## [vector-0.20.2] - 2023-04-10
+
+### Vector
+
+#### Bug Fixes
+
+- Vector PodMonitor interval configuration (#286) ([ddaf7ef](https://github.com/vectordotdev/helm-charts/commit/ddaf7ef160fbbe20099be3ca989904fb252fb402))
+- Bump Vector chart to 0.28.2 ([cc09e7c](https://github.com/vectordotdev/helm-charts/commit/cc09e7c9c8bc2631d8a7ff615b02f8816a8a6502))
+
 ## [vector-0.20.1] - 2023-03-06
 
 ### Vector
