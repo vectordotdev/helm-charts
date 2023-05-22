@@ -3,7 +3,20 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [vector-0.21.0] - 2023-04-20
+## [vector-0.22.0] - 2023-05-22
+
+### Vector
+
+#### Bug Fixes
+
+- Fix default/missing storageClassName (#302) ([9ac6f1b](https://github.com/vectordotdev/helm-charts/commit/9ac6f1bd3e935953c3b397a875b8b948249fee61))
+
+#### Features
+
+- Add minReadySeconds for daemonsets (#291) ([af8367c](https://github.com/vectordotdev/helm-charts/commit/af8367c7d946194f2c3a1b664fd5cb7d5bb3d1f2))
+- Bump Vector version to 0.30.0 ([d37033b](https://github.com/vectordotdev/helm-charts/commit/d37033b6e890d98b47e2627e2befd33404bb3eea))
+
+## [vector-0.21.1] - 2023-04-20
 
 ### Vector
 
