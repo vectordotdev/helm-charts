@@ -74,10 +74,15 @@ data:
         type: host_metrics
       internal_metrics:
         type: internal_metrics
+    transforms:
+      host_metrics_with_node_name:
+        type: remap
+        inputs: [host_metrics]
+        source: .tags.host = get_env_var!("VECTOR_SELF_NODE_NAME")
     sinks:
       prom_exporter:
         type: prometheus_exporter
-        inputs: [host_metrics, internal_metrics]
+        inputs: [host_metrics_with_node_name, internal_metrics]
         address: 0.0.0.0:9090
       stdout:
         type: console
