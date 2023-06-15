@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.22.1] - 2023-06-15
+
+### Vector
+
+#### Bug Fixes
+
+- Move minReadySeconds to global scope (#305) ([dfd5b2c](https://github.com/vectordotdev/helm-charts/commit/dfd5b2cff934be11ac7975ad5ac5967496b83697))
+
 ## [vector-0.22.0] - 2023-05-22
 
 ### Vector
