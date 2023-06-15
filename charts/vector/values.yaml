@@ -306,6 +306,36 @@ customConfig: {}
   #     encoding:
   #       codec: json
 
+# Default volumes. They can be manipulated.
+defaultVolumes:
+  - name: var-log
+    hostPath:
+      path: "/var/log/"
+  - name: var-lib
+    hostPath:
+      path: "/var/lib/"
+  - name: procfs
+    hostPath:
+      path: "/proc"
+  - name: sysfs
+    hostPath:
+      path: "/sys"
+
+# Default volume mounts. They can be manipulated.
+defaultVolumeMounts:
+  - name: var-log
+    mountPath: "/var/log/"
+    readOnly: true
+  - name: var-lib
+    mountPath: "/var/lib"
+    readOnly: true
+  - name: procfs
+    mountPath: "/host/proc"
+    readOnly: true
+  - name: sysfs
+    mountPath: "/host/sys"
+    readOnly: true
+
 # extraVolumes -- Additional Volumes to use with Vector Pods.
 extraVolumes: []
 
@@ -340,6 +370,9 @@ persistence:
   selectors: {}
 
   hostPath:
+    # persistence.hostPath.enabled -- If true, use hostPath persistence. Valid for the "Agent" role, if it's disabled
+    # the "Agent" role will use emptyDir for persistence.
+    enabled: true
     # persistence.hostPath.path -- Override path used for hostPath persistence. Valid for the "Agent" role, persistence
     # is always used for the "Agent" role.
     path: "/var/lib/vector"
@@ -401,6 +434,9 @@ podMonitor:
   honorLabels: false
   # podMonitor.honorTimestamps -- If true, honor_timestamps is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
   honorTimestamps: true
+
+# Log level for Vector. Default is "info".
+logLevel: "info"
 
 # Optional built-in HAProxy load balancer.
 haproxy:
