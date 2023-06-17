@@ -371,7 +371,7 @@ persistence:
 
   hostPath:
     # persistence.hostPath.enabled -- If true, use hostPath persistence. Valid for the "Agent" role, if it's disabled
-    # the "Agent" role will use emptyDir for persistence.
+    # the "Agent" role will use emptyDir.
     enabled: true
     # persistence.hostPath.path -- Override path used for hostPath persistence. Valid for the "Agent" role, persistence
     # is always used for the "Agent" role.
