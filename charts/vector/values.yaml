@@ -306,7 +306,8 @@ customConfig: {}
   #     encoding:
   #       codec: json
 
-# Default volumes. They can be manipulated.
+# -- Default volumes that are mounted into pods. In most cases, these should not be changed.
+# Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
 defaultVolumes:
   - name: var-log
     hostPath:
@@ -321,7 +322,7 @@ defaultVolumes:
     hostPath:
       path: "/sys"
 
-# Default volume mounts. They can be manipulated.
+# -- Default volume mounts. Corresponds to `volumes`.
 defaultVolumeMounts:
   - name: var-log
     mountPath: "/var/log/"
@@ -435,7 +436,7 @@ podMonitor:
   # podMonitor.honorTimestamps -- If true, honor_timestamps is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
   honorTimestamps: true
 
-# Log level for Vector. Default is "info".
+# Log level for Vector.
 logLevel: "info"
 
 # Optional built-in HAProxy load balancer.

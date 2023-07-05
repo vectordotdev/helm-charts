@@ -137,6 +137,8 @@ helm install --name <RELEASE_NAME> \
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used. |
+| defaultVolumes | list | See `values.yaml`	| Default volumes that are mounted into pods. In most cases, these should not be changed. Use extraVolumes/extraVolumeMounts for additional custom volumes. |
+| defaultVolumeMounts | list | See `values.yaml`	| Default volume mounts. Corresponds to volumes. |
 | dnsConfig | object | `{}` | Specify the [dnsConfig](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) options for Vector Pods. |
 | dnsPolicy | string | `"ClusterFirst"` | Specify the [dnsPolicy](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy) for Vector Pods. |
 | env | list | `[]` | Set environment variables for Vector containers. |
@@ -159,6 +161,7 @@ helm install --name <RELEASE_NAME> \
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
 | livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| logLevel | string | `"info"` | Override Vector's default log level. |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up DaemonSet pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
 | nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for Vector Pods. |
