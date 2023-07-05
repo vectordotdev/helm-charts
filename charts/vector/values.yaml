@@ -306,8 +306,9 @@ customConfig: {}
   #     encoding:
   #       codec: json
 
-# -- Default volumes that are mounted into pods. In most cases, these should not be changed.
+# defaultVolumes -- Default volumes that are mounted into pods. In most cases, these should not be changed.
 # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
+# @default -- See `values.yaml`
 defaultVolumes:
   - name: var-log
     hostPath:
@@ -322,7 +323,8 @@ defaultVolumes:
     hostPath:
       path: "/sys"
 
-# -- Default volume mounts. Corresponds to `volumes`.
+# defaultVolumeMounts -- Default volume mounts. Corresponds to `volumes`.
+# @default -- See `values.yaml`
 defaultVolumeMounts:
   - name: var-log
     mountPath: "/var/log/"
