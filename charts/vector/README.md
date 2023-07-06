@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.22.1](https://img.shields.io/badge/Version-0.22.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.30.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.30.0--distroless--libc-informational?style=flat-square)
+![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.30.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.30.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -137,6 +137,8 @@ helm install --name <RELEASE_NAME> \
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used. |
+| defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
+| defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
 | dnsConfig | object | `{}` | Specify the [dnsConfig](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) options for Vector Pods. |
 | dnsPolicy | string | `"ClusterFirst"` | Specify the [dnsPolicy](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy) for Vector Pods. |
 | env | list | `[]` | Set environment variables for Vector containers. |
@@ -159,6 +161,7 @@ helm install --name <RELEASE_NAME> \
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
 | livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| logLevel | string | `"info"` |  |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up DaemonSet pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
 | nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for Vector Pods. |
@@ -166,6 +169,7 @@ helm install --name <RELEASE_NAME> \
 | persistence.enabled | bool | `false` | If true, create and use PersistentVolumeClaims. |
 | persistence.existingClaim | string | `""` | Name of an existing PersistentVolumeClaim to use. Valid for the "Aggregator" role. |
 | persistence.finalizers | list | `["kubernetes.io/pvc-protection"]` | Specifies the finalizers of PersistentVolumeClaims. Valid for the "Aggregator" role. |
+| persistence.hostPath.enabled | bool | `true` | If true, use hostPath persistence. Valid for the "Agent" role, if it's disabled the "Agent" role will use emptyDir. |
 | persistence.hostPath.path | string | `"/var/lib/vector"` | Override path used for hostPath persistence. Valid for the "Agent" role, persistence is always used for the "Agent" role. |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims. Valid for the "Aggregator" role. |
