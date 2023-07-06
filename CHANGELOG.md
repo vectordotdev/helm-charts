@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.23.0] - 2023-07-06
+
+### Vector
+
+#### Features
+
+- Volumes/volumeMounts, logLevel and dataDir (#310) ([f6e2b3e](https://github.com/vectordotdev/helm-charts/commit/f6e2b3ef8a65f82702e1f9414c54db1343ed7481))
+- Bump Vector image to 0.31.0 ([fe13660](https://github.com/vectordotdev/helm-charts/commit/fe13660efdd1766a34dd0cdde85fac4196ede64a))
+
 ## [vector-0.22.1] - 2023-06-15
 
 ### Vector
