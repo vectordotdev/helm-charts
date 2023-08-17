@@ -16,6 +16,10 @@ spec:
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
+  {{- with .Values.podMonitor.podTargetLabels }}
+  podTargetLabels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   podMetricsEndpoints:
     - port: {{ .Values.podMonitor.port }}
       path: {{ .Values.podMonitor.path }}
