@@ -431,6 +431,9 @@ podMonitor:
   # podMonitor.metricRelabelings -- [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs)
   # to apply to samples before ingestion.
   metricRelabelings: []
+  # podMonitor.podTargetLabels -- [podTargetLabels](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PodMonitorSpec)
+  # transfers labels on the Kubernetes Pod onto the target.
+  podTargetLabels: []
   # podMonitor.additionalLabels -- Adds additional labels to the PodMonitor.
   additionalLabels: {}
   # podMonitor.honorLabels -- If true, honor_labels is set to true in the [scrape config](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).

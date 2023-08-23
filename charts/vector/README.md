@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.24.1](https://img.shields.io/badge/Version-0.24.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.32.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.32.1--distroless--libc-informational?style=flat-square)
+![Version: 0.25.0](https://img.shields.io/badge/Version-0.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.32.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.32.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -188,6 +188,7 @@ helm install --name <RELEASE_NAME> \
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from. |
 | podMonitor.metricRelabelings | list | `[]` | [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion. |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape. |
+| podMonitor.podTargetLabels | list | `[]` | [podTargetLabels](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PodMonitorSpec) transfers labels on the Kubernetes Pod onto the target. |
 | podMonitor.port | string | `"prom-exporter"` | Override the port to scrape. |
 | podMonitor.relabelings | list | `[]` | [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping. |
 | podMonitor.scrapeTimeout | string | `nil` | Override the timeout after which the scrape is ended. |
