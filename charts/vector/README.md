@@ -206,6 +206,7 @@ helm install --name <RELEASE_NAME> \
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
 | service.enabled | bool | `true` | If true, create and provide a Service resource for Vector. |
 | service.externalTrafficPolicy | string | `""` | Specify the [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip). |
+| service.internalTrafficPolicy | string | `""` | Specify the [internalTrafficPolicy]https://kubernetes.io/docs/concepts/services-networking/service-traffic-policy). |
 | service.ipFamilies | list | `[]` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | service.ipFamilyPolicy | string | `""` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
