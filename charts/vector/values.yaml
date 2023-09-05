@@ -614,3 +614,15 @@ haproxy:
   # haproxy.affinity -- Configure [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
   # rules for HAProxy Pods.
   affinity: {}
+
+# Create extra manifests via values. Would be passed through `tpl` for templating
+extraObjects: []
+  # - apiVersion: v1
+  #   kind: ConfigMap
+  #   metadata:
+  #     name: vector-dashboards
+  #     labels:
+  #       grafana_dashboard: "1"
+  #   data:
+  #     vector.json: |
+  #       {{ .Files.Get "dashboards/vector.json" | fromJson | toJson }}
