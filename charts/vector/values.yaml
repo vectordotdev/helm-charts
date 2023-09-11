@@ -619,7 +619,7 @@ haproxy:
   # rules for HAProxy Pods.
   affinity: {}
 
-# extraObjects -- Create extra manifests via values. Would be passed through `tpl` for templating
+# extraObjects -- Create extra manifests via values. Would be passed through `tpl` for templating.
 extraObjects: []
   # - apiVersion: v1
   #   kind: ConfigMap
