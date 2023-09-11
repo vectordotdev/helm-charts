@@ -13,11 +13,11 @@ securityContext:
 {{- with .Values.podPriorityClassName }}
 priorityClassName: {{ . }}
 {{- end }}
-{{- with .Values.dnsPolicy }}
-dnsPolicy: {{ . }}
-{{- end }}
 {{- with .Values.shareProcessNamespace }}
 shareProcessNamespace: {{ . }}
+{{- end }}
+{{- with .Values.dnsPolicy }}
+dnsPolicy: {{ . }}
 {{- end }}
 {{- with .Values.dnsConfig }}
 dnsConfig:
