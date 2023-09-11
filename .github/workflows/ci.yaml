@@ -132,6 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - install-chart
+      - lint-docs
     steps:
       - name: validate
         run: echo "PR OK"
