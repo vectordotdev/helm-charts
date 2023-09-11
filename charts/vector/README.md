@@ -145,6 +145,7 @@ helm install --name <RELEASE_NAME> \
 | envFrom | list | `[]` | Define environment variables from Secrets or ConfigMaps. |
 | existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. |
 | extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. |
+| extraObjects | list | `[]` | Create extra manifests via values. Would be passed through `tpl` for templating. |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers. |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods. |
 | fullnameOverride | string | `""` | Override the full name of resources. |
@@ -224,7 +225,6 @@ helm install --name <RELEASE_NAME> \
 | topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods, this is also used for the DeploymentStrategy for the "Stateless-Aggregators". Valid options depend on the chosen role. |
 | workloadResourceAnnotations | object | `{}` | Set annotations on the Vector DaemonSet, Deployment or StatefulSet. |
-| extraObjects | list | `[]` | Create extra manifests via values. Would be passed through `tpl` for templating. |
 
 ### HAProxy values
 
