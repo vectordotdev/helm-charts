@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.25.0] - 2023-09-20
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector version ([cf2db4a](https://github.com/vectordotdev/helm-charts/commit/cf2db4a48130aa2d66eb283b9f66b62620c0c8e4))
+
+#### Features
+
+- Add podMonitor.podTargetLabels (#319) ([25fa9d2](https://github.com/vectordotdev/helm-charts/commit/25fa9d230fd39b58c1432d431a4882b9334527a3))
+- Add internalTrafficPolicy to headless service (#320) ([5578f21](https://github.com/vectordotdev/helm-charts/commit/5578f216fb5e965a65a0017bc9180c36921d4959))
+
 ## [vector-0.24.1] - 2023-08-21
 
 ### Vector
