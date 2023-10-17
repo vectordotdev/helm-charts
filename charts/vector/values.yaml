@@ -88,9 +88,9 @@ podDisruptionBudget:
   # for Vector.
   enabled: false
   # podDisruptionBudget.minAvailable -- The number of Pods that must still be available after an eviction.
-  minAvailable: 1
+  # minAvailable: 1
   # podDisruptionBudget.maxUnavailable -- (int) The number of Pods that can be unavailable after an eviction.
-  maxUnavailable:
+  # maxUnavailable:
 
 rbac:
   # rbac.create -- If true, create and use RBAC resources. Only valid for the "Agent" role.
