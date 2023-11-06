@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.0
+        uses: helm/chart-testing-action@v2.6.1
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
@@ -39,7 +39,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.0
+        uses: helm/chart-testing-action@v2.6.1
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
@@ -121,7 +121,7 @@ jobs:
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.0
+        uses: helm/chart-testing-action@v2.6.1
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
