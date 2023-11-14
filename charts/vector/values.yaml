@@ -61,6 +61,8 @@ autoscaling:
   # autoscaling.enabled -- Create a [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
   # for Vector. Valid for the "Aggregator" and "Stateless-Aggregator" roles.
   enabled: false
+  # autoscaling.annotations -- Annotations to add to Vector's HPA.
+  annotations: {}
   # autoscaling.minReplicas -- Minimum replicas for Vector's HPA.
   minReplicas: 1
   # autoscaling.maxReplicas -- Maximum replicas for Vector's HPA.

@@ -125,6 +125,7 @@ helm install --name <RELEASE_NAME> \
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Configure [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) rules for Vector Pods. |
 | args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments. |
+| autoscaling.annotations | object | `{}` | Annotations to add to Vector's HPA. |
 | autoscaling.behavior | object | `{}` | Configure separate scale-up and scale-down behaviors. |
 | autoscaling.customMetric | object | `{}` | Target a custom metric for autoscaling. |
 | autoscaling.enabled | bool | `false` | Create a [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) for Vector. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
