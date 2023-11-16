@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.29.0] - 2023-11-16
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to 0.34.1 (#343) ([a193ebf](https://github.com/vectordotdev/helm-charts/commit/a193ebf416bae0f1c3010d3bb26a24296e1db57c))
+
+#### Features
+
+- Add `autoscaling.annotations ` field for configuring annotations on Vector's HPA (#336) ([98c202a](https://github.com/vectordotdev/helm-charts/commit/98c202a8b658a3783497e76e12bbde290b4c057b))
+
 ## [vector-0.28.0] - 2023-11-07
 
 ### Vector
