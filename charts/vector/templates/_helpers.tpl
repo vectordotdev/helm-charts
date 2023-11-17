@@ -162,6 +162,7 @@ Generate a single ServicePort based on a component configuration.
 Generate an array of ContainerPorts based on `.Values.customConfig`.
 */}}
 {{- define "vector.containerPorts" -}}
+{{- if not (typeIs "string" .Values.customConfig) }}
   {{- range $componentKind, $components := .Values.customConfig }}
     {{- if eq $componentKind "sources" }}
       {{- tuple $components "_helper.generateContainerPort" | include "_helper.componentIter" }}
@@ -175,6 +176,11 @@ Generate an array of ContainerPorts based on `.Values.customConfig`.
       {{- end }}
     {{- end }}
   {{- end }}
+{{- else if or .Values.livenessProbe .Values.readinessProbe }}
+- name: api
+  containerPort: 8686
+  protocol: TCP
+{{- end }}
 {{- end }}
 
 {{/*
@@ -235,7 +241,7 @@ Return `true` if we can determine if Vector's API is enabled.
 {{- define "_vector.apiEnabled" -}}
   {{- if $.Values.existingConfigMaps -}}
 false
-  {{- else if $.Values.customConfig -}}
+  {{- else if and $.Values.customConfig (not (typeIs "string" $.Values.customConfig)) -}}
     {{- if $.Values.customConfig.api -}}
       {{- if $.Values.customConfig.api.enabled -}}
 true
@@ -263,7 +269,7 @@ statefulset
 Print the `url` option for the Vector command.
 */}}
 {{- define "_vector.url" -}}
-  {{- if $.Values.customConfig -}}
+  {{- if and $.Values.customConfig (not (typeIs "string" $.Values.customConfig)) -}}
     {{- if $.Values.customConfig.api -}}
       {{- if $.Values.customConfig.api.address -}}
 {{ print "\\" }}
@@ -283,6 +289,7 @@ to be more generally usable for other components.
 {{- $sourceDatadogAgentPort := "" }}
 {{- $hasTls := "" }}
 {{- $protocol := "http" }}
+{{- if not (typeIs "string" .Values.customConfig) }}
 {{- range $componentKind, $configs := .Values.customConfig }}
   {{- if eq $componentKind "sources" }}
     {{- range $componentId, $componentConfig := $configs }}
@@ -297,6 +304,7 @@ to be more generally usable for other components.
       {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- if or (not .Values.customConfig) (and .Values.customConfig $hasSourceDatadogAgent) }}
 {{- template "_divider" }}
