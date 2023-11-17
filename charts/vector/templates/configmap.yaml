@@ -9,7 +9,11 @@ metadata:
 data:
   {{- if .Values.customConfig }}
   vector.yaml: |
-{{ tpl (toYaml .Values.customConfig) . | indent 4 }}
+    {{- if typeIs "string" .Values.customConfig -}}
+    {{ tpl .Values.customConfig . | nindent 4 }}
+    {{- else -}}
+    {{ tpl (toYaml .Values.customConfig) . | nindent 4 }}
+    {{- end }}
   {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
   aggregator.yaml: |
     data_dir: /vector-data-dir
