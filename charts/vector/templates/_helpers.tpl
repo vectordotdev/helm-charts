@@ -157,10 +157,6 @@ Generate an array of ContainerPorts based on `.Values.customConfig`.
       {{- end }}
     {{- end }}
   {{- end }}
-{{- else if or .Values.livenessProbe .Values.readinessProbe }}
-- name: api
-  containerPort: 8686
-  protocol: TCP
 {{- end }}
 {{- end }}
 
