@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.30.0] - 2023-12-04
+
+### Vector
+
+#### Features
+
+- Add `persistence.retentionPolicy` for configuring Statefulset PVC retention policy (#343) ([f94671a](f94671a699bae83b687f68d889b8e278273488f1))
+
 ## [vector-0.29.0] - 2023-11-16
 
 ### Vector
