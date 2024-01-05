@@ -3,13 +3,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [vector-0.30.0] - 2023-12-04
+## [vector-0.29.1] - 2024-01-02
 
 ### Vector
 
 #### Features
 
-- Add `persistence.retentionPolicy` for configuring Statefulset PVC retention policy (#343) ([f94671a](f94671a699bae83b687f68d889b8e278273488f1))
+- Bump to Vector v0.34.2 ([cbe5d57](https://github.com/vectordotdev/helm-charts/commit/cbe5d57726b3b23d40e0a9531ee46b746a7814be))
 
 ## [vector-0.29.0] - 2023-11-16
 
