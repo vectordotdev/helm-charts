@@ -365,20 +365,11 @@ persistence:
   # "Aggregator" role.
   # storageClassName: default
 
-  # The [Persistent Volume Claim (PVC) retention policy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention)
-  # controls if and how PVCs are deleted during the lifecycle of a StatefulSet.
-  # WhenDeleted specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is deleted,
-  # and WhenScaled specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is scaled down.
-  #
-  # Example:
-  #
-  # ```yaml
-  # retentionPolicy:
-  #   whenDeleted: Retain
-  #   whenScaled: Retain
-  # ```
-  # @type: map
+  # persistence.retentionPolicy -- Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention)
+  # for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role.
   retentionPolicy: {}
+  #  whenDeleted: Retain
+  #  whenScaled: Retain
 
   # persistence.accessModes -- Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role.
   accessModes:
