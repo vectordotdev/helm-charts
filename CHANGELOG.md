@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.30.1] - 2024-02-01
+
+### Vector
+
+#### Bug Fixes
+
+- Apply `logLevel` config option ([2225c94](https://github.com/vectordotdev/helm-charts/commit/2225c9454c325ef01d0c48a2eb35c0e2b0acf60c))
+
 ## [vector-0.30.0] - 2024-01-08
 
 ### Vector
