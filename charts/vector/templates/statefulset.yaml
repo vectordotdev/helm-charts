@@ -15,6 +15,7 @@ spec:
   selector:
     matchLabels:
       {{- include "vector.selectorLabels" . | nindent 6 }}
+  minReadySeconds: {{ .Values.minReadySeconds }}
   {{- with .Values.updateStrategy }}
   updateStrategy:
     {{- toYaml . | nindent 4 }}
