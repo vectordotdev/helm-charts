@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.31.1] - 2024-02-23
+
+### Vector
+
+#### Bug Fixes
+
+- Add minReadySeconds to StatefulSet and Deployment specs ([4a69450](https://github.com/vectordotdev/helm-charts/commit/4a6945068c1a36286be3b54f086861f134dbedd0))
+
 ## [vector-0.31.0] - 2024-02-13
 
 ### Vector
