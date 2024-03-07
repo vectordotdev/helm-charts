@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.31.1] - 2024-03-07
+
+### Vector
+
+#### Bug Fixes
+
+- Correct invalid `mountPoints` config option to `mountpoints` (#376) ([db06104](https://github.com/vectordotdev/helm-charts/commit/db06104a45ed5b8b04950f06b30cfdabeba6ac88))
+
 ## [vector-0.31.0] - 2024-02-13
 
 ### Vector
