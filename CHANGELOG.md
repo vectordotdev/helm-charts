@@ -3,14 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [vector-0.31.1] - 2024-03-07
+## [vector-0.31.1] - 2024-03-11
 
 ### Vector
 
 #### Bug Fixes
 
-- Correct invalid `mountPoints` config option to `mountpoints` (#376) ([db06104](https://github.com/vectordotdev/helm-charts/commit/db06104a45ed5b8b04950f06b30cfdabeba6ac88))
-- Add minReadySeconds to StatefulSet and Deployment specs ([4a69450](https://github.com/vectordotdev/helm-charts/commit/4a6945068c1a36286be3b54f086861f134dbedd0))
+- Add minReadySeconds to StatefulSet and Deployment specs (#367) ([b9e67eb](https://github.com/vectordotdev/helm-charts/commit/b9e67ebda2596498fbb285c2a74d8fcb29f7ec70))
+- Rename `mountPoints` to `mountpoints` (#377) ([da10d25](https://github.com/vectordotdev/helm-charts/commit/da10d25c5bd98597adff759330912ff0ecf5fc70))
+- Bump Vector version to v0.36.1 ([96b56a5](https://github.com/vectordotdev/helm-charts/commit/96b56a5985205f79d54849e09a1d2431336fdb6a))
 
 ## [vector-0.31.0] - 2024-02-13
 
