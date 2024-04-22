@@ -3,6 +3,57 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.32.1] - 2024-04-09
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.37.1 ([093f707](https://github.com/vectordotdev/helm-charts/commit/093f70727c2e98e603a03b2143eeb9f3b0c7945b))
+
+## [vector-0.32.0] - 2024-03-26
+
+### Vector
+
+#### Features
+
+- Bump Vector to v0.37.0 ([1a01b88](https://github.com/vectordotdev/helm-charts/commit/1a01b88a1de3387b33a980ffa34e4a23a472bb0e))
+
+## [vector-0.31.1] - 2024-03-11
+
+### Vector
+
+#### Bug Fixes
+
+- Add minReadySeconds to StatefulSet and Deployment specs (#367) ([b9e67eb](https://github.com/vectordotdev/helm-charts/commit/b9e67ebda2596498fbb285c2a74d8fcb29f7ec70))
+- Rename `mountPoints` to `mountpoints` (#377) ([da10d25](https://github.com/vectordotdev/helm-charts/commit/da10d25c5bd98597adff759330912ff0ecf5fc70))
+- Bump Vector version to v0.36.1 ([96b56a5](https://github.com/vectordotdev/helm-charts/commit/96b56a5985205f79d54849e09a1d2431336fdb6a))
+
+## [vector-0.31.0] - 2024-02-13
+
+### Vector
+
+#### Features
+
+- Bump Vector version to v0.36.0 ([a2f8c8a](https://github.com/vectordotdev/helm-charts/commit/a2f8c8a663106ff7985c421edc33c37aa248637a))
+
+## [vector-0.30.2] - 2024-02-12
+
+### Vector
+
+#### Bug Fixes
+
+- Apply `logLevel` config option (#362) ([96e3c2e](https://github.com/vectordotdev/helm-charts/commit/96e3c2e5f3435532a549847edf5264ce9513451f))
+- Bump to Vector v0.35.1 ([4a0a2a8](https://github.com/vectordotdev/helm-charts/commit/4a0a2a8c7c59bec7b6595966f9a43f7389135ffa))
+
+## [vector-0.30.1] - 2024-02-01
+
+### Vector
+
+#### Bug Fixes
+
+- Apply `logLevel` config option ([2225c94](https://github.com/vectordotdev/helm-charts/commit/2225c9454c325ef01d0c48a2eb35c0e2b0acf60c))
+
 ## [vector-0.30.0] - 2024-01-08
 
 ### Vector
