@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.33.0] - 2024-05-07
+
+### Vector
+
+#### Bug Fixes
+
+- Have psp support hostNetwork: true when podHostNetwork is true (#385) ([b23cf1f](https://github.com/vectordotdev/helm-charts/commit/b23cf1f1b2302209ebacea23c73c547599f44724))
+
+#### Features
+
+- Bump Vector version to v0.38.0 ([f430315](https://github.com/vectordotdev/helm-charts/commit/f430315f551eb25d1ba00bed31d5fe2c2bed67e4))
+
 ## [vector-0.32.1] - 2024-04-09
 
 ### Vector
