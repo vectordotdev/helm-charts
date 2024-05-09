@@ -156,6 +156,7 @@ helm install --name <RELEASE_NAME> \
 | image.repository | string | `"timberio/vector"` | Override default registry and name for Vector's image. |
 | image.sha | string | `""` | The SHA to use for Vector's image. |
 | image.tag | string | Derived from the Chart's appVersion. | The tag to use for Vector's image. |
+| image.base | string | `""` | The base distribution to use for vector. If set, then the base in appVersion will be replaced with this base alongside the version. For example: with a `base` of `debian` `0.38.0-distroless-libc` becomes `0.38.0-debian` |
 | ingress.annotations | object | `{}` | Set annotations on the Ingress. |
 | ingress.className | string | `""` | Specify the [ingressClassName](https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress), requires Kubernetes >= 1.18 |
 | ingress.enabled | bool | `false` | If true, create and use an Ingress resource. |

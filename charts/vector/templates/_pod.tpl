@@ -38,9 +38,9 @@ containers:
 {{ toYaml . | indent 6 }}
 {{- end }}
 {{- if .Values.image.sha }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
+    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}@sha256:{{ .Values.image.sha }}"
 {{- else }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}"
 {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- with .Values.command }}
