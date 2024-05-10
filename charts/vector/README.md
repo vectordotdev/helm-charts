@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.33.0](https://img.shields.io/badge/Version-0.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.38.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.38.0--distroless--libc-informational?style=flat-square)
+![Version: 0.34.0](https://img.shields.io/badge/Version-0.34.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.38.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.38.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -151,6 +151,7 @@ helm install --name <RELEASE_NAME> \
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers. |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods. |
 | fullnameOverride | string | `""` | Override the full name of resources. |
+| image.base | string | `""` | The base distribution to use for vector. If set, then the base in appVersion will be replaced with this base alongside the version. For example: with a `base` of `debian` `0.38.0-distroless-libc` becomes `0.38.0-debian` |
 | image.pullPolicy | string | `"IfNotPresent"` | The [pullPolicy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) for Vector's image. |
 | image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the Vector Pods. |
 | image.repository | string | `"timberio/vector"` | Override default registry and name for Vector's image. |

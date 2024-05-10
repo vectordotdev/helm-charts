@@ -38,6 +38,9 @@ image:
   tag: ""
   # image.sha -- The SHA to use for Vector's image.
   sha: ""
+  # image.base -- The base distribution to use for vector. If set, then the base in appVersion will be replaced with this base alongside the version.
+  # For example: with a `base` of `debian` `0.38.0-distroless-libc` becomes `0.38.0-debian`
+  base: ""
 
 # replicas -- Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles.
 replicas: 1

@@ -6,6 +6,25 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+  Set the image tag when `base` is used to allow for updates that are pinned
+  to a specific base OS, but not to a specific version.
+
+  This assumes that the `appVersion` has a prefix of the actual version followed
+  by the default OS.
+
+  A manual tag takes precedence over everything else
+*/}}
+{{- define "vector.image.tag" -}}
+{{- $version := .Chart.AppVersion }}
+{{- if .Values.image.tag }}
+{{- $version = .Values.image.tag }}
+{{- else if .Values.image.base }}
+{{- $version = (printf "%s-%s" (first (splitList "-" $version)) .Values.image.base) }}
+{{- end }}
+{{- printf "%s" $version }}
+{{- end }}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
@@ -37,7 +56,7 @@ Common labels.
 helm.sh/chart: {{ include "vector.chart" . }}
 {{ include "vector.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+app.kubernetes.io/version: {{ include "vector.image.tag" . | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ with .Values.commonLabels }}
