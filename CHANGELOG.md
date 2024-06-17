@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.34.0] - 2024-06-17
+
+### Vector
+
+#### Bug Fixes
+
+- Fix indentation for haproxy.initContainers (#390) ([8e4cb99](https://github.com/vectordotdev/helm-charts/commit/8e4cb993464eed061472cf645bab1584632e6cb5))
+
+#### Features
+
+- Bump Vector to v0.39.0 ([a83c4d6](https://github.com/vectordotdev/helm-charts/commit/a83c4d6e765de44491ea7c37dd0f75c9324c8efe))
+
 ## [vector-0.33.0] - 2024-05-07
 
 ### Vector
