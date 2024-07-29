@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "vector.fullname" . }}
-  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
