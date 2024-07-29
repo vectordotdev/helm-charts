@@ -138,8 +138,10 @@ containers:
       - name: data
         {{- if .Values.existingConfigMaps }}
         mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfigMaps`" }}{{ end }}"
-        {{- else }}
+        {{- else if not (typeIs "string" .Values.customConfig) }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
+        {{- else }}
+        mountPath: "/vector-data-dir"
         {{- end }}
       - name: config
         mountPath: "/etc/vector/"
