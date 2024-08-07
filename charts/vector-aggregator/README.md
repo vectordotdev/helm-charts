@@ -4,7 +4,7 @@
 
 This is an opinionated Helm Chart for running [Vector](https://vector.dev) as an [aggregator](https://vector.dev/docs/about/concepts/#aggregator) in Kubernetes.
 
-To get started check out our [documentation](https://master.vector.dev/docs/setup/installation/platforms/kubernetes/)
+To get started check out our [documentation](https://vector.dev/docs/setup/installation/platforms/kubernetes/)
 
 ## Load Balancing (Beta)
 
