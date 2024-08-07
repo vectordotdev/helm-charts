@@ -192,7 +192,7 @@ helm install --name <RELEASE_NAME> \
 | podMonitor.jobLabel | string | `"app.kubernetes.io/name"` | Override the label to retrieve the job name from. |
 | podMonitor.metricRelabelings | list | `[]` | [MetricRelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion. |
 | podMonitor.path | string | `"/metrics"` | Override the path to scrape. |
-| podMonitor.podTargetLabels | list | `[]` | [podTargetLabels](https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PodMonitorSpec) transfers labels on the Kubernetes Pod onto the target. |
+| podMonitor.podTargetLabels | list | `[]` | [podTargetLabels](https://prometheus-operator.dev/docs/api-reference/api/#monitoring.coreos.com/v1.PodMonitorSpec) transfers labels on the Kubernetes Pod onto the target. |
 | podMonitor.port | string | `"prom-exporter"` | Override the port to scrape. |
 | podMonitor.relabelings | list | `[]` | [RelabelConfigs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before scraping. |
 | podMonitor.scrapeTimeout | string | `nil` | Override the timeout after which the scrape is ended. |
