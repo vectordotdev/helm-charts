@@ -27,6 +27,10 @@ dnsConfig:
 imagePullSecrets:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.hostAliases }}
+hostAliases:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.initContainers }}
 initContainers:
 {{ toYaml . | indent 2 }}
