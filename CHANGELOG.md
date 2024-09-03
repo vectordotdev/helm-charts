@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.35.2] - 2024-09-03
+
+### Vector
+
+#### Bug Fixes
+
+- InternalTrafficPolicy on service ([4e658d7](https://github.com/vectordotdev/helm-charts/commit/4e658d7658cd0b79b8089734c6ac7db70af8a5e6))
+
 ## [vector-0.35.1] - 2024-08-26
 
 ### Vector
