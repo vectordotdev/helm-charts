@@ -1,6 +1,6 @@
 apiVersion: v2
 name: vector
-version: "0.35.3"
+version: "0.36.0"
 kubeVersion: ">=1.15.0-0"
 description: A lightweight, ultra-fast tool for building observability pipelines
 type: application
@@ -18,11 +18,11 @@ maintainers:
   - name: Datadog
     email: vector@datadoghq.com
 icon: https://vector.dev/press/vector-icon.svg
-appVersion: "0.40.2-distroless-libc"
+appVersion: "0.41.0-distroless-libc"
 annotations:
   artifacthub.io/images: |
     - name: vector
-      image: timberio/vector:0.40.2-distroless-libc
+      image: timberio/vector:0.41.0-distroless-libc
     - name: haproxy
       image: haproxytech/haproxy-alpine:2.6.12
   artifacthub.io/license: MPL-2.0
