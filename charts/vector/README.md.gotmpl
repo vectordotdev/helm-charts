@@ -24,8 +24,7 @@ By default, Vector runs as a `StatefulSet` in the "Aggregator" role. It can alte
 To install the chart with the release name `<RELEASE_NAME>` run:
 
 ```bash
-helm install --name <RELEASE_NAME> \
-  vector/vector
+helm install <RELEASE_NAME> vector/vector
 ```
 
 ### Upgrading
@@ -110,9 +109,9 @@ customConfig:
 The following table lists the configurable parameters of the Vector chart and their default values. Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-helm install --name <RELEASE_NAME> \
-  --set role=Agent \
-  vector/vector
+helm install <RELEASE_NAME> \
+  vector/vector \
+  --set role=Agent
 ```
 
 {{ template "chart.valuesHeader" . }}
