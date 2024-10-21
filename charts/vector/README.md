@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.36.1](https://img.shields.io/badge/Version-0.36.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.41.1--distroless--libc-informational?style=flat-square)
+![Version: 0.36.2](https://img.shields.io/badge/Version-0.36.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.41.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -26,8 +26,7 @@ By default, Vector runs as a `StatefulSet` in the "Aggregator" role. It can alte
 To install the chart with the release name `<RELEASE_NAME>` run:
 
 ```bash
-helm install --name <RELEASE_NAME> \
-  vector/vector
+helm install <RELEASE_NAME> vector/vector
 ```
 
 ### Upgrading
@@ -112,9 +111,9 @@ customConfig:
 The following table lists the configurable parameters of the Vector chart and their default values. Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-helm install --name <RELEASE_NAME> \
-  --set role=Agent \
-  vector/vector
+helm install <RELEASE_NAME> \
+  vector/vector \
+  --set role=Agent
 ```
 
 ## Values
