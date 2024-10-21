@@ -27,6 +27,10 @@ dnsConfig:
 imagePullSecrets:
 {{ toYaml . | indent 2 }}
 {{- end }}
+{{- with .Values.hostAliases }}
+hostAliases:
+{{ toYaml . | indent 2 }}
+{{- end }}
 {{- with .Values.initContainers }}
 initContainers:
 {{ toYaml . | indent 2 }}
@@ -38,9 +42,9 @@ containers:
 {{ toYaml . | indent 6 }}
 {{- end }}
 {{- if .Values.image.sha }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}@sha256:{{ .Values.image.sha }}"
+    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}@sha256:{{ .Values.image.sha }}"
 {{- else }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}"
 {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- with .Values.command }}
@@ -52,6 +56,8 @@ containers:
     {{- toYaml . | nindent 6 }}
 {{- end }}
     env:
+      - name: VECTOR_LOG
+        value: "{{ .Values.logLevel | default "info" }}"
 {{- if .Values.env }}
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
@@ -74,8 +80,6 @@ containers:
         value: "/host/proc"
       - name: SYSFS_ROOT
         value: "/host/sys"
-      - name: VECTOR_LOG
-        value: "{{ .Values.logLevel | default "info" }}"
 {{- end }}
 {{- if .Values.envFrom }}
 {{- with .Values.envFrom }}

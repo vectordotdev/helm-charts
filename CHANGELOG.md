@@ -3,6 +3,137 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.36.1] - 2024-09-11
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.41.1 (#413) ([a9aeafb](https://github.com/vectordotdev/helm-charts/commit/a9aeafbf6a7d9e647d77eb6b873e3674f5b4dd07))
+
+## [vector-0.36.0] - 2024-09-09
+
+### Vector
+
+#### Features
+
+- Update to v0.41.0 of Vector (#411) ([ceb86bd](https://github.com/vectordotdev/helm-charts/commit/ceb86bd98f051eec5cbf2ee0c01f3b7aa7aeaef2))
+
+## [vector-0.35.3] - 2024-09-09
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.40.2 (#409) ([8618426](https://github.com/vectordotdev/helm-charts/commit/86184265d67e8d9c2bab0db63005f2704516e065))
+
+## [vector-0.35.2] - 2024-09-03
+
+### Vector
+
+#### Bug Fixes
+
+- InternalTrafficPolicy on service (#405) ([0c53d3a](https://github.com/vectordotdev/helm-charts/commit/0c53d3af5545b69171ce6dfee88a51dd363a973a))
+
+## [vector-0.35.1] - 2024-08-26
+
+### Vector
+
+#### Bug Fixes
+
+- Bump to Vector v0.40.1 ([585e87d](https://github.com/vectordotdev/helm-charts/commit/585e87d66c914ea18ff387f2a21c4ce1d3df8f03))
+
+## [vector-0.35.0] - 2024-07-29
+
+### Vector
+
+#### Features
+
+- Update Vector to v0.40.0 ([037dce3](https://github.com/vectordotdev/helm-charts/commit/037dce3159263fffbda3e03f00084b12db083cdd))
+
+## [vector-0.34.0] - 2024-06-17
+
+### Vector
+
+#### Bug Fixes
+
+- Fix indentation for haproxy.initContainers (#390) ([8e4cb99](https://github.com/vectordotdev/helm-charts/commit/8e4cb993464eed061472cf645bab1584632e6cb5))
+
+#### Features
+
+- Bump Vector to v0.39.0 ([a83c4d6](https://github.com/vectordotdev/helm-charts/commit/a83c4d6e765de44491ea7c37dd0f75c9324c8efe))
+
+## [vector-0.33.0] - 2024-05-07
+
+### Vector
+
+#### Bug Fixes
+
+- Have psp support hostNetwork: true when podHostNetwork is true (#385) ([b23cf1f](https://github.com/vectordotdev/helm-charts/commit/b23cf1f1b2302209ebacea23c73c547599f44724))
+
+#### Features
+
+- Bump Vector version to v0.38.0 ([f430315](https://github.com/vectordotdev/helm-charts/commit/f430315f551eb25d1ba00bed31d5fe2c2bed67e4))
+
+## [vector-0.32.1] - 2024-04-09
+
+### Vector
+
+#### Bug Fixes
+
+- Bump Vector to v0.37.1 ([093f707](https://github.com/vectordotdev/helm-charts/commit/093f70727c2e98e603a03b2143eeb9f3b0c7945b))
+
+## [vector-0.32.0] - 2024-03-26
+
+### Vector
+
+#### Features
+
+- Bump Vector to v0.37.0 ([1a01b88](https://github.com/vectordotdev/helm-charts/commit/1a01b88a1de3387b33a980ffa34e4a23a472bb0e))
+
+## [vector-0.31.1] - 2024-03-11
+
+### Vector
+
+#### Bug Fixes
+
+- Add minReadySeconds to StatefulSet and Deployment specs (#367) ([b9e67eb](https://github.com/vectordotdev/helm-charts/commit/b9e67ebda2596498fbb285c2a74d8fcb29f7ec70))
+- Rename `mountPoints` to `mountpoints` (#377) ([da10d25](https://github.com/vectordotdev/helm-charts/commit/da10d25c5bd98597adff759330912ff0ecf5fc70))
+- Bump Vector version to v0.36.1 ([96b56a5](https://github.com/vectordotdev/helm-charts/commit/96b56a5985205f79d54849e09a1d2431336fdb6a))
+
+## [vector-0.31.0] - 2024-02-13
+
+### Vector
+
+#### Features
+
+- Bump Vector version to v0.36.0 ([a2f8c8a](https://github.com/vectordotdev/helm-charts/commit/a2f8c8a663106ff7985c421edc33c37aa248637a))
+
+## [vector-0.30.2] - 2024-02-12
+
+### Vector
+
+#### Bug Fixes
+
+- Apply `logLevel` config option (#362) ([96e3c2e](https://github.com/vectordotdev/helm-charts/commit/96e3c2e5f3435532a549847edf5264ce9513451f))
+- Bump to Vector v0.35.1 ([4a0a2a8](https://github.com/vectordotdev/helm-charts/commit/4a0a2a8c7c59bec7b6595966f9a43f7389135ffa))
+
+## [vector-0.30.1] - 2024-02-01
+
+### Vector
+
+#### Bug Fixes
+
+- Apply `logLevel` config option ([2225c94](https://github.com/vectordotdev/helm-charts/commit/2225c9454c325ef01d0c48a2eb35c0e2b0acf60c))
+
+## [vector-0.30.0] - 2024-01-08
+
+### Vector
+
+#### Features
+
+- Bump Vector to v0.35.0 ([1fae6dc](https://github.com/vectordotdev/helm-charts/commit/1fae6dc128a1ebb0042b12ab5cf35f2d2fd927c8))
+
 ## [vector-0.29.1] - 2024-01-02
 
 ### Vector
