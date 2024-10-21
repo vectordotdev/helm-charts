@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.36.2](https://img.shields.io/badge/Version-0.36.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.41.1--distroless--libc-informational?style=flat-square)
+![Version: 0.37.0](https://img.shields.io/badge/Version-0.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.41.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.41.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -175,6 +175,7 @@ helm install <RELEASE_NAME> \
 | persistence.finalizers | list | `["kubernetes.io/pvc-protection"]` | Specifies the finalizers of PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.hostPath.enabled | bool | `true` | If true, use hostPath persistence. Valid for the "Agent" role, if it's disabled the "Agent" role will use emptyDir. |
 | persistence.hostPath.path | string | `"/var/lib/vector"` | Override path used for hostPath persistence. Valid for the "Agent" role, persistence is always used for the "Agent" role. |
+| persistence.retentionPolicy | object | `{}` | Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | podAnnotations | object | `{}` | Set annotations on Vector Pods. |

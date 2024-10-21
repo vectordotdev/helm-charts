@@ -379,6 +379,12 @@ persistence:
   # "Aggregator" role.
   # storageClassName: default
 
+  # persistence.retentionPolicy -- Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention)
+  # for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role.
+  retentionPolicy: {}
+  #  whenDeleted: Retain
+  #  whenScaled: Retain
+
   # persistence.accessModes -- Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role.
   accessModes:
     - ReadWriteOnce
