@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.37.0] - 2024-10-21
+
+### Vector
+
+#### Features
+
+- Add `persistence.retentionPolicy` for configuring Statefulset PVC retention policy (#347) ([ab8df81](https://github.com/vectordotdev/helm-charts/commit/ab8df816a041ade43cdb659770fb4d2503f13beb))
+- Bump Vector to v0.42.0 (#420) ([3304a80](https://github.com/vectordotdev/helm-charts/commit/3304a8069da8ff194a8579fa95c2ed4a5bd394ad))
+- Add OCI registry support for Helm chart (#419) ([c03515e8](https://github.com/vectordotdev/helm-charts/commit/c03515e8fa5a4506239b4db726c1462ac58d2166))
+
 ## [vector-0.36.1] - 2024-09-11
 
 ### Vector
