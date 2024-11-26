@@ -1,0 +1,12 @@
+.DS_Store
+
+# Chart dependencies
+**/charts/*.tgz
+
+# IDEs
+.idea/
+*.iml
+.vscode
+*~
+\#*\#
+.\#*
