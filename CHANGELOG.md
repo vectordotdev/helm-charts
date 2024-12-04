@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.38.0] - 2024-12-04
+
+### Vector
+
+#### Features
+
+- Bump Vector to v0.43.0 (#430) ([630594c](https://github.com/vectordotdev/helm-charts/commit/630594cbbc1051d8a8fd1686249173882a91ad3a))
+- Bump Vector to v0.43.0 ([ac6bbcb](https://github.com/vectordotdev/helm-charts/commit/ac6bbcb216162e4d404ca79ac6901e2f8e778adf))
+
 ## [vector-0.37.0] - 2024-12-04
 
 ### Vector
