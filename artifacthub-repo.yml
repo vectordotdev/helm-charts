@@ -1,7 +1,13 @@
 # Artifact Hub repository metadata file
 repositoryID: 2bfedcfd-6f6f-40ab-9830-833068a48c10
 owners: # (optional, used to claim repository ownership)
-  - name: spencer.gilbert
-    email: spencer.gilbert@datadoghq.com
+  - name: benson.fung
+    email: benson.fung@datadoghq.com
+  - name: pavlos.rontidis
+    email: pavlos.rontidis@datadoghq.com
+  - name: jesse.szwedko
+    email: jesse.szwedko@datadoghq.com
+  - name: robot-vector-vector
+    email: robot-vector-vector@datadoghq.com
 ignore: # (optional, packages that should not be indexed by Artifact Hub)
   - name: vector-shared
