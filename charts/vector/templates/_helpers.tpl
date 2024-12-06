@@ -129,6 +129,26 @@ Generate an array of ServicePorts based on `.Values.customConfig`.
 {{- end }}
 
 {{/*
+Returns a list of ports merged from services.portsOverrides and customConfigs.
+*/}}
+{{- define "vector.portsOverrides" -}}
+  {{- $mergedPorts := dict }}
+  {{- range $_, $svcPort := .Values.service.portsOverrides }}
+    {{- if not (hasKey $mergedPorts $svcPort.name) }}
+      {{- $_ := set $mergedPorts $svcPort.name $svcPort }}
+    {{- end }}
+  {{- end }}
+  {{- range $_, $customPort := (include "vector.ports" . | fromYamlArray) }}
+    {{- if (hasKey $mergedPorts $customPort.name) }}
+      {{- $_ := set $mergedPorts $customPort.name (get $mergedPorts $customPort.name | mergeOverwrite $customPort)}}
+    {{- else }}
+      {{- $_ := set $mergedPorts $customPort.name $customPort }}
+    {{- end }}
+  {{- end }}
+  {{- values $mergedPorts | toYaml }}
+{{- end }}
+
+{{/*
 Iterate over the components defined in `.Values.customConfig`.
 */}}
 {{- define "_helper.componentIter" -}}
