@@ -5,8 +5,10 @@ metadata:
   name: {{ include "vector.fullname" . }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
+  {{- with .Values.workloadResourceAnnotations }}
   annotations:
-    {{- toYaml .Values.workloadResourceAnnotations | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     matchLabels:
