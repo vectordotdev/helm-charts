@@ -22,6 +22,7 @@ when the `develop` branch is merged into `master`.
 To make releasing easier two scripts are utilized in the steps below.
 
 1. Run `$ .github/release-vector-version.sh`
+   - Update Helm docs by running `helm-docs`
    - Commit the changes generated from step 1. This needs to be a
       [conventional commit](https://www.conventionalcommits.org/).
      - E.g. "feat(vector): Bump Vector to v0.29.0"
@@ -44,9 +45,10 @@ To make releasing easier two scripts are utilized in the steps below.
      - This script requires [`yq`](https://github.com/mikefarah/yq) and
        [`git-cliff`](https://github.com/orhun/git-cliff) to be installed.
 
-3. To kick off the release:
+3. To kick off the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml):
  ```
    git switch master
    git pull
    git merge develop
+   git push
 ```
