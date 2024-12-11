@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.38.1] - 2024-12-11
+
+### Vector
+
+#### Bug Fixes
+
+- Allow empty workloadResourceAnnotations (#435) ([516885f](https://github.com/vectordotdev/helm-charts/commit/516885fb923d68023ed3b4f07bf919d3408de6bb))
+
+#### Features
+
+- Bump Vector to v0.43.1 (#437) ([61659e8](https://github.com/vectordotdev/helm-charts/commit/61659e812d036bdf3cd23305dcaebf5aa9fc5432))
+
 ## [vector-0.38.0] - 2024-12-04
 
 ### Vector
