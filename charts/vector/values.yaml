@@ -20,6 +20,12 @@ role: "Aggregator"
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations.
 rollWorkload: true
 
+# rollWorkloadSecrets -- Add a checksum of the generated Secret to workload annotations.
+rollWorkloadSecrets: false
+
+# rollWorkloadExtraObjects -- Add a checksum of the generated ExtraObjects to workload annotations.
+rollWorkloadExtraObjects: false
+
 # commonLabels -- Add additional labels to all created resources.
 commonLabels: {}
 

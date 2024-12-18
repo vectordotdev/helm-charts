@@ -33,6 +33,12 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
       {{- end }}
+      {{- if .Values.rollWorkloadSecrets }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      {{- end }}
+      {{- if .Values.rollWorkloadExtraObjects }}
+        checksum/extraObjects: {{ include (print $.Template.BasePath "/extra-manifests.yaml") . | sha256sum }}
+      {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
