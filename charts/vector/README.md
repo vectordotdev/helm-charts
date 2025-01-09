@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.38.1](https://img.shields.io/badge/Version-0.38.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.43.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.43.1--distroless--libc-informational?style=flat-square)
+![Version: 0.39.0](https://img.shields.io/badge/Version-0.39.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.43.1-distroless-libc](https://img.shields.io/badge/AppVersion-0.43.1--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -206,6 +206,8 @@ helm install <RELEASE_NAME> \
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
+| rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
+| rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
 | secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values. **NOTE: Don't commit unencrypted secrets to git!** |
 | securityContext | object | `{}` | Specify securityContext on Vector containers. |
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
