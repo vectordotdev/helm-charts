@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "vector.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
 data:
