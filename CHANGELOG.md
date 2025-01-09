@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.39.0] - 2025-01-09
+
+### Vector
+
+#### Features
+
+- Add option to roll vector pods on secrets and extra objects change (#439) ([d7a05fc](https://github.com/vectordotdev/helm-charts/commit/d7a05fc597714cb791a51afd4b2bff2d21d60be3))
+- Add `namespace` to manifests (#441) ([30ea8ff](https://github.com/vectordotdev/helm-charts/commit/30ea8ff9e8c0e698901ce39f0d2313a1c55b5e1c))
+
 ## [vector-0.38.1] - 2024-12-11
 
 ### Vector
