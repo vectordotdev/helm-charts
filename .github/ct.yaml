@@ -4,3 +4,4 @@ check-version-increment: true
 debug: true
 exclude-deprecated: true
 helm-extra-args: --timeout 300s
+target-branch: master
