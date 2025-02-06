@@ -20,7 +20,7 @@ spec:
   selector:
     matchLabels:
       {{- include "vector.selectorLabels" . | nindent 6 }}
-  {{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.GitVersion }}
+  {{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.Version }}
   minReadySeconds: {{ .Values.minReadySeconds }}
   {{- end }}
   {{- with .Values.updateStrategy }}
