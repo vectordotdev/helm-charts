@@ -175,10 +175,10 @@ tolerations:
 {{- with  .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
 {{- range $_, $entry := . }}
-{{- if not (dig "labelSelectors" "matchLabels" false $entry) }}
+{{- if not (dig "labelSelector" "matchLabels" false $entry) }}
   {{- $ls := dict -}}
-  {{- $_ := set $ls "labelSelectors" dict -}}
-  {{- $_ := set $ls.labelSelectors "matchLabels" (include "vector.selectorLabels" $ | fromYaml) }}
+  {{- $_ := set $ls "labelSelector" dict -}}
+  {{- $_ := set $ls.labelSelector "matchLabels" (include "vector.selectorLabels" $ | fromYaml) }}
   {{- $entry := merge $entry $ls }}
 {{- end }}
 {{- end }}
