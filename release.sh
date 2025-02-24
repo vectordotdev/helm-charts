@@ -72,7 +72,7 @@ git switch develop
 git pull
 
 BRANCH2="regenerate-changelog-$VERSION"
-git checkout -b "$BRANCH2" develop
+git checkout -b "$BRANCH2"
 .github/release-changelog.sh
 
 # Commit changes from Step 3
