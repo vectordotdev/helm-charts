@@ -11,20 +11,19 @@ ISSUE_LINK=$1
 VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
 
 create_pr() {
-  local branch output pr_url pr_number
-  branch="$1"  # Read branch name from function argument
+  local branch output pr_url
+  branch="$1"
+  title="$2"
 
   output=$(gh pr create \
-    --title "feat(vector): Update Vector version to $VERSION and Helm docs" \
-    --body "This PR updates the Vector chart version to $VERSION and regenerates Helm docs.\n\nRef: $ISSUE_LINK" \
+    --title "$title" \
+    --body "Ref: $ISSUE_LINK" \
     --base master --head "$branch")
 
-  echo "$output"  # Optional: Print the full output for debugging
+  echo "$output"
 
-  pr_url=$(echo "$output" | tail -n 1)  # Extract last line (PR URL)
-  pr_number=$(basename "$pr_url")  # Extract PR number from URL
-
-  echo "$pr_number"  # Return PR number via stdout
+  pr_url=$(echo "$output" | tail -n 1)
+  echo "pr_url"
 }
 
 wait_for_pr_merge() {
@@ -64,7 +63,7 @@ else
 fi
 
 # Push the branch and submit a PR for Steps 1 and 2
-PR1_URL=$(create_pr "$BRANCH1")
+PR1_URL=$(create_pr "$BRANCH1" "chore(releasing): Update Vector version to $VERSION and Helm docs")
 echo "Submitted: $PR1_URL"
 
 # Step 3: Run .github/release-changelog.sh
@@ -88,7 +87,7 @@ else
 fi
 
 # Push the branch and submit a PR for Step 3
-PR2_URL=$(create_pr "$BRANCH2")
+PR2_URL=$(create_pr "$BRANCH2" "chore(releasing): Regenerate CHANGELOG for $VERSION")
 echo "PR for Step 3 submitted: $PR2_URL"
 
 # Both PRs needs to be merged before updating the master branch.
