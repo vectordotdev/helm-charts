@@ -57,6 +57,7 @@ if [ -n "$(git status --porcelain)" ]; then
   git commit -m \
     "feat(vector): Bump Vector to $VERSION and update Helm docs"
   echo "Committed changes from Steps 1 and 2."
+  git push -u origin "$BRANCH1"
 else
   echo "No changes to commit from Steps 1 and 2."
   exit 1
@@ -67,6 +68,9 @@ PR1_URL=$(create_pr "$BRANCH1")
 echo "Submitted: $PR1_URL"
 
 # Step 3: Run .github/release-changelog.sh
+git switch develop
+git pull
+
 BRANCH2="regenerate-changelog-$VERSION"
 git checkout -b "$BRANCH2" develop
 .github/release-changelog.sh
@@ -77,15 +81,13 @@ if [ -n "$(git status --porcelain)" ]; then
   git commit -m \
     "feat(vector): Regenerate CHANGELOG for $VERSION"
   echo "Committed changes from Step 3."
+  git push -u origin "$BRANCH2"
 else
   echo "No changes to commit from Step 3."
   exit 1
 fi
 
 # Push the branch and submit a PR for Step 3
-git switch develop
-git pull
-git push -u origin "$BRANCH2"
 PR2_URL=$(create_pr "$BRANCH2")
 echo "PR for Step 3 submitted: $PR2_URL"
 
