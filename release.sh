@@ -9,6 +9,35 @@ fi
 
 ISSUE_LINK=$1
 
+create_pr() {
+  local branch output pr_url pr_number
+  branch="$1"  # Read branch name from function argument
+
+  output=$(gh pr create \
+    --title "feat(vector): Update Vector version to $VERSION and Helm docs" \
+    --body "This PR updates the Vector chart version to $VERSION and regenerates Helm docs.\n\nRef: $ISSUE_LINK" \
+    --base master --head "$branch")
+
+  echo "$output"  # Optional: Print the full output for debugging
+
+  pr_url=$(echo "$output" | tail -n 1)  # Extract last line (PR URL)
+  pr_number=$(basename "$pr_url")  # Extract PR number from URL
+
+  echo "$pr_number"  # Return PR number via stdout
+}
+
+wait_for_pr_merge() {
+  local pr_url="$1"
+
+  echo "Waiting for PR ($pr_url) to be merged..."
+
+  while [[ -z $(gh pr view "$pr_url" --json mergedAt -q .mergedAt) ]]; do
+    sleep 10
+  done
+
+  echo "PR ($pr_url) has been merged!"
+}
+
 # Ensure we are on the develop branch
 git switch develop
 git pull
@@ -34,12 +63,7 @@ else
 fi
 
 # Push the branch and submit a PR for Steps 1 and 2
-git push -u origin "$BRANCH1"
-PR1_URL=$(gh pr create \
-  --title "feat(vector): Update Vector version to $VERSION and Helm docs" \
-  --body "This PR updates the Vector chart version to $VERSION and regenerates Helm docs.\n\nRef: $ISSUE_LINK" \
-  --base master --head "$BRANCH1" --json url -q .url)
-
+PR1_URL=$(create_pr "$BRANCH1")
 echo "Submitted: $PR1_URL"
 
 # Step 3: Run .github/release-changelog.sh
@@ -60,28 +84,13 @@ fi
 
 # Push the branch and submit a PR for Step 3
 git push -u origin "$BRANCH2"
-PR2_URL=$(gh pr create \
-  --title "feat(vector): Regenerate CHANGELOG for $VERSION" \
-  --body "This PR regenerates the CHANGELOG for the $VERSION release.\n\nRef: $ISSUE_LINK" \
-  --base master --head "$BRANCH2" --json url -q .url)
+PR2_URL=$(create_pr "$BRANCH2")
 
 echo "PR for Step 3 submitted: $PR2_URL"
 
-# Wait for PR1 to be merged
-echo "Waiting for PR1 ($PR1_URL) to be merged..."
-while ! gh pr view "$PR1_URL" --json merged -q .merged | grep -q true; do
-  sleep 10
-done
-
-echo "PR1 ($PR1_URL) merged."
-
-# Wait for PR2 to be merged
-echo "Waiting for PR2 ($PR2_URL) to be merged..."
-while ! gh pr view "$PR2_URL" --json merged -q .merged | grep -q true; do
-  sleep 10
-done
-
-echo "PR2 ($PR2_URL) merged."
+# Both PRs needs to be merged before updating the master branch.
+wait_for_pr_merge "$PR1_URL"
+wait_for_pr_merge "$PR2_URL"
 
 # Final Step: Merge develop into master
 git switch master
