@@ -83,9 +83,10 @@ else
 fi
 
 # Push the branch and submit a PR for Step 3
+git switch develop
+git pull
 git push -u origin "$BRANCH2"
 PR2_URL=$(create_pr "$BRANCH2")
-
 echo "PR for Step 3 submitted: $PR2_URL"
 
 # Both PRs needs to be merged before updating the master branch.
