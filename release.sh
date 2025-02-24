@@ -23,7 +23,7 @@ create_pr() {
   echo "$output"
 
   pr_url=$(echo "$output" | tail -n 1)
-  echo "pr_url"
+  echo "$pr_url"
 }
 
 wait_for_pr_merge() {
