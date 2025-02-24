@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.40.1] - 2025-02-24
+
+### Releasing
+
+### Vector
+
+#### Bug Fixes
+
+- Use `.KubeVersion.Version` rather than `.KubeVersion.GitVersion` for capability detection (#449) ([931fa10](https://github.com/vectordotdev/helm-charts/commit/931fa10afe7b04cf7e32a65768196a7bdf02a01e))
+
 ## [vector-0.40.0] - 2025-01-14
 
 ### Vector
