@@ -8,6 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 ISSUE_LINK=$1
+VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
 
 create_pr() {
   local branch output pr_url pr_number
@@ -43,7 +44,6 @@ git switch develop
 git pull
 
 # Step 1: Run .github/release-vector-version.sh
-VERSION=$(grep 'version:' charts/vector/Chart.yaml | awk '{print $2}')
 BRANCH1="update-vector-version-$VERSION"
 git checkout -b "$BRANCH1"
 .github/release-vector-version.sh
