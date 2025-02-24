@@ -8,7 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 ISSUE_LINK=$1
-VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
+VECTOR_VERSION=$(curl -s https://raw.githubusercontent.com/vectordotdev/vector/master/Cargo.toml | \
+  grep -E '^version = "' | \
+  sed -E 's/version = "(.*)"/\1/')
 
 create_pr() {
   local branch output pr_url
@@ -43,7 +45,7 @@ git switch develop
 git pull
 
 # Step 1: Run .github/release-vector-version.sh
-BRANCH1="update-vector-version-$VERSION"
+BRANCH1="update-vector-version-$VECTOR_VERSION"
 git checkout -b "$BRANCH1"
 .github/release-vector-version.sh
 
@@ -54,7 +56,7 @@ helm-docs
 if [ -n "$(git status --porcelain)" ]; then
   git add .
   git commit -m \
-    "feat(vector): Bump Vector to $VERSION and update Helm docs"
+    "feat(vector): Bump Vector to $VECTOR_VERSION and update Helm docs"
   echo "Committed changes from Steps 1 and 2."
   git push -u origin "$BRANCH1"
 else
@@ -63,14 +65,15 @@ else
 fi
 
 # Push the branch and submit a PR for Steps 1 and 2
-PR1_URL=$(create_pr "$BRANCH1" "chore(releasing): Update Vector version to $VERSION and Helm docs")
+PR1_URL=$(create_pr "$BRANCH1" "chore(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
 echo "Submitted: $PR1_URL"
+wait_for_pr_merge "$PR1_URL"
 
 # Step 3: Run .github/release-changelog.sh
 git switch develop
 git pull
 
-BRANCH2="regenerate-changelog-$VERSION"
+BRANCH2="regenerate-changelog-$VECTOR_VERSION"
 git checkout -b "$BRANCH2"
 .github/release-changelog.sh
 
@@ -78,7 +81,7 @@ git checkout -b "$BRANCH2"
 if [ -n "$(git status --porcelain)" ]; then
   git add .
   git commit -m \
-    "feat(vector): Regenerate CHANGELOG for $VERSION"
+    "feat(vector): Regenerate CHANGELOG for $VECTOR_VERSION"
   echo "Committed changes from Step 3."
   git push -u origin "$BRANCH2"
 else
@@ -87,11 +90,11 @@ else
 fi
 
 # Push the branch and submit a PR for Step 3
-PR2_URL=$(create_pr "$BRANCH2" "chore(releasing): Regenerate CHANGELOG for $VERSION")
+CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
+PR2_URL=$(create_pr "$BRANCH2" "chore(releasing): Regenerate CHANGELOG for $CHART_VERSION")
 echo "PR for Step 3 submitted: $PR2_URL"
 
 # Both PRs needs to be merged before updating the master branch.
-wait_for_pr_merge "$PR1_URL"
 wait_for_pr_merge "$PR2_URL"
 
 # Final Step: Merge develop into master
