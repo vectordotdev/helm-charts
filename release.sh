@@ -18,7 +18,7 @@ create_pr() {
   output=$(gh pr create \
     --title "$title" \
     --body "Ref: $ISSUE_LINK" \
-    --base master --head "$branch")
+    --base develop --head "$branch")
 
   echo "$output"
 
