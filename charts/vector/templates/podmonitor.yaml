@@ -15,7 +15,7 @@ spec:
       {{- include "vector.selectorLabels" . | nindent 6 }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace }}
+      - {{ .Release.Namespace | quote }}
   {{- with .Values.podMonitor.podTargetLabels }}
   podTargetLabels:
     {{- toYaml . | nindent 4 }}

@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "vector.fullname" . }}-headless
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
@@ -72,7 +72,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "vector.fullname" . }}-headless
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
