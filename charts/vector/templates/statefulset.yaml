@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "vector.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
@@ -20,7 +20,7 @@ spec:
   selector:
     matchLabels:
       {{- include "vector.selectorLabels" . | nindent 6 }}
-  {{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.GitVersion }}
+  {{- if semverCompare ">=1.22-0" .Capabilities.KubeVersion.Version }}
   minReadySeconds: {{ .Values.minReadySeconds }}
   {{- end }}
   {{- with .Values.updateStrategy }}
