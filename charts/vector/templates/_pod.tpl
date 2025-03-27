@@ -32,7 +32,8 @@ hostAliases:
 {{ toYaml . | indent 2 }}
 {{- end }}
 {{- if .Values.initContainers }}
-  {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
+initContainers:
+{{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 containers:
   - name: vector
