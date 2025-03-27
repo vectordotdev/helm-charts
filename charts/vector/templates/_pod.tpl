@@ -157,7 +157,7 @@ containers:
 {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- if .Values.extraContainers }}
-  {{- tpl (toYaml .Values.extraContainers) . | nindent 2 }}
+{{- tpl (toYaml .Values.extraContainers) . | nindent 2 }}
 {{- end }}
 terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}
