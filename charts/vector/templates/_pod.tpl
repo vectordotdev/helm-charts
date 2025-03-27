@@ -31,9 +31,8 @@ imagePullSecrets:
 hostAliases:
 {{ toYaml . | indent 2 }}
 {{- end }}
-{{- with .Values.initContainers }}
-initContainers:
-{{ toYaml . | indent 2 }}
+{{- if .Values.initContainers }}
+  {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 containers:
   - name: vector
@@ -156,8 +155,8 @@ containers:
 {{- with .Values.extraVolumeMounts }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- with .Values.extraContainers }}
-{{ toYaml . | indent 2 }}
+{{- if .Values.extraContainers }}
+  {{- tpl (toYaml .Values.extraContainers) . | nindent 2 }}
 {{- end }}
 terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- with .Values.nodeSelector }}

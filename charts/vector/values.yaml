@@ -370,10 +370,34 @@ extraVolumes: []
 extraVolumeMounts: []
 
 # initContainers -- Init Containers to be added to the Vector Pods.
+# This also supports template content, which will eventually be converted to yaml.
 initContainers: []
+# initContainers:
+#   - name: test
+#     image: busybox:latest
+#     command:
+#       - cp
+#     args:
+#       - /bin/sleep
+#       - /test/sleep
+#     volumeMounts:
+#       - name: test
+#         mountPath: /test
 
 # extraContainers -- Extra Containers to be added to the Vector Pods.
+# This also supports template content, which will eventually be converted to yaml.
 extraContainers: []
+# extraContainers:
+#   - name: test
+#     command:
+#       - cp
+#     args:
+#       - /bin/sleep
+#       - /test/sleep
+#     image: busybox:latest
+#     volumeMounts:
+#       - name: test
+#         mountPath: /test
 
 # Configuration for Vector's data persistence.
 persistence:
