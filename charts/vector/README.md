@@ -145,7 +145,7 @@ helm install <RELEASE_NAME> \
 | env | list | `[]` | Set environment variables for Vector containers. |
 | envFrom | list | `[]` | Define environment variables from Secrets or ConfigMaps. |
 | existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. |
-| extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. |
+| extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | extraObjects | list | `[]` | Create extra manifests via values. Would be passed through `tpl` for templating. |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers. |
 | extraVolumes | list | `[]` | Additional Volumes to use with Vector Pods. |
@@ -248,14 +248,14 @@ helm install <RELEASE_NAME> \
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically. By default, this chart will parse Vector's configuration from customConfig to generate HAProxy's config, which can be overwritten with haproxy.customConfig. |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer. |
 | haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. |
-| haproxy.extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
+| haproxy.extraContainers | list | `[]` | Extra Containers to be added to the HAProxy Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers. |
 | haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods. |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy. |
 | haproxy.image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the HAProxy Pods. |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry and name for HAProxy. |
 | haproxy.image.tag | string | `"2.6.12"` | The tag to use for HAProxy's image. |
-| haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pods. |
+| haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings. |
 | haproxy.nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for HAProxy Pods |
 | haproxy.podAnnotations | object | `{}` | Set annotations on HAProxy Pods. |

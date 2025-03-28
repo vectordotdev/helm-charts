@@ -614,9 +614,11 @@ haproxy:
   extraVolumeMounts: []
 
   # haproxy.initContainers -- Init Containers to be added to the HAProxy Pods.
+  # This also supports template content, which will eventually be converted to yaml.
   initContainers: []
 
   # haproxy.extraContainers -- Extra Containers to be added to the HAProxy Pods.
+  # This also supports template content, which will eventually be converted to yaml.
   extraContainers: []
 
   autoscaling:
