@@ -162,7 +162,7 @@ helm install <RELEASE_NAME> \
 | ingress.enabled | bool | `false` | If true, create and use an Ingress resource. |
 | ingress.hosts | list | `[]` | Configure the hosts and paths for the Ingress. |
 | ingress.tls | list | `[]` | Configure TLS for the Ingress. |
-| initContainers | list | `[]` | Init Containers to be added to the Vector Pods. |
+| initContainers | list | `[]` | Init Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
 | livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
 | logLevel | string | `"info"` |  |
@@ -248,7 +248,7 @@ helm install <RELEASE_NAME> \
 | haproxy.customConfig | string | `""` | Override HAProxy's default configs, if used **all** options need to be specified. This parameter supports using Helm templates to insert values dynamically. By default, this chart will parse Vector's configuration from customConfig to generate HAProxy's config, which can be overwritten with haproxy.customConfig. |
 | haproxy.enabled | bool | `false` | If true, create a HAProxy load balancer. |
 | haproxy.existingConfigMap | string | `""` | Use this existing ConfigMap for HAProxy's configuration instead of creating a new one. Additionally, haproxy.containerPorts and haproxy.service.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. |
-| haproxy.extraContainers | list | `[]` | Extra Containers to be added to the HAProxy Pods. |
+| haproxy.extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.extraVolumeMounts | list | `[]` | Additional Volume to mount into HAProxy Containers. |
 | haproxy.extraVolumes | list | `[]` | Additional Volumes to use with HAProxy Pods. |
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy. |
