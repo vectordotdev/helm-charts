@@ -13,7 +13,7 @@ VECTOR_VERSION=$(curl -s https://raw.githubusercontent.com/vectordotdev/vector/m
   sed -E 's/version = "(.*)"/\1/')
 
 create_pr() {
-  local branch output pr_url
+  local branch title output pr_url
   branch="$1"
   title="$2"
 
@@ -21,8 +21,6 @@ create_pr() {
     --title "$title" \
     --body "Ref: $ISSUE_LINK" \
     --base develop --head "$branch")
-
-  echo "$output"
 
   pr_url=$(echo "$output" | tail -n 1)
   echo "$pr_url"
