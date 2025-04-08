@@ -63,7 +63,7 @@ else
 fi
 
 # Push the branch and submit a PR for Steps 1 and 2
-PR1_URL=$(create_pr "$BRANCH1" "chore(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
+PR1_URL=$(create_pr "$BRANCH1" "feat(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
 echo "Submitted: $PR1_URL"
 wait_for_pr_merge "$PR1_URL"
 
@@ -96,6 +96,7 @@ echo "PR for Step 3 submitted: $PR2_URL"
 wait_for_pr_merge "$PR2_URL"
 
 # Final Step: Merge develop into master
+git pull
 git switch master
 git pull
 git merge develop
