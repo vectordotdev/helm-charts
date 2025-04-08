@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.41.2] - 2025-04-08
+
+### Vector
+
+#### Bug Fixes
+
+- Quote namespace strings (#464) ([f7530f3](https://github.com/vectordotdev/helm-charts/commit/f7530f3c457773cd51e30be78772d7197e24496b))
+- Set podmonitor namespace (#451) ([93b30c0](https://github.com/vectordotdev/helm-charts/commit/93b30c0a8feb1c63c520977f58fcfdd603dafc69))
+- Quote namespace strings (#465) ([d11451c](https://github.com/vectordotdev/helm-charts/commit/d11451c72148735d9fd2cb4a4a250e913663386e))
+
+#### Features
+
+- Support tpl for init and extra containers. (#469) ([a3878ea](https://github.com/vectordotdev/helm-charts/commit/a3878eab9efc2477c4a97cc5a0e5920132836177))
+- Update Vector version to 0.46.0 (#471) ([7af43f5](https://github.com/vectordotdev/helm-charts/commit/7af43f5c299505451869261d2efd8e1dbfb018fe))
+
 ## [vector-0.41.0] - 2025-02-24
 
 ### Releasing
