@@ -238,6 +238,8 @@ affinity: {}
 
 # topologySpreadConstraints -- Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 # for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles.
+#
+# If no "selectorLabels.matchLabels" are defined then defaults will be used to match the selectorLabels of this instance.
 topologySpreadConstraints: []
 
 # Configuration for Vector's Service.
