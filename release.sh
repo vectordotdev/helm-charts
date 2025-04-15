@@ -8,9 +8,9 @@ if [ -z "$1" ]; then
 fi
 
 ISSUE_LINK=$1
-VECTOR_VERSION=$(curl -s https://raw.githubusercontent.com/vectordotdev/vector/master/Cargo.toml | \
-  grep -E '^version = "' | \
-  sed -E 's/version = "(.*)"/\1/')
+VECTOR_VERSION=$(curl --silent https://api.github.com/repos/vectordotdev/vector/releases/latest \
+  | grep -oE "tag_name\": *\".{1,15}\"," \
+  | ${SED:-sed} 's/tag_name\": *\"v//;s/\",//')
 
 create_pr() {
   local branch title output pr_url
