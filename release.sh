@@ -89,7 +89,7 @@ fi
 
 # Push the branch and submit a PR for Step 3
 CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
-PR2_URL=$(create_pr "$BRANCH2" "chore(releasing): Regenerate CHANGELOG for $CHART_VERSION")
+PR2_URL=$(create_pr "$BRANCH2" "chore(vector): Regenerate CHANGELOG for $CHART_VERSION")
 echo "PR for Step 3 submitted: $PR2_URL"
 
 # Both PRs needs to be merged before updating the master branch.
