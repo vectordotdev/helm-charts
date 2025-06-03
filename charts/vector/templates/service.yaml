@@ -33,7 +33,11 @@ spec:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
 {{- else if .Values.customConfig }}
-  {{- include "vector.ports" . | indent 4 }}
+  {{- if .Values.service.portsOverrides }}
+    {{- include "vector.portsOverrides" . | nindent 4}}
+  {{- else }}
+    {{- include "vector.ports" . | indent 4 }}
+  {{- end }}
 {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
     - name: datadog-agent
       port: 8282
