@@ -65,6 +65,8 @@ podManagementPolicy: OrderedReady
 
 # Create a Secret resource for Vector to use.
 secrets:
+  # secrets.annotations -- Set annotations on Vector Secrets.
+  annotations: {}
   # secrets.generic -- Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64
   # encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values.
   # **NOTE: Don't commit unencrypted secrets to git!**
