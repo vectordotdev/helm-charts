@@ -29,6 +29,9 @@ spec:
   {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}
+{{- if .Values.service.trafficDistribution }}
+  trafficDistribution: {{ .Values.service.trafficDistribution }}
+{{-end }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
