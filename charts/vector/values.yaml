@@ -269,7 +269,7 @@ service:
   ipFamilies: []
   # service.trafficDistribution -- Specify the [Traffic distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution)
   # additional Topology Aware Routing may be informative. Specify the [Topology Aware Routing](https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/)
-  trafficDistribution: "" # PreferClose
+  trafficDistribution: ""
 
 # Configuration for Vector's Headless Service.
 serviceHeadless:
