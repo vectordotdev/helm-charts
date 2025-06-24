@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.43.0](https://img.shields.io/badge/Version-0.43.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.47.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.47.0--distroless--libc-informational?style=flat-square)
+![Version: 0.43.1](https://img.shields.io/badge/Version-0.43.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.47.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.47.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -219,6 +219,7 @@ helm install <RELEASE_NAME> \
 | service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
 | service.ports | list | `[]` | Manually set the Service ports, overriding automated generation of Service ports. |
 | service.topologyKeys | list | `[]` | Specify the [topologyKeys](https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology) field on Vector's Service. |
+| service.trafficDistribution | string | `""` | Specify the [Traffic distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution) additional Topology Aware Routing may be informative. Specify the [Topology Aware Routing](https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/) |
 | service.type | string | `"ClusterIP"` | Set the type for Vector's Service. |
 | serviceAccount.annotations | object | `{}` | Annotations to add to Vector's ServiceAccount. |
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for Vector's ServiceAccount. |
