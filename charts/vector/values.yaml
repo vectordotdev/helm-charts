@@ -267,6 +267,9 @@ service:
   ipFamilyPolicy: ""
   # service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
   ipFamilies: []
+  # service.trafficDistribution -- Specify the [Traffic distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution)
+  # additional Topology Aware Routing may be informative. Specify the [Topology Aware Routing](https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/)
+  trafficDistribution: ""
 
 # Configuration for Vector's Headless Service.
 serviceHeadless:
