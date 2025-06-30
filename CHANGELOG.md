@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [vector-0.43.1] - 2025-06-30
+## [vector-0.44.0] - 2025-06-30
 
 ### Releasing
 
