@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.44.0] - 2025-06-30
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.48.0 and Helm docs (#483) ([35b36a9](https://github.com/vectordotdev/helm-charts/commit/35b36a9610809b2d512403a69570fa4536c92d32))
+
+### Vector
+
+#### Features
+
+- Allow configuration of service `trafficDistribution` (#481) ([ae7b2f3](https://github.com/vectordotdev/helm-charts/commit/ae7b2f3a76b89e16c5db48216818531989c72cf3))
+
 ## [vector-0.43.0] - 2025-05-20
 
 ### Vector
