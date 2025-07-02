@@ -263,6 +263,8 @@ service:
   internalTrafficPolicy: ""
   # service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
   loadBalancerIP: ""
+  # service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/).
+  loadBalancerSourceRanges: []
   # service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
   ipFamilyPolicy: ""
   # service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
@@ -594,6 +596,8 @@ haproxy:
     externalTrafficPolicy: ""
     # haproxy.service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
     loadBalancerIP: ""
+    # haproxy.service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/).
+    loadBalancerSourceRanges: []
     # haproxy.service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
     ipFamilyPolicy: ""
     # haproxy.service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
