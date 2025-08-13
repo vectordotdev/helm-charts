@@ -101,7 +101,7 @@ wait_for_pr_merge() {
 # fi
 #
 # # Push the branch and submit a PR for Step 3
-# CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
+CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
 # PR2_URL=$(create_pr "$BRANCH2" "chore(vector): Regenerate CHANGELOG for $CHART_VERSION")
 # green "PR for Step 3 submitted: $PR2_URL"
 #
@@ -123,7 +123,7 @@ NEW_CHART_VERSION=$(echo "$CHART_VERSION" | awk -F. '{ $2++; $3=0; print $1"."$2
 BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
 
 # MacOS sed doesn't support -i like all other implementations do
-sed "/^version:/s|$CHART_VERSION|$NEW_VERSION|" charts/vector/Chart.yaml > charts/vector/Chart.yaml.tmp \
+sed "/^version:/s|$CHART_VERSION|$NEW_CHART_VERSION|" charts/vector/Chart.yaml > charts/vector/Chart.yaml.tmp \
   && mv charts/vector/Chart.yaml.tmp charts/vector/Chart.yaml
 
 git checkout -b "$BRANCH3"
