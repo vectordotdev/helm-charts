@@ -7,6 +7,15 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+tools=("helm-docs" "gh" "yq" "git-cliff" "git" "curl" "awk" "sed")
+
+for tool in "${tools[@]}"; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        echo "❌ $tool is missing. See README.md for all required tools"
+        exit 1
+    fi
+done
+
 ISSUE_LINK=$1
 VECTOR_VERSION=$(curl --silent https://api.github.com/repos/vectordotdev/vector/releases/latest \
   | grep -oE "tag_name\": *\".{1,15}\"," \
@@ -96,7 +105,7 @@ echo "PR for Step 3 submitted: $PR2_URL"
 wait_for_pr_merge "$PR2_URL"
 
 # Final Step: Merge develop into master
-git pull
+git fetch
 git switch master
 git pull
 git merge develop
