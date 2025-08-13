@@ -118,7 +118,7 @@ CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vec
 # echo "Release workflow initiated: https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml"
 
 # Post Release Step
-git switch develop
+# git switch develop
 NEW_CHART_VERSION=$(echo "$CHART_VERSION" | awk -F. '{ $2++; $3=0; print $1"."$2"."$3 }')
 BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
 
@@ -126,7 +126,7 @@ BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
 sed "/^version:/s|$CHART_VERSION|$NEW_CHART_VERSION|" charts/vector/Chart.yaml > charts/vector/Chart.yaml.tmp \
   && mv charts/vector/Chart.yaml.tmp charts/vector/Chart.yaml
 
-git checkout -b "$BRANCH3"
+# git checkout -b "$BRANCH3"
 message="chore(releasing): Bump chart version to $NEW_CHART_VERSION"
 
 # Commit changes from Post Release Step
@@ -140,7 +140,8 @@ else
   exit 1
 fi
 
-PR3_URL=$(create_pr "$BRANCH3" "$message")
+# PR3_URL=$(create_pr "$BRANCH3" "$message")
+PR3_URL="https://github.com/vectordotdev/helm-charts/pull/493"
 green "Post Release Step PR submitted: $PR3_URL"
 
 wait_for_pr_merge "$PR3_URL"
