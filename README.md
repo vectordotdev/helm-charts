@@ -16,8 +16,7 @@ helm repo update
 
 # Releasing
 
-Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser)
-when the `develop` branch is merged into `master`.
+Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser) when the `develop` branch is merged into `master`.
 
 Install the following required tools:
 * [`helm-docs`](https://github.com/norwoodj/helm-docs)
