@@ -31,13 +31,14 @@ Now run the release script:
 bash release.sh <Vector release GitHub issue link>
 ```
 
-This will create the pull requests and wait for them to get approved and merged. If the scripts fails, please to refer to following section and continue the release manually.
-After the script runs the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) should start automatically and once that's finished you have successfully released `helm-charts`!
+This will create the pull requests and wait for them to be approved and merged. If the script fails, please refer to the following section and continue the release manually.
+
+After the script runs, the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) should start automatically. Once it completes, you will have successfully released `helm-charts`!
 
 ## Releasing manually
 
 <details>
-<summary>[NOT RECOMMENDED]</summary>
+<summary>Always prefer the automated method described above. Use this guide only if the above method fails. </summary>
 To make releasing easier two scripts are utilized in the steps below.
 
 1. Run `$ .github/release-vector-version.sh`
