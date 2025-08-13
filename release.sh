@@ -25,14 +25,19 @@ create_pr() {
   local branch title output pr_url
   branch="$1"
   title="$2"
+  body="${3:-Ref: $ISSUE_LINK}"
 
   output=$(gh pr create \
     --title "$title" \
-    --body "Ref: $ISSUE_LINK" \
+    --body "$body" \
     --base develop --head "$branch")
 
   pr_url=$(echo "$output" | tail -n 1)
   echo "$pr_url"
+}
+
+green() {
+  echo -e "\e[32m$1\e[0m"
 }
 
 wait_for_pr_merge() {
@@ -44,7 +49,7 @@ wait_for_pr_merge() {
     sleep 10
   done
 
-  echo "PR ($pr_url) has been merged!"
+  echo -e "\e[35mPR ($pr_url) has been merged!\e[0m"
 }
 
 # Ensure we are on the develop branch
@@ -73,7 +78,7 @@ fi
 
 # Push the branch and submit a PR for Steps 1 and 2
 PR1_URL=$(create_pr "$BRANCH1" "feat(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
-echo "Submitted: $PR1_URL"
+green "PR for Steps 1 & 2 submitted: $PR1_URL"
 wait_for_pr_merge "$PR1_URL"
 
 # Step 3: Run .github/release-changelog.sh
@@ -99,7 +104,7 @@ fi
 # Push the branch and submit a PR for Step 3
 CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
 PR2_URL=$(create_pr "$BRANCH2" "chore(vector): Regenerate CHANGELOG for $CHART_VERSION")
-echo "PR for Step 3 submitted: $PR2_URL"
+green "PR for Step 3 submitted: $PR2_URL"
 
 # Both PRs needs to be merged before updating the master branch.
 wait_for_pr_merge "$PR2_URL"
@@ -112,3 +117,33 @@ git merge develop
 git push
 
 echo "Release workflow initiated: https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml"
+
+# Post Release Step
+git switch develop
+NEW_CHART_VERSION=$(echo "$CHART_VERSION" | awk -F. '{ $2++; $3=0; print $1"."$2"."$3 }')
+BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
+
+# MacOS sed doesn't support -i like all other implementations do
+sed "/^version:/s|$CHART_VERSION|$NEW_CHART_VERSION|" charts/vector/Chart.yaml > charts/vector/Chart.yaml.tmp \
+  && mv charts/vector/Chart.yaml.tmp charts/vector/Chart.yaml
+
+git checkout -b "$BRANCH3"
+message="chore(releasing): Bump chart version to $NEW_CHART_VERSION"
+
+# Commit changes from Post Release Step
+if [ -n "$(git status --porcelain)" ]; then
+  git add .
+  git commit -m "$message"
+  echo "Committed changes from Post Release Step"
+  git push -u origin "$BRANCH3"
+else
+  echo "No changes to commit from Post Release Step"
+  exit 1
+fi
+
+PR3_URL=$(create_pr "$BRANCH3" "$message" "Post release version bump")
+green "Post Release Step PR submitted: $PR3_URL"
+
+wait_for_pr_merge "$PR3_URL"
+
+echo "Make sure to monitor the release workflow if you aren't already: https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml"
