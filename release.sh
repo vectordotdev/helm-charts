@@ -1,12 +1,12 @@
 #!/bin/bash
 
 set -e
-
-if [ -z "$1" ]; then
-  echo "Usage: $0 <GitHub issue link>"
-  exit 1
-fi
-
+#
+# if [ -z "$1" ]; then
+#   echo "Usage: $0 <GitHub issue link>"
+#   exit 1
+# fi
+#
 tools=("helm-docs" "gh" "yq" "git-cliff" "git" "curl" "awk" "sed")
 
 for tool in "${tools[@]}"; do
@@ -16,10 +16,10 @@ for tool in "${tools[@]}"; do
     fi
 done
 
-ISSUE_LINK=$1
-VECTOR_VERSION=$(curl --silent https://api.github.com/repos/vectordotdev/vector/releases/latest \
-  | grep -oE "tag_name\": *\".{1,15}\"," \
-  | ${SED:-sed} 's/tag_name\": *\"v//;s/\",//')
+# ISSUE_LINK=$1
+# VECTOR_VERSION=$(curl --silent https://api.github.com/repos/vectordotdev/vector/releases/latest \
+#   | grep -oE "tag_name\": *\".{1,15}\"," \
+#   | ${SED:-sed} 's/tag_name\": *\"v//;s/\",//')
 
 create_pr() {
   local branch title output pr_url
@@ -51,73 +51,74 @@ wait_for_pr_merge() {
   echo -e "\e[35mPR ($pr_url) has been merged!\e[0m"
 }
 
-# Ensure we are on the develop branch
-git switch develop
-git pull
-
-# Step 1: Run .github/release-vector-version.sh
-BRANCH1="update-vector-version-$VECTOR_VERSION"
-git checkout -b "$BRANCH1"
-.github/release-vector-version.sh
-
-# Step 2: Update Helm docs
-helm-docs
-
-# Commit changes from Steps 1 and 2
-if [ -n "$(git status --porcelain)" ]; then
-  git add .
-  git commit -m \
-    "feat(vector): Bump Vector to $VECTOR_VERSION and update Helm docs"
-  echo "Committed changes from Steps 1 and 2."
-  git push -u origin "$BRANCH1"
-else
-  echo "No changes to commit from Steps 1 and 2."
-  exit 1
-fi
-
-# Push the branch and submit a PR for Steps 1 and 2
-PR1_URL=$(create_pr "$BRANCH1" "feat(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
-green "PR for Steps 1 & 2 submitted: $PR1_URL"
-wait_for_pr_merge "$PR1_URL"
-
-# Step 3: Run .github/release-changelog.sh
-git switch develop
-git pull
-
-BRANCH2="regenerate-changelog-$VECTOR_VERSION"
-git checkout -b "$BRANCH2"
-.github/release-changelog.sh
-
-# Commit changes from Step 3
-if [ -n "$(git status --porcelain)" ]; then
-  git add .
-  git commit -m \
-    "feat(vector): Regenerate CHANGELOG for $VECTOR_VERSION"
-  echo "Committed changes from Step 3."
-  git push -u origin "$BRANCH2"
-else
-  echo "No changes to commit from Step 3."
-  exit 1
-fi
-
-# Push the branch and submit a PR for Step 3
-CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
-PR2_URL=$(create_pr "$BRANCH2" "chore(vector): Regenerate CHANGELOG for $CHART_VERSION")
-green "PR for Step 3 submitted: $PR2_URL"
-
-# Both PRs needs to be merged before updating the master branch.
-wait_for_pr_merge "$PR2_URL"
-
+# # Ensure we are on the develop branch
+# git switch develop
+# git pull
+#
+# # Step 1: Run .github/release-vector-version.sh
+# BRANCH1="update-vector-version-$VECTOR_VERSION"
+# git checkout -b "$BRANCH1"
+# .github/release-vector-version.sh
+#
+# # Step 2: Update Helm docs
+# helm-docs
+#
+# # Commit changes from Steps 1 and 2
+# if [ -n "$(git status --porcelain)" ]; then
+#   git add .
+#   git commit -m \
+#     "feat(vector): Bump Vector to $VECTOR_VERSION and update Helm docs"
+#   echo "Committed changes from Steps 1 and 2."
+#   git push -u origin "$BRANCH1"
+# else
+#   echo "No changes to commit from Steps 1 and 2."
+#   exit 1
+# fi
+#
+# # Push the branch and submit a PR for Steps 1 and 2
+# PR1_URL=$(create_pr "$BRANCH1" "feat(releasing): Update Vector version to $VECTOR_VERSION and Helm docs")
+# green "PR for Steps 1 & 2 submitted: $PR1_URL"
+# wait_for_pr_merge "$PR1_URL"
+#
+# # Step 3: Run .github/release-changelog.sh
+# git switch develop
+# git pull
+#
+# BRANCH2="regenerate-changelog-$VECTOR_VERSION"
+# git checkout -b "$BRANCH2"
+# .github/release-changelog.sh
+#
+# # Commit changes from Step 3
+# if [ -n "$(git status --porcelain)" ]; then
+#   git add .
+#   git commit -m \
+#     "feat(vector): Regenerate CHANGELOG for $VECTOR_VERSION"
+#   echo "Committed changes from Step 3."
+#   git push -u origin "$BRANCH2"
+# else
+#   echo "No changes to commit from Step 3."
+#   exit 1
+# fi
+#
+# # Push the branch and submit a PR for Step 3
+# CHART_VERSION=$(awk -F': ' '/version:/ {gsub(/"/, "", $2); print $2}' charts/vector/Chart.yaml)
+# PR2_URL=$(create_pr "$BRANCH2" "chore(vector): Regenerate CHANGELOG for $CHART_VERSION")
+# green "PR for Step 3 submitted: $PR2_URL"
+#
+# # Both PRs needs to be merged before updating the master branch.
+# wait_for_pr_merge "$PR2_URL"
+#
 # Final Step: Merge develop into master
-git fetch
-git switch master
-git pull
-git merge develop
-git push
+# git fetch
+# git switch master
+# git pull
+# git merge develop
+# git push
 
-echo "Release workflow initiated: https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml"
+# echo "Release workflow initiated: https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml"
 
 # Post Release Step
+git switch develop
 NEW_CHART_VERSION=$(echo "$CHART_VERSION" | awk -F. '{ $2++; $3=0; print $1"."$2"."$3 }')
 BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
 
