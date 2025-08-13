@@ -19,19 +19,26 @@ helm repo update
 Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser)
 when the `develop` branch is merged into `master`.
 
-To successfully run all scripts during the release, make sure the following tools are installed as they are all **REQUIRED**:
+Install the following required tools:
 * [`helm-docs`](https://github.com/norwoodj/helm-docs)
 * [`gh`](https://cli.github.com/)
 * [`yq`](https://github.com/mikefarah/yq)
 * [`git-cliff`](https://github.com/orhun/git-cliff)
 
-Now run `bash release.sh <insert Vector release issue link here>`.
-This will create 2 pull requests that need approval before merging so make sure to keep an eye on the console.
 
+Now run the release script:
+
+```shell
+bash release.sh <Vector release GitHub issue link>
+```
+
+This will create the pull requests and wait for them to get approved and merged. If the scripts fails, please to refer to following section and continue the release manually.
 After the script runs the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) should start automatically and once that's finished you have successfully released `helm-charts`!
 
+## Releasing manually
+
 <details>
-<summary>[NOT RECOMMENDED] Releasing manually</summary>
+<summary>[NOT RECOMMENDED]</summary>
 To make releasing easier two scripts are utilized in the steps below.
 
 1. Run `$ .github/release-vector-version.sh`
