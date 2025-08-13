@@ -37,7 +37,11 @@ create_pr() {
 }
 
 green() {
-  echo -e "\e[32m$1\e[0m"
+  printf '\033[32m%s\033[0m\n' "$1"
+}
+
+purple() {
+  printf '\033[35m%s\033[0m\n' "$1"
 }
 
 wait_for_pr_merge() {
@@ -49,7 +53,7 @@ wait_for_pr_merge() {
     sleep 10
   done
 
-  echo -e "\e[35mPR ($pr_url) has been merged!\e[0m"
+  purple "PR ($pr_url) has been merged!"
 }
 
 # Ensure we are on the develop branch
