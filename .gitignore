@@ -1,4 +1,5 @@
 .DS_Store
+kubeval
 
 # Chart dependencies
 **/charts/*.tgz
