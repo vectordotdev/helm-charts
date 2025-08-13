@@ -127,11 +127,16 @@ git switch develop
 NEW_CHART_VERSION=$(echo "$CHART_VERSION" | awk -F. '{ $2++; $3=0; print $1"."$2"."$3 }')
 BRANCH3="bump-chart-version-$NEW_CHART_VERSION"
 
+git checkout -b "$BRANCH3"
+
 # MacOS sed doesn't support -i like all other implementations do
 sed "/^version:/s|$CHART_VERSION|$NEW_CHART_VERSION|" charts/vector/Chart.yaml > charts/vector/Chart.yaml.tmp \
   && mv charts/vector/Chart.yaml.tmp charts/vector/Chart.yaml
 
-git checkout -b "$BRANCH3"
+
+# Update Helm docs
+helm-docs
+
 message="chore(releasing): Bump chart version to $NEW_CHART_VERSION"
 
 # Commit changes from Post Release Step
