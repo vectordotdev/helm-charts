@@ -117,6 +117,16 @@ podDisruptionBudget:
 rbac:
   # rbac.create -- If true, create and use RBAC resources. Only valid for the "Agent" role.
   create: true
+  # rbac.extraRules -- List of additional Kubernetes RBAC rules to append to the ClusterRole.
+  # Rules defined here are appended after the chart's standard rules.
+  # Each item must follow the Kubernetes ClusterRole rule syntax.
+  #
+  # Example:
+  # extraRules:
+  #   - apiGroups: [""]
+  #     resources: ["nodes/metrics", "nodes/stats"]
+  #     verbs: ["get"]
+  extraRules: []
 
 psp:
   # psp.create -- If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/)
