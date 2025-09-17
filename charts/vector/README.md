@@ -201,6 +201,7 @@ helm install <RELEASE_NAME> \
 | podSecurityContext | object | `{}` | Allows you to overwrite the default [PodSecurityContext](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for Vector Pods. |
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
 | rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the "Agent" role. |
+| rbac.extraRules | list | `[]` | List of additional Kubernetes RBAC rules to append to the ClusterRole. Rules defined here are appended after the chart's standard rules. Each item must follow the Kubernetes ClusterRole rule syntax.  Example: extraRules:   - apiGroups: [""]     resources: ["nodes/metrics", "nodes/stats"]     verbs: ["get"] |
 | readinessProbe | object | `{}` | Override default readiness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
