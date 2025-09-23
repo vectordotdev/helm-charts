@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.46.0] - 2025-09-23
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.50.0 and Helm docs (#498) ([02a7d06](https://github.com/vectordotdev/helm-charts/commit/02a7d069d4c90262971d24fa0c99118d25aa4e68))
+
+### Vector
+
+#### Features
+
+- Allow specifying additional ClusterRole rules (#495) ([23f60fe](https://github.com/vectordotdev/helm-charts/commit/23f60fec2332b20a301796c80bf7c5b49b383045))
+
 ## [vector-0.45.0] - 2025-08-12
 
 ### Releasing
