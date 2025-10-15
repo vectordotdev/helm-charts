@@ -154,6 +154,10 @@ args: []
 
 # Tolerations to set for the `Pod`s managed by `DaemonSet`.
 tolerations:
+  # Generic toleration for NoSchedule taints - allows scheduling on tainted nodes
+  # This ensures Vector Agent can run on all nodes regardless of taints
+  - effect: NoSchedule
+    operator: Exists
   # This toleration is to have the `DaemonSet` runnable on master nodes.
   # Remove it if your masters can't run pods.
   - key: node-role.kubernetes.io/master
