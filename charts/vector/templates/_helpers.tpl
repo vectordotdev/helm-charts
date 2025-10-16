@@ -25,6 +25,46 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Build a valid image reference from available fields:
+  - tag only:         repo:tag
+  - sha/digest only:  repo@sha256:…
+  - tag@digest:       repo:tag@sha256:…
+  - nothing set:      repo:<Chart.AppVersion>
+*/}}
+{{- define "vector.image" -}}
+{{- $repo   := .Values.image.repository | default "timberio/vector" -}}
+{{- $tagRaw := include "vector.image.tag" . | default "" -}}
+{{- $sha    := (coalesce .Values.image.sha .Values.image.digest) | default "" -}}
+{{- $tag    := trim $tagRaw -}}
+
+{{- /* Case 1: digest field wins */ -}}
+{{- if $sha -}}
+  {{- if $tag -}}
+    {{- printf "%s:%s@%s" $repo $tag $sha -}}
+  {{- else -}}
+    {{- printf "%s@%s" $repo $sha -}}
+  {{- end -}}
+
+{{- /* Case 2: tag looks like a digest */ -}}
+{{- else if hasPrefix "sha256:" $tag -}}
+  {{- printf "%s@%s" $repo $tag -}}
+
+{{- /* Case 3: tag@digest combined syntax */ -}}
+{{- else if contains "@sha256:" $tag -}}
+  {{- $parts := splitList "@" $tag -}}
+  {{- printf "%s:%s@%s" $repo (index $parts 0) (index $parts 1) -}}
+
+{{- /* Case 4: normal tag */ -}}
+{{- else if $tag -}}
+  {{- printf "%s:%s" $repo $tag -}}
+
+{{- /* Fallback: use chart app version */ -}}
+{{- else -}}
+  {{- printf "%s:%s" $repo .Chart.AppVersion -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
