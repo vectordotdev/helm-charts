@@ -1,9 +1,7 @@
 # Vector Helm Charts
 
-Official Helm charts for Vector. Currently supported:
+Official Helm charts for Vector:
 - [Vector](charts/vector/README.md) (vector/vector)
-- **DEPRECATED** [Vector Agents](charts/vector-agent/README.md) (vector/vector-agent)
-- **DEPRECATED** [Vector Aggregators](charts/vector-aggregator/README.md) (vector/vector-aggregator)
 
 # How to use the Vector Helm Repository
 

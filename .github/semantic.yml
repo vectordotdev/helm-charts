@@ -3,9 +3,6 @@ titleOnly: true
 scopes:
   - deps
   - vector
-  - vector-agent
-  - vector-aggregator
-  - vector-shared
 
 # Default
 types:

@@ -94,7 +94,7 @@ jobs:
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
-        run: ct install --config .github/ct.yaml --excluded-charts vector-shared --upgrade
+        run: ct install --config .github/ct.yaml --upgrade
 
   pr-validated:
     name: pr-validated
