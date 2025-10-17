@@ -47,7 +47,6 @@ Use descriptive branch names that indicate the purpose of your changes.
 #### Chart Development
 
 - Make changes to the relevant chart in the `charts/` directory
-- Update `Chart.yaml` version following [SemVer](https://semver.org/) if needed
 - Update documentation in `README.md.gotmpl` (not `README.md` directly) and then run `helm-docs`
 - Test your changes thoroughly
 
