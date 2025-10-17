@@ -14,21 +14,6 @@ Before contributing, ensure you have the following tools installed:
 - [Docker](https://docs.docker.com/get-docker/)
 - [Git](https://git-scm.com/downloads)
 
-### Repository Structure
-
-```
-.
-├── charts/
-│   ├── vector/            # Main Vector chart
-│   ├── vector-agent/      # Deprecated agent chart
-│   └── vector-aggregator/ # Deprecated aggregator chart
-├── .github/
-│   ├── workflows/         # CI/CD workflows
-│   └── *.sh               # Release scripts
-├── CHANGELOG.md           # Project changelog
-└── README.md              # Repository documentation
-```
-
 ## Development Workflow
 
 ### 1. Fork and Clone
