@@ -80,14 +80,6 @@ Examples:
 All allowed `scope`s and `type`s can be found [here](https://github.com/vectordotdev/helm-charts/blob/develop/.github/semantic.yml)
 ## Pull Request Guidelines
 
-### PR Requirements
-
-- [ ] Target the `develop` branch
-- [ ] Include clear description of changes
-- [ ] Update documentation if needed
-- [ ] Add tests for new functionality
-- [ ] PR title follows the [Conventional Commits](https://www.conventionalcommits.org/) format
-- [ ] Ensure CI checks pass
 
 ### Review Process
 
