@@ -9,13 +9,14 @@ Thank you for your interest in contributing to the Vector Helm Charts repository
 Before contributing, ensure you have the following tools installed:
 
 - [Helm](https://helm.sh/docs/intro/install/)
+- [helm-docs](https://github.com/norwoodj/helm-docs)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [Docker](https://docs.docker.com/get-docker/)
 - [Git](https://git-scm.com/downloads)
 
 ### Repository Structure
 
-```sh
+```
 .
 ├── charts/
 │   ├── vector/            # Main Vector chart
@@ -62,36 +63,10 @@ Use descriptive branch names that indicate the purpose of your changes.
 
 - Make changes to the relevant chart in the `charts/` directory
 - Update `Chart.yaml` version following [SemVer](https://semver.org/) if needed
-- Update documentation in `README.md.gotmpl` (not `README.md` directly)
+- Update documentation in `README.md.gotmpl` (not `README.md` directly) and then run `helm-docs`
 - Test your changes thoroughly
 
-### 4. Commit Guidelines
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/) format:
-
-```
-<type>(scope): <description>
-
-[optional body]
-
-[optional footer]
-```
-
-Examples:
-- `feat(vector): add support for custom annotations`
-- `fix(vector): correct RBAC permissions for metrics`
-- `docs(vector): update configuration examples`
-
-Types:
-- `feat`: New features
-- `fix`: Bug fixes
-- `docs`: Documentation changes
-- `style`: Formatting changes
-- `refactor`: Code refactoring
-- `test`: Adding tests
-- `chore`: Maintenance tasks
-
-### 6. Submit Pull Request
+### 4. Submit Pull Request
 
 1. Push your branch to your fork:
 
@@ -106,6 +81,19 @@ Types:
    - Testing steps
    - Related issues (if any)
 
+4. Make sure the PR title follows the [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+<type>(scope): <description>
+```
+
+Examples:
+- `feat(vector): add support for custom annotations`
+- `fix(vector): correct RBAC permissions for metrics`
+- `docs(vector): update configuration examples`
+- `chore(deps): update helm-docs version`
+
+All allowed `scope`s and `type`s can be found [here](https://github.com/vectordotdev/helm-charts/blob/develop/.github/semantic.yml)
 ## Pull Request Guidelines
 
 ### PR Requirements
@@ -114,7 +102,7 @@ Types:
 - [ ] Include clear description of changes
 - [ ] Update documentation if needed
 - [ ] Add tests for new functionality
-- [ ] Follow conventional commit format
+- [ ] PR title follows the [Conventional Commits](https://www.conventionalcommits.org/) format
 - [ ] Ensure CI checks pass
 
 ### Review Process
@@ -122,7 +110,7 @@ Types:
 1. Maintainers will review your PR
 2. Address any feedback or requested changes
 3. Once approved, maintainers will merge your PR
-4. Your changes will be included in the next release
+4. Your changes will be included in the next release, which should be in the same day or before the Vector release. See the [Vector public calendar](https://calendar.vector.dev)
 
 ## Issue Reporting
 
