@@ -34,8 +34,18 @@ Build a valid image reference from available fields:
 {{- define "vector.image" -}}
 {{- $repo   := .Values.image.repository | default "timberio/vector" -}}
 {{- $tagRaw := include "vector.image.tag" . | default "" -}}
-{{- $sha    := (coalesce .Values.image.sha .Values.image.digest) | default "" -}}
+{{- $shaRaw := (coalesce .Values.image.sha .Values.image.digest) | default "" -}}
 {{- $tag    := trim $tagRaw -}}
+
+{{- /* Normalize SHA to ensure it has sha256: prefix for backward compatibility */ -}}
+{{- $sha := "" -}}
+{{- if $shaRaw -}}
+  {{- if hasPrefix "sha256:" $shaRaw -}}
+    {{- $sha = $shaRaw -}}
+  {{- else -}}
+    {{- $sha = printf "sha256:%s" $shaRaw -}}
+  {{- end -}}
+{{- end -}}
 
 {{- /* Case 1: digest field wins */ -}}
 {{- if $sha -}}
