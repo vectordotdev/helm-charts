@@ -49,7 +49,7 @@ spec:
         checksum/extraObjects: {{ include (print $.Template.BasePath "/extra-manifests.yaml") . | sha256sum }}
       {{- end }}
       {{- with .Values.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       labels:
         {{- include "vector.selectorLabels" . | nindent 8 }}
