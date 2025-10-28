@@ -32,7 +32,10 @@ commonLabels: {}
 # Define the Vector image to use.
 image:
   # image.repository -- Override default registry and name for Vector's image.
-  repository: docker.io/timberio/vector
+    # Vector images are available from:
+    #   - Docker Hub: docker.io/timberio/vector
+    #   - GitHub Container Registry: ghcr.io/vectordotdev/vector
+    repository: docker.io/timberio/vector
   # image.pullPolicy -- The [pullPolicy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) for
   # Vector's image.
   pullPolicy: IfNotPresent
