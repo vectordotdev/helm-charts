@@ -221,7 +221,7 @@ lifecycle: {}
 minReadySeconds: 0
 
 # revisionHistoryLimit -- The number of historical changes to retain to allow rollback. Valid for all roles (Agent, Aggregator, Stateless-Aggregator).
-# defaults to 10 it not set
+# defaults to 10 if not set
 # revisionHistoryLimit: 10
 
 # updateStrategy -- Customize the updateStrategy used to replace Vector Pods, this is also used for the
