@@ -256,6 +256,7 @@ helm install <RELEASE_NAME> \
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy. |
 | haproxy.image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the HAProxy Pods. |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry and name for HAProxy. |
+| haproxy.image.sha | string | `nil` | The SHA to use for HAProxy's image. |
 | haproxy.image.tag | string | `"2.6.12"` | The tag to use for HAProxy's image. |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings. |
