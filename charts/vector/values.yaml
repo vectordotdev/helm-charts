@@ -535,6 +535,8 @@ haproxy:
     pullSecrets: []
     # haproxy.image.tag -- The tag to use for HAProxy's image.
     tag: "2.6.12"
+    # haproxy.image.tag -- The SHA to use for HAProxy's image.
+    sha:
 
   # haproxy.rollWorkload -- Add a checksum of the generated ConfigMap to the HAProxy Deployment.
   rollWorkload: true
