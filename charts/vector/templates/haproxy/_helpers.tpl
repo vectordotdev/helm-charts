@@ -8,6 +8,52 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Build a valid image reference from available fields:
+  - tag only:         repo:tag
+  - sha/digest only:  repo@sha256:…
+  - tag@digest:       repo:tag@sha256:…
+  - nothing set:      repo:<Chart.AppVersion>
+*/}}
+{{- define "haproxy.image" -}}
+{{- $repo   := .Values.haproxy.image.repository -}}
+{{- $tagRaw := .Values.haproxy.image.tag -}}
+{{- $shaRaw := (coalesce .Values.haproxy.image.sha .Values.haproxy.image.digest) | default "" -}}
+{{- $tag    := trim $tagRaw -}}
+
+{{- /* Normalize SHA to ensure it has sha256: prefix for backward compatibility */ -}}
+{{- $sha := "" -}}
+{{- if $shaRaw -}}
+  {{- if hasPrefix "sha256:" $shaRaw -}}
+    {{- $sha = $shaRaw -}}
+  {{- else -}}
+    {{- $sha = printf "sha256:%s" $shaRaw -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Case 1: digest field wins */ -}}
+{{- if $sha -}}
+  {{- if $tag -}}
+    {{- printf "%s:%s@%s" $repo $tag $sha -}}
+  {{- else -}}
+    {{- printf "%s@%s" $repo $sha -}}
+  {{- end -}}
+
+{{- /* Case 2: tag looks like a digest */ -}}
+{{- else if hasPrefix "sha256:" $tag -}}
+  {{- printf "%s@%s" $repo $tag -}}
+
+{{- /* Case 3: tag@digest combined syntax */ -}}
+{{- else if contains "@sha256:" $tag -}}
+  {{- $parts := splitList "@" $tag -}}
+  {{- printf "%s:%s@%s" $repo (index $parts 0) (index $parts 1) -}}
+
+{{- /* Case 4: normal tag */ -}}
+{{- else if $tag -}}
+  {{- printf "%s:%s" $repo $tag -}}
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "haproxy.labels" -}}
