@@ -58,7 +58,6 @@ hostAliases: []
 #   - "foo.local"
 #   - "bar.local"
 
-
 # podManagementPolicy -- Specify the [podManagementPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies)
 # for the StatefulSet. Valid for the "Aggregator" role.
 podManagementPolicy: OrderedReady
@@ -215,7 +214,6 @@ lifecycle: {}
   #     - /bin/sleep
   #     - "10"
 
-
 # minReadySeconds -- Specify the minimum number of seconds a newly spun up pod should wait to
 # pass healthchecks before it is considered available.
 minReadySeconds: 0
@@ -346,6 +344,42 @@ customConfig: {}
   #     inputs: [vector]
   #     encoding:
   #       codec: json
+
+# emptyConfig -- Provide an empty config directory. Requires args to include flag to allow empty config (https://vector.dev/docs/reference/cli/).
+# If set, this parameter takes precedence over existingConfigMaps, customConfig and the chart's default configs.
+emptyConfig: false
+
+# configSidecar -- sidecar container collects the configmaps with specified label and stores the included files into the respective folders.
+# If enabled, existingConfigMaps are ignored.
+configSidecar:
+  # configSidecar.enabled -- If true, create and use a sidecar container to manage vector configuration.
+  enabled: false
+  # configSidecar.image -- Define the sidecar image to use.
+  image:
+    # configSidecar.image.registry -- Override default registry for the sidecar image.
+    registry: quay.io
+    # configSidecar.image.repository -- Override default repository and name for the sidecar image.
+    repository: kiwigrid/k8s-sidecar
+    # configSidecar.image.tag -- The tag to use for the sidecar image.
+    tag: "2.1.4"
+    # configSidecar.image.sha -- The SHA to use for the sidecar image.
+    sha: ""
+  # configSidecar.imagePullPolicy -- sidecar image pull policy.
+  imagePullPolicy: IfNotPresent
+  # configSidecar.label -- Label that the configmaps have to be marked with to be collected by the sidecar.
+  label: "vector-config"
+  # configSidecar.labelValue -- Value of the label that the configmaps are set to.
+  labelValue: "true"
+  # configSidecar.folder -- Folder inside the pod where the configmaps are stored.
+  folder: "/etc/vector"
+  # configSidecar.watchMethod -- Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
+  watchMethod: "WATCH"
+  # configSidecar.ignoreAlreadyProcessed -- If true, already processed ConfigMaps are ignored on subsequent runs.
+  ignoreAlreadyProcessed: false
+  # configSidecar.logLevel -- Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
+  logLevel: "INFO"
+  # configSidecar.uniqueFilenames -- If true, the sidecar will ensure that filenames are unique where duplicate data keys exist.
+  uniqueFilenames: false
 
 # defaultVolumes -- Default volumes that are mounted into pods. In most cases, these should not be changed.
 # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.

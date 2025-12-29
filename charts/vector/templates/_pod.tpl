@@ -36,6 +36,43 @@ initContainers:
 {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 containers:
+{{- if .Values.configSidecar.enabled }}
+  - name: config-sidecar
+    {{- if .Values.configSidecar.image.sha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@sha256:{{ .Values.configSidecar.image.sha }}"
+    {{- else }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.configSidecar.imagePullPolicy }}
+    env:
+      {{- if .Values.configSidecar.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
+      - name: METHOD
+        value: {{ .Values.configSidecar.watchMethod }}
+      - name: LABEL
+        value: "{{ .Values.configSidecar.label }}"
+      {{- with .Values.configSidecar.labelValue }}
+      - name: LABEL_VALUE
+        value: {{ quote . }}
+      {{- end }}
+      {{- with .Values.configSidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: "{{ . }}"
+      {{- end }}
+      - name: FOLDER
+        value: "{{ .Values.configSidecar.folder }}"
+      - name: RESOURCE
+        value: "configmap"
+      {{- if .Values.configSidecar.uniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "true"
+      {{- end }}
+    volumeMounts:
+      - name: config
+        mountPath: "{{ .Values.configSidecar.folder }}"
+{{- end }}
   - name: vector
 {{- with .Values.securityContext }}
     securityContext:
@@ -48,8 +85,19 @@ containers:
     {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- with .Values.args }}
+{{- $args := . }}
+{{- if or $.Values.emptyConfig $.Values.configSidecar.enabled }}
+  {{- if not (has "--allow-empty-config" $args) }}
+    {{ $args = append $args "--allow-empty-config" }}
+  {{- end }}
+{{- end }}
+{{- if $.Values.configSidecar.enabled }}
+  {{- if not (has "--watch-config" $args) }}
+    {{ $args = append $args "--watch-config"  }}
+  {{- end }}
+{{- end }}
     args:
-    {{- toYaml . | nindent 6 }}
+    {{- toYaml $args | nindent 6 }}
 {{- end }}
     env:
       - name: VECTOR_LOG
@@ -136,14 +184,18 @@ containers:
 {{- end }}
     volumeMounts:
       - name: data
-        {{- if .Values.existingConfigMaps }}
+        {{- if or .Values.emptyConfig .Values.configSidecar.enabled }}
+        mountPath: "/var/lib/vector/"
+        {{- else if .Values.existingConfigMaps }}
         mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfigMaps`" }}{{ end }}"
         {{- else }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
         {{- end }}
       - name: config
         mountPath: "/etc/vector/"
+{{- if not .Values.configSidecar.enabled }}
         readOnly: true
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
 {{- with .Values.defaultVolumeMounts }}
 {{- toYaml . | nindent 6 }}
@@ -184,6 +236,9 @@ volumes:
     emptyDir: {}
 {{- end }}
   - name: config
+{{- if or .Values.emptyConfig .Values.configSidecar.enabled }}
+    emptyDir: {}
+{{- else }}
     projected:
       sources:
 {{- if .Values.existingConfigMaps }}
@@ -194,6 +249,7 @@ volumes:
 {{- else }}
         - configMap:
             name: {{ template "vector.fullname" . }}
+{{- end }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
