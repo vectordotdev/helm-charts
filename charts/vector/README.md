@@ -154,7 +154,7 @@ helm install <RELEASE_NAME> \
 | image.base | string | `""` | The base distribution to use for vector. If set, then the base in appVersion will be replaced with this base alongside the version. For example: with a `base` of `debian` `0.38.0-distroless-libc` becomes `0.38.0-debian` |
 | image.pullPolicy | string | `"IfNotPresent"` | The [pullPolicy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) for Vector's image. |
 | image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the Vector Pods. |
-| image.repository | string | `"timberio/vector"` | Override default registry and name for Vector's image. |
+| image.repository | string | `"docker.io/timberio/vector"` | Override default registry and name for Vector's image. |
 | image.sha | string | `""` | The SHA to use for Vector's image. |
 | image.tag | string | Derived from the Chart's appVersion. | The tag to use for Vector's image. |
 | ingress.annotations | object | `{}` | Set annotations on the Ingress. |
