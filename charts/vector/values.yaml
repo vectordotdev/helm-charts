@@ -17,6 +17,16 @@ fullnameOverride: ""
 # Stateless-Aggregator = Deployment
 role: "Aggregator"
 
+# Workload API version overrides. Use these to switch to custom controllers
+# or to test new Kubernetes API versions.
+daemonSet:
+  # daemonSet.apiVersion -- Override the DaemonSet apiVersion. Valid for the "Agent" role.
+  apiVersion: ""
+
+statefulSet:
+  # statefulSet.apiVersion -- Override the StatefulSet apiVersion. Valid for the "Aggregator" role.
+  apiVersion: ""
+
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations.
 rollWorkload: true
 

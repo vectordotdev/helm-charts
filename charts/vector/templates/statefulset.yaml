@@ -1,5 +1,5 @@
 {{- if (eq .Values.role "Aggregator") -}}
-apiVersion: apps/v1
+apiVersion: {{ .Values.statefulSet.apiVersion | default "apps/v1" }}
 kind: StatefulSet
 metadata:
   name: {{ include "vector.fullname" . }}
