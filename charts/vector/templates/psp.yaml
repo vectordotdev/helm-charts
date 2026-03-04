@@ -3,6 +3,7 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ include "vector.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
 spec:

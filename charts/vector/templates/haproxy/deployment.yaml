@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "haproxy.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "haproxy.labels" . | nindent 4 }}
 spec:
