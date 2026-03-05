@@ -15,7 +15,7 @@ data:
     data_dir: /vector-data-dir
     api:
       enabled: true
-      address: 127.0.0.1:8686
+      address: 0.0.0.0:8686
       playground: false
     sources:
       datadog_agent:
@@ -59,7 +59,7 @@ data:
     data_dir: /vector-data-dir
     api:
       enabled: true
-      address: 127.0.0.1:8686
+      address: 0.0.0.0:8686
       playground: false
     sources:
       kubernetes_logs:

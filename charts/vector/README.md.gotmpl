@@ -104,6 +104,18 @@ customConfig:
           {{ print "{{ print \"{{ source_type }}\" }}" }}
 ```
 
+### API exposure and health probes
+
+When using chart-managed default configuration (without `customConfig` and `existingConfigMaps`),
+Vector's API listens on `0.0.0.0:8686`, and the chart applies a default readiness probe
+(`httpGet` on `/health` and port `api`).
+
+If you use `customConfig`, ensure `api.enabled`/`api.address` and probe settings are aligned
+with your configuration.
+
+As this API can expose internal state, restrict reachability with Kubernetes controls such as
+`NetworkPolicy` and carefully scoped Service/Ingress exposure.
+
 ## All configuration options
 
 The following table lists the configurable parameters of the Vector chart and their default values. Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,

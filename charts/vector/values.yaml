@@ -482,8 +482,9 @@ livenessProbe: {}
   #   path: /health
   #   port: api
 
-# readinessProbe -- Override default readiness probe settings. If customConfig is used,
-# requires customConfig.api.enabled to be set to true.
+# readinessProbe -- Override default readiness probe settings. If not set, this chart applies an
+# HTTP readinessProbe (`/health` on `api`) for chart-managed default configs.
+# If customConfig is used, requires customConfig.api.enabled to be set to true.
 readinessProbe: {}
   # httpGet:
   #   path: /health

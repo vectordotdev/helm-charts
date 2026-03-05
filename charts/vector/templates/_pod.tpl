@@ -122,9 +122,14 @@ containers:
     livenessProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
-{{- with .Values.readinessProbe }}
+{{- if .Values.readinessProbe }}
     readinessProbe:
-      {{- toYaml . | trim | nindent 6 }}
+      {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: api
 {{- end }}
 {{- with .Values.resources }}
     resources:
