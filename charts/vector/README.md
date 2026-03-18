@@ -15,7 +15,7 @@ helm repo update
 
 ## Requirements
 
-Kubernetes: `>=1.15.0-0`
+Kubernetes: `>=1.28.0-0`
 
 ## Quick start
 
