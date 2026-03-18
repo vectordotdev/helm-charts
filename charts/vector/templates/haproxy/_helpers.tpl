@@ -43,5 +43,9 @@ Create the name of the service account to use
 Return the appropriate apiVersion for HPA autoscaling APIs.
 */}}
 {{- define "autoscaling.apiVersion" -}}
+{{- if or (.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler") (semverCompare ">=1.23" .Capabilities.KubeVersion.Version) -}}
 "autoscaling/v2"
+{{- else -}}
+"autoscaling/v2beta2"
+{{- end -}}
 {{- end -}}

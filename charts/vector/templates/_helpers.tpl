@@ -140,14 +140,22 @@ Create the name of the service account to use.
 Return the appropriate apiVersion for PodDisruptionBudget policy APIs.
 */}}
 {{- define "policy.poddisruptionbudget.apiVersion" -}}
+{{- if or (.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget") (semverCompare ">=1.21" .Capabilities.KubeVersion.Version) -}}
 "policy/v1"
+{{- else -}}
+"policy/v1beta1"
+{{- end -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for HPA autoscaling APIs.
 */}}
 {{- define "autoscaling.apiVersion" -}}
+{{- if or (.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler") (semverCompare ">=1.23" .Capabilities.KubeVersion.Version) -}}
 "autoscaling/v2"
+{{- else -}}
+"autoscaling/v2beta2"
+{{- end -}}
 {{- end -}}
 
 {{/*
