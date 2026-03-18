@@ -42,6 +42,9 @@ jobs:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
         # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
+          - v1.35.0
+          - v1.34.0
+          - v1.33.0
           - v1.32.0
           - v1.30.0
           - v1.28.0
@@ -69,6 +72,9 @@ jobs:
         # When changing versions here, check that the version exists at: https://github.com/yannh/kubernetes-json-schema and https://hub.docker.com/r/kindest/node/tags
         # Aim to match https://github.com/vectordotdev/vector/blob/master/.github/workflows/k8s_e2e.yml as close as possible
         k8s:
+          - v1.35.0
+          - v1.34.0
+          - v1.33.0
           - v1.32.0
           - v1.30.0
           - v1.28.0
