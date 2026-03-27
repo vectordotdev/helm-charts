@@ -53,7 +53,9 @@ containers:
 {{- end }}
     env:
       - name: VECTOR_LOG
-        value: "{{ .Values.logLevel | default "info" }}"
+        value: "{{ .Values.logConfig.level | default "info" }}"
+      - name: VECTOR_LOG_FORMAT
+        value: "{{ .Values.logConfig.format | default "text" }}"
 {{- if .Values.env }}
 {{- with .Values.env }}
     {{- toYaml . | nindent 6 }}
