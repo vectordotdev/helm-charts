@@ -435,6 +435,9 @@ persistence:
   #  whenDeleted: Retain
   #  whenScaled: Retain
 
+  # persistence.annotations -- Set annotations on the PersistentVolumeClaims created by the StatefulSet.
+  annotations: {}
+
   # persistence.accessModes -- Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role.
   accessModes:
     - ReadWriteOnce
