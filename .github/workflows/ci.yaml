@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.8.0
+        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
@@ -23,11 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Install Helm Docs
-        uses: envoy/install-helm-docs@v1.0.0
+        uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
         with:
           version: 1.11.0
       - name: Run helm-docs
@@ -50,7 +50,7 @@ jobs:
           - v1.28.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Add vector helm repo
@@ -80,15 +80,15 @@ jobs:
           - v1.28.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
       - name: Create kind ${{ matrix.k8s }}
-        uses: helm/kind-action@main
+        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.8.0
+        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
