@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.51.0](https://img.shields.io/badge/Version-0.51.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.53.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.53.0--distroless--libc-informational?style=flat-square)
+![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.54.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.54.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -15,7 +15,7 @@ helm repo update
 
 ## Requirements
 
-Kubernetes: `>=1.15.0-0`
+Kubernetes: `>=1.28.0-0`
 
 ## Quick start
 
@@ -164,7 +164,7 @@ helm install <RELEASE_NAME> \
 | ingress.tls | list | `[]` | Configure TLS for the Ingress. |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
-| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet. |
 | logLevel | string | `"info"` |  |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
@@ -202,7 +202,7 @@ helm install <RELEASE_NAME> \
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
 | rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the "Agent" role. |
 | rbac.extraRules | list | `[]` | List of additional Kubernetes RBAC rules to append to the ClusterRole. Rules defined here are appended after the chart's standard rules. Each item must follow the Kubernetes ClusterRole rule syntax.  Example: extraRules:   - apiGroups: [""]     resources: ["nodes/metrics", "nodes/stats"]     verbs: ["get"] |
-| readinessProbe | object | `{}` | Override default readiness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| readinessProbe | object | `{}` | Override default readiness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
