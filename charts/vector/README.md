@@ -228,6 +228,7 @@ helm install <RELEASE_NAME> \
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and serviceAccount.create is true, a name is generated using the fullname template. |
 | serviceHeadless.enabled | bool | `true` | If true, create and provide a Headless Service resource for Vector. |
 | shareProcessNamespace | bool | `false` | Specify the [shareProcessNamespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/) options for Vector Pods. |
+| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |
 | topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
