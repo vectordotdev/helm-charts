@@ -127,9 +127,12 @@ containers:
       {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
 {{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
     readinessProbe:
-      httpGet:
-        path: /health
+      grpc:
         port: 8686
+{{- end }}
+{{- with .Values.startupProbe }}
+    startupProbe:
+      {{- toYaml . | trim | nindent 6 }}
 {{- end }}
 {{- with .Values.resources }}
     resources:

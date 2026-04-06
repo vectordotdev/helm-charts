@@ -16,7 +16,6 @@ data:
     api:
       enabled: true
       address: 0.0.0.0:8686
-      playground: false
     sources:
       datadog_agent:
         address: 0.0.0.0:8282
@@ -60,7 +59,6 @@ data:
     api:
       enabled: true
       address: 0.0.0.0:8686
-      playground: false
     sources:
       kubernetes_logs:
         type: kubernetes_logs
