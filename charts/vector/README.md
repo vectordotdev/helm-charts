@@ -110,7 +110,7 @@ customConfig:
 
 When using chart-managed default configuration (without `customConfig` and `existingConfigMaps`),
 Vector's API listens on `0.0.0.0:8686`, and the chart applies a default readiness probe
-(`httpGet` on `/health` and port `api`).
+(`httpGet` on `/health` and port `8686`).
 
 If you use `customConfig`, ensure `api.enabled`/`api.address` and probe settings are aligned
 with your configuration.
@@ -214,7 +214,7 @@ helm install <RELEASE_NAME> \
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
 | rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the "Agent" role. |
 | rbac.extraRules | list | `[]` | List of additional Kubernetes RBAC rules to append to the ClusterRole. Rules defined here are appended after the chart's standard rules. Each item must follow the Kubernetes ClusterRole rule syntax.  Example: extraRules:   - apiGroups: [""]     resources: ["nodes/metrics", "nodes/stats"]     verbs: ["get"] |
-| readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an HTTP readinessProbe (`/health` on `api`) for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an HTTP readinessProbe (`/health` on port `8686`) for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |

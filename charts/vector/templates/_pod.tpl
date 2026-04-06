@@ -129,7 +129,7 @@ containers:
     readinessProbe:
       httpGet:
         path: /health
-        port: api
+        port: 8686
 {{- end }}
 {{- with .Values.resources }}
     resources:

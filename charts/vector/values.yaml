@@ -483,12 +483,12 @@ livenessProbe: {}
   #   port: api
 
 # readinessProbe -- Override default readiness probe settings. If not set, this chart applies an
-# HTTP readinessProbe (`/health` on `api`) for chart-managed default configs.
+# HTTP readinessProbe (`/health` on port `8686`) for chart-managed default configs.
 # If customConfig is used, requires customConfig.api.enabled to be set to true.
 readinessProbe: {}
   # httpGet:
   #   path: /health
-  #   port: api
+  #   port: 8686
 
 # Configure a PodMonitor for Vector, requires the PodMonitor CRD to be installed.
 podMonitor:
