@@ -126,6 +126,10 @@ containers:
     readinessProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
+{{- with .Values.startupProbe }}
+    startupProbe:
+      {{- toYaml . | trim | nindent 6 }}
+{{- end }}
 {{- with .Values.resources }}
     resources:
 {{- toYaml . | nindent 6 }}

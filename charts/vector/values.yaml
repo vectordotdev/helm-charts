@@ -497,6 +497,13 @@ readinessProbe: {}
   # grpc:
   #   port: 8686
 
+# startupProbe -- Override default startup probe settings. If customConfig is used,
+# requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe
+# instead of httpGet.
+startupProbe: {}
+  # grpc:
+  #   port: 8686
+
 # Configure a PodMonitor for Vector, requires the PodMonitor CRD to be installed.
 podMonitor:
   # podMonitor.enabled -- If true, create a PodMonitor for Vector.
