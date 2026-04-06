@@ -137,6 +137,7 @@ helm install <RELEASE_NAME> \
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |
+| daemonSet.apiVersion | string | `""` | Override the DaemonSet apiVersion. Valid for the "Agent" role. |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used. |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
@@ -228,6 +229,7 @@ helm install <RELEASE_NAME> \
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and serviceAccount.create is true, a name is generated using the fullname template. |
 | serviceHeadless.enabled | bool | `true` | If true, create and provide a Headless Service resource for Vector. |
 | shareProcessNamespace | bool | `false` | Specify the [shareProcessNamespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/) options for Vector Pods. |
+| statefulSet.apiVersion | string | `""` | Override the StatefulSet apiVersion. Valid for the "Aggregator" role. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |
 | topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
