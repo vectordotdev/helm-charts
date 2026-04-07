@@ -39,7 +39,7 @@ spec:
       securityContext:
         {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: {{ .Values.haproxy.terminationGracePeriodSeconds }}
-      {{- with .Values.priorityClassName }}
+      {{- with .Values.haproxy.podPriorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
       {{- if .Values.haproxy.initContainers }}
