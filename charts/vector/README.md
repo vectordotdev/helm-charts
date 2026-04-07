@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.54.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.54.0--distroless--libc-informational?style=flat-square)
+![Version: 0.52.0](https://img.shields.io/badge/Version-0.52.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.54.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.54.0--distroless--libc-informational?style=flat-square) 
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -16,6 +16,8 @@ helm repo update
 ## Requirements
 
 Kubernetes: `>=1.28.0-0`
+
+
 
 ## Quick start
 
@@ -135,17 +137,16 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
-| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.1.4"},"imagePullPolicy":"IfNotPresent","initContainer":false,"label":"vector-config","labelValue":"true","logLevel":"INFO","uniqueFilenames":false,"watchMethod":"WATCH"}` | sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If enabled, existingConfigMaps are ignored. |
+| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","uniqueFilenames":false,"watchMethod":"WATCH"}` | sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If enabled, existingConfigMaps are ignored. |
 | configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
 | configSidecar.folder | string | `"/etc/vector"` | Folder inside the pod where the configmaps are stored. |
 | configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
-| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.1.4"}` | Define the sidecar image to use. |
+| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"}` | Define the sidecar image to use. |
 | configSidecar.image.registry | string | `"quay.io"` | Override default registry for the sidecar image. |
 | configSidecar.image.repository | string | `"kiwigrid/k8s-sidecar"` | Override default repository and name for the sidecar image. |
 | configSidecar.image.sha | string | `""` | The SHA to use for the sidecar image. |
-| configSidecar.image.tag | string | `"2.1.4"` | The tag to use for the sidecar image. |
+| configSidecar.image.tag | string | `"2.5.4"` | The tag to use for the sidecar image. |
 | configSidecar.imagePullPolicy | string | `"IfNotPresent"` | sidecar image pull policy. |
-| configSidecar.initContainer | bool | `false` | If true, use an init container instead of a extra container. |
 | configSidecar.label | string | `"vector-config"` | Label that the configmaps have to be marked with to be collected by the sidecar. |
 | configSidecar.labelValue | string | `"true"` | Value of the label that the configmaps are set to. |
 | configSidecar.logLevel | string | `"INFO"` | Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. |
