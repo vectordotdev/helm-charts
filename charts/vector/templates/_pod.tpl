@@ -39,7 +39,7 @@ containers:
 {{- if .Values.configSidecar.enabled }}
   - name: config-sidecar
     {{- if .Values.configSidecar.image.sha }}
-    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@sha256:{{ .Values.configSidecar.image.sha }}"
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@{{ .Values.configSidecar.image.sha }}"
     {{- else }}
     image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}"
     {{- end }}

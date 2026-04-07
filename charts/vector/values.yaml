@@ -351,8 +351,8 @@ customConfig: {}
 # If set, this parameter takes precedence over existingConfigMaps, customConfig and the chart's default configs.
 emptyConfig: false
 
-# configSidecar -- sidecar container collects the configmaps with specified label and stores the included files into the respective folders.
-# If enabled, existingConfigMaps are ignored.
+# configSidecar -- Sidecar container collects the configmaps with specified label and stores the included files into the respective folders.
+# If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label.
 configSidecar:
   # configSidecar.enabled -- If true, create and use a sidecar container to manage vector configuration.
   enabled: false

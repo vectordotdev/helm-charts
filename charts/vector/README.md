@@ -137,7 +137,7 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
-| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","uniqueFilenames":false,"watchMethod":"WATCH"}` | sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If enabled, existingConfigMaps are ignored. |
+| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","uniqueFilenames":false,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
 | configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
 | configSidecar.folder | string | `"/etc/vector"` | Folder inside the pod where the configmaps are stored. |
 | configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
