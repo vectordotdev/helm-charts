@@ -382,6 +382,10 @@ configSidecar:
   logLevel: "INFO"
   # configSidecar.uniqueFilenames -- If true, the sidecar will ensure that filenames are unique where duplicate data keys exist.
   uniqueFilenames: false
+  # configSidecar.rbac -- RBAC settings for config sidecar
+  rbac:
+    # configSidecar.rbac.create -- Create Role and RoleBinding for config sidecar
+    create: true
 
 # defaultVolumes -- Default volumes that are mounted into pods. In most cases, these should not be changed.
 # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.

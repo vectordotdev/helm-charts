@@ -137,7 +137,7 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
-| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","uniqueFilenames":false,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
+| configSidecar | object | `{"enabled":false,"folder":"/etc/vector","ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":false,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
 | configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
 | configSidecar.folder | string | `"/etc/vector"` | Folder inside the pod where the configmaps are stored. |
 | configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
@@ -150,6 +150,8 @@ helm install <RELEASE_NAME> \
 | configSidecar.label | string | `"vector-config"` | Label that the configmaps have to be marked with to be collected by the sidecar. |
 | configSidecar.labelValue | string | `"true"` | Value of the label that the configmaps are set to. |
 | configSidecar.logLevel | string | `"INFO"` | Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. |
+| configSidecar.rbac | object | `{"create":true}` | RBAC settings for config sidecar |
+| configSidecar.rbac.create | bool | `true` | Create Role and RoleBinding for config sidecar |
 | configSidecar.uniqueFilenames | bool | `false` | If true, the sidecar will ensure that filenames are unique where duplicate data keys exist. |
 | configSidecar.watchMethod | string | `"WATCH"` | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. |
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
