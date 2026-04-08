@@ -38,8 +38,17 @@ initContainers:
 containers:
 {{- if .Values.configSidecar.enabled }}
   - name: config-sidecar
-    {{- if .Values.configSidecar.image.sha }}
-    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@{{ .Values.configSidecar.image.sha }}"
+    {{- $sidecarShaRaw := .Values.configSidecar.image.sha | default "" -}}
+    {{- $sidecarSha := "" -}}
+    {{- if $sidecarShaRaw -}}
+      {{- if hasPrefix "sha256:" $sidecarShaRaw -}}
+        {{- $sidecarSha = $sidecarShaRaw -}}
+      {{- else -}}
+        {{- $sidecarSha = printf "sha256:%s" $sidecarShaRaw -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if $sidecarSha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@{{ $sidecarSha }}"
     {{- else }}
     image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}"
     {{- end }}
