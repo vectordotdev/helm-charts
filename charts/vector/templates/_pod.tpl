@@ -84,8 +84,10 @@ containers:
     command:
     {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- with .Values.args }}
-{{- $args := . }}
+{{- $args := list }}
+{{- if .Values.args }}
+{{- $args = .Values.args }}
+{{- end }}
 {{- if or $.Values.emptyConfig $.Values.configSidecar.enabled }}
   {{- if not (has "--allow-empty-config" $args) }}
     {{ $args = append $args "--allow-empty-config" }}
@@ -96,6 +98,7 @@ containers:
     {{ $args = append $args "--watch-config"  }}
   {{- end }}
 {{- end }}
+{{- if $args }}
     args:
     {{- toYaml $args | nindent 6 }}
 {{- end }}
