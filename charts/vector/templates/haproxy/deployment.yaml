@@ -38,6 +38,7 @@ spec:
       serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.haproxy.terminationGracePeriodSeconds }}
       {{- with .Values.haproxy.podPriorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
