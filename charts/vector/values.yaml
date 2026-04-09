@@ -322,6 +322,8 @@ ingress:
 # existingConfigMaps -- List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires
 # dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on
 # your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs.
+# This parameter is not considered with configSidecar enabled. Ensure the correct label key (configSidecar.label) and 
+# value (configSidecar.labelValue) to load existing ConfigMaps with configSidecar enabled.
 existingConfigMaps: []
 
 # dataDir -- Specify the path for Vector's data, only used when existingConfigMaps are used.
