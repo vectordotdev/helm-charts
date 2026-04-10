@@ -38,19 +38,13 @@ initContainers:
 containers:
 {{- if .Values.configSidecar.enabled }}
   - name: config-sidecar
-    {{- $sidecarShaRaw := .Values.configSidecar.image.sha | default "" -}}
-    {{- $sidecarSha := "" -}}
-    {{- if $sidecarShaRaw -}}
-      {{- if hasPrefix "sha256:" $sidecarShaRaw -}}
-        {{- $sidecarSha = $sidecarShaRaw -}}
-      {{- else -}}
-        {{- $sidecarSha = printf "sha256:%s" $sidecarShaRaw -}}
-      {{- end -}}
-    {{- end -}}
-    {{- if $sidecarSha }}
-    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@{{ $sidecarSha }}"
+    {{- $sidecarSha := .Values.configSidecar.image.sha | trimPrefix "sha256:" | default "" -}}
+    {{- if and .Values.configSidecar.image.tag $sidecarSha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@sha256:{{ $sidecarSha }}"
+    {{- else if and (not .Values.configSidecar.image.tag) $sidecarSha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}@sha256:{{ $sidecarSha }}"
     {{- else }}
-    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}"
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag | default "latest" }}"
     {{- end }}
     imagePullPolicy: {{ .Values.configSidecar.imagePullPolicy }}
     env:
