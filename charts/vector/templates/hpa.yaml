@@ -4,6 +4,7 @@ apiVersion: {{ template "autoscaling.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "vector.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
