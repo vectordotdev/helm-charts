@@ -122,9 +122,13 @@ containers:
     livenessProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
-{{- with .Values.readinessProbe }}
+{{- if .Values.readinessProbe }}
     readinessProbe:
-      {{- toYaml . | trim | nindent 6 }}
+      {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+    readinessProbe:
+      grpc:
+        port: 8686
 {{- end }}
 {{- with .Values.startupProbe }}
     startupProbe:

@@ -490,9 +490,9 @@ livenessProbe: {}
   # grpc:
   #   port: 8686
 
-# readinessProbe -- Override default readiness probe settings. If customConfig is used,
-# requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe
-# instead of httpGet.
+# readinessProbe -- Override default readiness probe settings. If not set, this chart applies a
+# gRPC readinessProbe on port `8686` for chart-managed default configs. If customConfig is used,
+# requires customConfig.api.enabled to be set to true.
 readinessProbe: {}
   # grpc:
   #   port: 8686
