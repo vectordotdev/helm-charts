@@ -26,7 +26,7 @@ data:
     {{- end }}
     api:
       enabled: true
-      address: 127.0.0.1:8686
+      address: 0.0.0.0:8686
     sources:
       datadog_agent:
         address: 0.0.0.0:8282
@@ -71,7 +71,7 @@ data:
     {{- end }}
     api:
       enabled: true
-      address: 127.0.0.1:8686
+      address: 0.0.0.0:8686
     sources:
       kubernetes_logs:
         type: kubernetes_logs
