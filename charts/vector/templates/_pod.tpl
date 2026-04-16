@@ -179,7 +179,7 @@ containers:
 {{- if .Values.readinessProbe }}
     readinessProbe:
       {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
-{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) (not .Values.emptyConfig) }}
     readinessProbe:
       grpc:
         port: 8686
