@@ -89,7 +89,7 @@ containers:
 {{- end }}
 {{- $args := list }}
 {{- if .Values.args }}
-{{- $args = list .Values.args }}
+{{- $args = .Values.args }}
 {{- end }}
 {{- if or $.Values.emptyConfig $.Values.configSidecar.enabled }}
   {{- if not (has "--allow-empty-config" $args) }}
