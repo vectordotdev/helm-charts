@@ -89,7 +89,7 @@ containers:
 {{- end }}
 {{- $args := list }}
 {{- if .Values.args }}
-{{- $args = .Values.args }}
+{{- $args = list .Values.args }}
 {{- end }}
 {{- if or $.Values.emptyConfig $.Values.configSidecar.enabled }}
   {{- if not (has "--allow-empty-config" $args) }}
@@ -101,7 +101,7 @@ containers:
     {{ $args = append $args "--watch-config"  }}
   {{- end }}
   {{- if not (has "--config-dir" $args) }}
-    {{ $args = concat $args list("--config-dir" "/etc/vector/")  }}
+    {{ $args = concat $args (list "--config-dir" "/etc/vector/")  }}
   {{- end }}
 {{- end }}
 {{- if $args }}
