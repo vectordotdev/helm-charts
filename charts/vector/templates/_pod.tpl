@@ -95,13 +95,13 @@ containers:
   {{- if not (has "--allow-empty-config" $args) }}
     {{ $args = append $args "--allow-empty-config" }}
   {{- end }}
+  {{- if not (has "--config-dir" $args) }}
+    {{ $args = concat $args (list "--config-dir" "/etc/vector/")  }}
+  {{- end }}
 {{- end }}
 {{- if $.Values.configSidecar.enabled }}
   {{- if not (has "--watch-config" $args) }}
     {{ $args = append $args "--watch-config"  }}
-  {{- end }}
-  {{- if not (has "--config-dir" $args) }}
-    {{ $args = concat $args (list "--config-dir" "/etc/vector/")  }}
   {{- end }}
 {{- end }}
 {{- if $args }}
