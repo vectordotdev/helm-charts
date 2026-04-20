@@ -100,6 +100,9 @@ containers:
   {{- if not (has "--watch-config" $args) }}
     {{ $args = append $args "--watch-config"  }}
   {{- end }}
+  {{- if not (has "--config-dir" $args) }}
+    {{ $args = append $args "--config-dir /etc/vector/"  }}
+  {{- end }}
 {{- end }}
 {{- if $args }}
     args:
