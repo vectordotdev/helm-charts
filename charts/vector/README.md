@@ -177,7 +177,7 @@ helm install <RELEASE_NAME> \
 | ingress.tls | list | `[]` | Configure TLS for the Ingress. |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
-| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility. |
+| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | logLevel | string | `"info"` |  |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
@@ -215,7 +215,7 @@ helm install <RELEASE_NAME> \
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
 | rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the "Agent" role. |
 | rbac.extraRules | list | `[]` | List of additional Kubernetes RBAC rules to append to the ClusterRole. Rules defined here are appended after the chart's standard rules. Each item must follow the Kubernetes ClusterRole rule syntax.  Example: extraRules:   - apiGroups: [""]     resources: ["nodes/metrics", "nodes/stats"]     verbs: ["get"] |
-| readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies a gRPC readinessProbe on port `8686` for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
@@ -241,7 +241,7 @@ helm install <RELEASE_NAME> \
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and serviceAccount.create is true, a name is generated using the fullname template. |
 | serviceHeadless.enabled | bool | `true` | If true, create and provide a Headless Service resource for Vector. |
 | shareProcessNamespace | bool | `false` | Specify the [shareProcessNamespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/) options for Vector Pods. |
-| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility. |
+| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | statefulSet.apiVersion | string | `""` | Override the StatefulSet apiVersion. Valid for the "Aggregator" role. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |

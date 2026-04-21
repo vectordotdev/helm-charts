@@ -485,9 +485,10 @@ dnsConfig: {}
 shareProcessNamespace: false
 
 # livenessProbe -- Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled
-# to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility.
+# to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept
+# for backwards compatibility with older Vector versions.
 livenessProbe: {}
-  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check)
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
   # grpc:
   #   port: 8686
   #
@@ -496,18 +497,25 @@ livenessProbe: {}
   #   path: /health
   #   port: 8686
 
-# readinessProbe -- Override default readiness probe settings. If not set, this chart applies a
-# gRPC readinessProbe on port `8686` for chart-managed default configs. If customConfig is used,
-# requires customConfig.api.enabled to be set to true.
+# readinessProbe -- Override default readiness probe settings. If not set, this chart applies an
+# `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used,
+# requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+;
+# the `httpGet /health` probe is kept for backwards compatibility with older Vector versions.
 readinessProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
   # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
+  # httpGet:
+  #   path: /health
   #   port: 8686
 
 # startupProbe -- Override default startup probe settings. If customConfig is used,
-# requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept
-# for backwards compatibility.
+# requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+;
+# the `httpGet /health` probe is kept for backwards compatibility with older Vector versions.
 startupProbe: {}
-  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check)
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
   # grpc:
   #   port: 8686
   #
