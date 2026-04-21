@@ -485,9 +485,15 @@ dnsConfig: {}
 shareProcessNamespace: false
 
 # livenessProbe -- Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled
-# to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet.
+# to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility.
 livenessProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check)
   # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
+  # httpGet:
+  #   path: /health
   #   port: 8686
 
 # readinessProbe -- Override default readiness probe settings. If not set, this chart applies a
@@ -498,10 +504,16 @@ readinessProbe: {}
   #   port: 8686
 
 # startupProbe -- Override default startup probe settings. If customConfig is used,
-# requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe
-# instead of httpGet.
+# requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept
+# for backwards compatibility.
 startupProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check)
   # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
+  # httpGet:
+  #   path: /health
   #   port: 8686
 
 # Configure a PodMonitor for Vector, requires the PodMonitor CRD to be installed.

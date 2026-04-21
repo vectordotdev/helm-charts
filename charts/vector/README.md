@@ -177,7 +177,7 @@ helm install <RELEASE_NAME> \
 | ingress.tls | list | `[]` | Configure TLS for the Ingress. |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
-| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet. |
+| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility. |
 | logLevel | string | `"info"` |  |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
@@ -241,7 +241,7 @@ helm install <RELEASE_NAME> \
 | serviceAccount.name | string | `nil` | The name of the ServiceAccount to use. If not set and serviceAccount.create is true, a name is generated using the fullname template. |
 | serviceHeadless.enabled | bool | `true` | If true, create and provide a Headless Service resource for Vector. |
 | shareProcessNamespace | bool | `false` | Specify the [shareProcessNamespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/) options for Vector Pods. |
-| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. Since Vector's API is gRPC-only (HTTP/2), use a grpc probe instead of httpGet. |
+| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended; the `httpGet /health` probe is kept for backwards compatibility. |
 | statefulSet.apiVersion | string | `""` | Override the StatefulSet apiVersion. Valid for the "Aggregator" role. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |
