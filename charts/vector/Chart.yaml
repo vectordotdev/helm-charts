@@ -1,6 +1,6 @@
 apiVersion: v2
 name: vector
-version: "0.52.0"
+version: "0.53.0"
 kubeVersion: ">=1.28.0-0"
 description: A lightweight, ultra-fast tool for building observability pipelines
 type: application
