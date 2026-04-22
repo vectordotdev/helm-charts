@@ -3,6 +3,27 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.52.0] - 2026-04-22
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.55.0 and Helm docs (#558) ([6ce3699](https://github.com/vectordotdev/helm-charts/commit/6ce36995480f6dcafd81c162e4377f5e0a6035eb))
+
+### Vector
+
+#### Bug Fixes
+
+- Use haproxy podPriorityClassName in haproxy deployment (#538) ([889084a](https://github.com/vectordotdev/helm-charts/commit/889084aca571c176abb553f86ee600b739bf4289))
+- Set haproxy terminationGracePeriodSeconds on pod spec (#539) ([b261a43](https://github.com/vectordotdev/helm-charts/commit/b261a432e9fac7afbabf5ace5625eef7dbf63f14))
+- Add missing namespace to HPA and PDB templates (#537) ([40adbf7](https://github.com/vectordotdev/helm-charts/commit/40adbf7c21d895c9e217ef0f33073186c415cc49))
+
+#### Features
+
+- Add startupProbe option to pod template (#550) ([e3ce248](https://github.com/vectordotdev/helm-charts/commit/e3ce248883d3ddcde9c5bb4ea66bbfe61cdaefd1))
+- Default API bind and readiness for chart-managed config (#540) ([82773e7](https://github.com/vectordotdev/helm-charts/commit/82773e79041172ddeed13efe7ab679a79fb72fa7))
+
 ## [vector-0.51.0] - 2026-03-10
 
 ### Vector
