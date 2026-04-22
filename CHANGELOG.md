@@ -22,7 +22,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 #### Features
 
 - Add startupProbe option to pod template (#550) ([e3ce248](https://github.com/vectordotdev/helm-charts/commit/e3ce248883d3ddcde9c5bb4ea66bbfe61cdaefd1))
-- Default API bind and readiness for chart-managed config (#540) ([82773e7](https://github.com/vectordotdev/helm-charts/commit/82773e79041172ddeed13efe7ab679a79fb72fa7)) (default readiness probe later reverted to `httpGet /health` in #557)
+- Default API bind and readiness for chart-managed config (#540) ([82773e7](https://github.com/vectordotdev/helm-charts/commit/82773e79041172ddeed13efe7ab679a79fb72fa7))
 
 ## [vector-0.51.0] - 2026-03-10
 
