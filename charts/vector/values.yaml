@@ -302,6 +302,8 @@ service:
 serviceHeadless:
   # serviceHeadless.enabled -- If true, create and provide a Headless Service resource for Vector.
   enabled: true
+  # serviceHeadless.annotations -- Set annotations on Vector's Headless Service.
+  annotations: {}
 
 # Configuration for Vector's Ingress.
 ingress:
