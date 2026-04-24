@@ -384,8 +384,6 @@ configSidecar:
   label: "vector-config"
   # configSidecar.labelValue -- Value of the label that the configmaps are set to.
   labelValue: "true"
-  # configSidecar.folder -- Folder inside the pod where the configmaps are stored.
-  folder: "/etc/vector"
   # configSidecar.watchMethod -- Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
   watchMethod: "WATCH"
   # configSidecar.ignoreAlreadyProcessed -- If true, already processed ConfigMaps are ignored on subsequent runs.

@@ -65,7 +65,7 @@ containers:
         value: "{{ . }}"
       {{- end }}
       - name: FOLDER
-        value: "{{ .Values.configSidecar.folder }}"
+        value: "/etc/vector/"
       - name: RESOURCE
         value: "configmap"
       {{- if .Values.configSidecar.uniqueFilenames }}
@@ -74,7 +74,7 @@ containers:
       {{- end }}
     volumeMounts:
       - name: config
-        mountPath: "{{ .Values.configSidecar.folder }}"
+        mountPath: "/etc/vector/"
 {{- end }}
   - name: vector
 {{- with .Values.securityContext }}
