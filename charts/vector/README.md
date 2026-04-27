@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.55.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.55.0--distroless--libc-informational?style=flat-square)
+![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.55.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.55.0--distroless--libc-informational?style=flat-square) 
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -16,6 +16,8 @@ helm repo update
 ## Requirements
 
 Kubernetes: `>=1.28.0-0`
+
+
 
 ## Quick start
 
@@ -108,7 +110,7 @@ customConfig:
 
 ### API exposure and health probes
 
-When using chart-managed default configuration (without `customConfig` and `existingConfigMaps`),
+When using chart-managed default configuration (without `customConfig`, `existingConfigMaps` and `emptyConfig`),
 Vector's API listens on `0.0.0.0:8686`, and the chart applies a default readiness probe
 (`grpc` on port `8686`).
 
@@ -147,6 +149,22 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
+| configSidecar | object | `{"enabled":false,"ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":true,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
+| configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
+| configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
+| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"}` | Define the sidecar image to use. |
+| configSidecar.image.registry | string | `"quay.io"` | Override default registry for the sidecar image. |
+| configSidecar.image.repository | string | `"kiwigrid/k8s-sidecar"` | Override default repository and name for the sidecar image. |
+| configSidecar.image.sha | string | `""` | The SHA to use for the sidecar image. |
+| configSidecar.image.tag | string | `"2.7.1"` | The tag to use for the sidecar image. |
+| configSidecar.imagePullPolicy | string | `"IfNotPresent"` | sidecar image pull policy. |
+| configSidecar.label | string | `"vector-config"` | Label that the configmaps have to be marked with to be collected by the sidecar. |
+| configSidecar.labelValue | string | `"true"` | Value of the label that the configmaps are set to. |
+| configSidecar.logLevel | string | `"INFO"` | Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. |
+| configSidecar.rbac | object | `{"create":true}` | RBAC settings for config sidecar |
+| configSidecar.rbac.create | bool | `true` | Create Role and RoleBinding for config sidecar |
+| configSidecar.uniqueFilenames | bool | `true` | If true, the sidecar will ensure that filenames are unique where duplicate data keys exist. |
+| configSidecar.watchMethod | string | `"WATCH"` | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. |
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |
 | daemonSet.apiVersion | string | `""` | Override the DaemonSet apiVersion. Valid for the "Agent" role. |
@@ -155,9 +173,10 @@ helm install <RELEASE_NAME> \
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
 | dnsConfig | object | `{}` | Specify the [dnsConfig](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config) options for Vector Pods. |
 | dnsPolicy | string | `"ClusterFirst"` | Specify the [dnsPolicy](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy) for Vector Pods. |
+| emptyConfig | bool | `false` | Provide an empty config directory. Requires args to include flag to allow empty config (https://vector.dev/docs/reference/cli/). If set, this parameter takes precedence over existingConfigMaps, customConfig and the chart's default configs. |
 | env | list | `[]` | Set environment variables for Vector containers. |
 | envFrom | list | `[]` | Define environment variables from Secrets or ConfigMaps. |
-| existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. |
+| existingConfigMaps | list | `[]` | List of existing ConfigMaps for Vector's configuration instead of creating a new one. Requires dataDir to be set. Additionally, containerPorts, service.ports, and serviceHeadless.ports should be specified based on your supplied configuration. If set, this parameter takes precedence over customConfig and the chart's default configs. This parameter is not considered with configSidecar enabled. Ensure the correct label key (configSidecar.label) and  value (configSidecar.labelValue) to load existing ConfigMaps with configSidecar enabled. |
 | extraContainers | list | `[]` | Extra Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | extraObjects | list | `[]` | Create extra manifests via values. Would be passed through `tpl` for templating. |
 | extraVolumeMounts | list | `[]` | Additional Volume to mount into Vector Containers. |

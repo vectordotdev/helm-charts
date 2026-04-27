@@ -1,4 +1,4 @@
-{{- if not .Values.existingConfigMaps }}
+{{- if not (or .Values.emptyConfig .Values.existingConfigMaps) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,13 +6,24 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
+    {{- if .Values.configSidecar.enabled}}
+    {{ .Values.configSidecar.label }}: {{ quote .Values.configSidecar.labelValue }}
+    {{- end }}
 data:
   {{- if .Values.customConfig }}
+  {{- if and .Values.configSidecar.enabled .Values.customConfig.data_dir }}
+  {{- $msg := "When configSidecar is enabled, customConfig.data_dir must not be set. " }}
+  {{- $msg = printf "%sVector uses /var/lib/vector before loading custom config and does not allow overrides. " $msg }}
+  {{- $msg = printf "%sRemove customConfig.data_dir or disable configSidecar." $msg }}
+  {{- fail $msg }}
+  {{- end }}
   vector.yaml: |
 {{ tpl (toYaml .Values.customConfig) . | indent 4 }}
   {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
   aggregator.yaml: |
+    {{- if not .Values.configSidecar.enabled}}
     data_dir: /vector-data-dir
+    {{- end }}
     api:
       enabled: true
       address: 0.0.0.0:8686
@@ -55,7 +66,9 @@ data:
           codec: json
   {{- else if (eq .Values.role "Agent") }}
   agent.yaml: |
+    {{- if not .Values.configSidecar.enabled}}
     data_dir: /vector-data-dir
+    {{- end }}
     api:
       enabled: true
       address: 0.0.0.0:8686
