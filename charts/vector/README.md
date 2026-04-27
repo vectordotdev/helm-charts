@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.55.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.55.0--distroless--libc-informational?style=flat-square)
+![Version: 0.53.0](https://img.shields.io/badge/Version-0.53.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.55.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.55.0--distroless--libc-informational?style=flat-square) 
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -149,21 +149,21 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
-| configSidecar | object | `{"enabled":false,"ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":false,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
+| configSidecar | object | `{"enabled":false,"ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":true,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
 | configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
 | configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
-| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.5.4"}` | Define the sidecar image to use. |
+| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"}` | Define the sidecar image to use. |
 | configSidecar.image.registry | string | `"quay.io"` | Override default registry for the sidecar image. |
 | configSidecar.image.repository | string | `"kiwigrid/k8s-sidecar"` | Override default repository and name for the sidecar image. |
 | configSidecar.image.sha | string | `""` | The SHA to use for the sidecar image. |
-| configSidecar.image.tag | string | `"2.5.4"` | The tag to use for the sidecar image. |
+| configSidecar.image.tag | string | `"2.7.1"` | The tag to use for the sidecar image. |
 | configSidecar.imagePullPolicy | string | `"IfNotPresent"` | sidecar image pull policy. |
 | configSidecar.label | string | `"vector-config"` | Label that the configmaps have to be marked with to be collected by the sidecar. |
 | configSidecar.labelValue | string | `"true"` | Value of the label that the configmaps are set to. |
 | configSidecar.logLevel | string | `"INFO"` | Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. |
 | configSidecar.rbac | object | `{"create":true}` | RBAC settings for config sidecar |
 | configSidecar.rbac.create | bool | `true` | Create Role and RoleBinding for config sidecar |
-| configSidecar.uniqueFilenames | bool | `false` | If true, the sidecar will ensure that filenames are unique where duplicate data keys exist. |
+| configSidecar.uniqueFilenames | bool | `true` | If true, the sidecar will ensure that filenames are unique where duplicate data keys exist. |
 | configSidecar.watchMethod | string | `"WATCH"` | Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds. |
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |

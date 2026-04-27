@@ -375,7 +375,7 @@ configSidecar:
     # configSidecar.image.repository -- Override default repository and name for the sidecar image.
     repository: kiwigrid/k8s-sidecar
     # configSidecar.image.tag -- The tag to use for the sidecar image.
-    tag: "2.5.4"
+    tag: "2.7.1"
     # configSidecar.image.sha -- The SHA to use for the sidecar image.
     sha: ""
   # configSidecar.imagePullPolicy -- sidecar image pull policy.
@@ -391,7 +391,7 @@ configSidecar:
   # configSidecar.logLevel -- Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
   logLevel: "INFO"
   # configSidecar.uniqueFilenames -- If true, the sidecar will ensure that filenames are unique where duplicate data keys exist.
-  uniqueFilenames: false
+  uniqueFilenames: true
   # configSidecar.rbac -- RBAC settings for config sidecar
   rbac:
     # configSidecar.rbac.create -- Create Role and RoleBinding for config sidecar
