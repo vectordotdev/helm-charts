@@ -518,9 +518,9 @@ podMonitor:
 
 # Log configuration for Vector
 logConfig:
-  # Log level -- Set Vector's log level
+  # logConfig.level -- Set Vector's log level
   level: "info"
-  # Log format -- Set Vector's logging format
+  # logConfig.format -- Set Vector's logging format
   format: "text"
 
 # Optional built-in HAProxy load balancer.
