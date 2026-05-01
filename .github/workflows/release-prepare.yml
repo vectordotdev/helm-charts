@@ -1,0 +1,104 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+
+# Uses the vectordotdev-bot GitHub App so that PR creation and pushes can
+# trigger downstream workflows (the default GITHUB_TOKEN cannot do that).
+# Requires the App to be installed on this repo, with VECTORDOTDEV_BOT_APP_ID
+# (variable) and VECTORDOTDEV_BOT_PRIVATE_KEY (secret) configured.
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        with:
+          app-id: ${{ vars.VECTORDOTDEV_BOT_APP_ID }}
+          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+
+      - name: Checkout develop
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "vectordotdev-bot[bot]"
+          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+
+      - name: Install helm-docs
+        uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
+        with:
+          version: 1.11.0
+
+      - name: Install yq
+        run: |
+          sudo curl -sSL -o /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Install git-cliff
+        run: |
+          curl -sSL https://github.com/orhun/git-cliff/releases/download/v2.7.0/git-cliff-2.7.0-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz
+          sudo mv git-cliff-2.7.0-x86_64-unknown-linux-gnu/git-cliff /usr/local/bin/
+
+      - name: Get latest Vector version
+        id: vector
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/vectordotdev/vector/releases/latest \
+            | grep -oE '"tag_name": *"[^"]+"' \
+            | sed 's/"tag_name": *"v//;s/"//')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release branch
+        run: git checkout -b "release-${{ steps.vector.outputs.version }}"
+
+      - name: Update Vector appVersion
+        run: .github/release-vector-version.sh
+
+      - name: Update Helm docs
+        run: helm-docs
+
+      - name: Commit version bump
+        run: |
+          git add .
+          git commit -m "feat(vector): Bump Vector to ${{ steps.vector.outputs.version }} and update Helm docs"
+
+      - name: Regenerate CHANGELOG
+        run: .github/release-changelog.sh
+
+      - name: Commit changelog
+        run: |
+          git add .
+          git commit -m "feat(vector): Regenerate CHANGELOG for ${{ steps.vector.outputs.version }}"
+
+      - name: Push branch
+        run: git push -u origin "release-${{ steps.vector.outputs.version }}"
+
+      - name: Create PR
+        run: |
+          gh pr create \
+            --title "feat(releasing): Release Vector ${{ steps.vector.outputs.version }}" \
+            --body "$(cat <<'EOF'
+          Automated release PR for Vector ${{ steps.vector.outputs.version }}.
+
+          ## Reviewer checklist
+
+          - [ ] Review `CHANGELOG.md` and edit if needed (drop reverted/housekeeping entries, fix miscategorized commits).
+          - [ ] Confirm `appVersion` in `charts/vector/Chart.yaml` matches the intended Vector release.
+          - [ ] Merge via **squash** so the commit history stays clean — the Post Release workflow fires on merge and will merge `develop` into `master`, triggering the chart release.
+          EOF
+          )" \
+            --base develop \
+            --head "release-${{ steps.vector.outputs.version }}"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}

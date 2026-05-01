@@ -4,58 +4,48 @@ This document is intended for project maintainers.
 
 Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser) when the `develop` branch is merged into `master`.
 
-Install the following required tools:
-* [`helm-docs`](https://github.com/norwoodj/helm-docs)
-* [`gh`](https://cli.github.com/)
-* [`yq`](https://github.com/mikefarah/yq)
-* [`git-cliff`](https://github.com/orhun/git-cliff)
+## Prerequisites
 
+The release workflows authenticate as the `vectordotdev-bot` GitHub App. The App must be installed on this repo, with the following configured under **Settings → Secrets and variables → Actions**:
 
-Now run the release script:
+- Variable: `VECTORDOTDEV_BOT_APP_ID` — the App's numeric ID.
+- Secret: `VECTORDOTDEV_BOT_PRIVATE_KEY` — the App's private key (PEM contents).
 
-```shell
-bash release.sh <Vector release GitHub issue link>
-```
+The App is required because the default `GITHUB_TOKEN` cannot trigger downstream workflows — without it, the push to `master` would not fire the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml), and PR-creation events would not run CI.
 
-This will create the pull requests and wait for them to be approved and merged. If the script fails, please refer to the following section and continue the release manually.
+## Automated release
 
-After the script runs, the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) should start automatically. Once it completes, you will have successfully released `helm-charts`!
+1. Go to **Actions → Prepare Release** and click **Run workflow**, or run:
+   ```shell
+   gh workflow run release-prepare.yml
+   ```
+2. Review the opened release PR — edit `CHANGELOG.md` if needed, then **squash-merge** into `develop`.
+3. The **Post Release** workflow fires automatically on merge and:
+   - Merges `develop` into `master` (triggering the chart release).
+   - Opens a version bump PR for the next development cycle, set to auto-merge once CI passes.
+
+Once the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) completes, the chart is published.
 
 ## Releasing manually
 
 <details>
-<summary>Always prefer the automated method described above. Use this guide only if the above method fails. </summary>
-To make releasing easier two scripts are utilized in the steps below.
+<summary>Use this only if the automated workflows fail.</summary>
 
-1. Run `$ .github/release-vector-version.sh`
-   - Update Helm docs by running `helm-docs`
-   - Commit the changes generated from step 1. This needs to be a
-      [conventional commit](https://www.conventionalcommits.org/).
-     - E.g. "feat(vector): Bump Vector to v0.29.0"
-     - Submit a PR with the changes.
-   - Notes:
-     - This queries [vectordotdev/vector](https://github.com/vectordotdev/vector)
-     for the latest release and updates the `vector` chart's default image.
-     - This is convenient when updating the chart after a Vector release.
-     - On macOS, install `gsed`
+1. Run `.github/release-vector-version.sh` to update the Vector image version, then run `helm-docs`.
+  - Commit: `feat(vector): Bump Vector to <version> and update Helm docs`
 
-2. Run `$ .github/release-changelog.sh`
-   - Commit the changes generated from step 1. This needs to be a
-      [conventional commit](https://www.conventionalcommits.org/).
-      - E.g. "feat(vector): Regenerate CHANGELOG"
-   - Submit a PR with the changes.
-   - Notes:
-     - This pulls the current `vector` chart version and uses `git-cliff` to update
-       the [CHANGELOG.md](CHANGELOG.md). Run this to generate the final commit merged into
-       `develop` before merging `develop` into `master`.
-     - This script requires [`yq`](https://github.com/mikefarah/yq) and
-       [`git-cliff`](https://github.com/orhun/git-cliff) to be installed.
+2. Run `.github/release-changelog.sh` to regenerate the CHANGELOG.
+  - Commit: `feat(vector): Regenerate CHANGELOG for <version>`
 
-3. To kick off the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml):
- ```
-   git switch master
-   git pull
+3. Submit both commits as a single PR to `develop` and merge it.
+
+4. Merge `develop` into `master` to trigger the release workflow:
+   ```shell
+   git switch master && git pull
    git merge develop
    git push
-```
+   ```
+
+5. Bump the chart minor version in `charts/vector/Chart.yaml`, run `helm-docs`, and open a PR to `develop`.
+
 </details>
