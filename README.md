@@ -5,9 +5,11 @@ Official Helm charts for Vector:
 
 # How to use the Vector Helm Repository
 
-You need to add this repository to your Helm repositories:
+You can add this repository to your Helm repositories:
 
 ```shell
 helm repo add vector https://helm.vector.dev
 helm repo update
 ```
+
+Or use the chart directly via the `OCI` `oci://ghcr.io/vectordotdev/helm-charts/vector`
