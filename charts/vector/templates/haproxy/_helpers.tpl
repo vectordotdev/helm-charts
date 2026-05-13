@@ -16,7 +16,7 @@ Build a valid image reference from available fields:
 */}}
 {{- define "haproxy.image" -}}
 {{- $repo   := .Values.haproxy.image.repository | default "haproxytech/haproxy-alpine" -}}
-{{- $tagRaw := .Values.haproxy.image.tag -}}
+{{- $tagRaw := .Values.haproxy.image.tag | default "" -}}
 {{- $shaRaw := (coalesce .Values.haproxy.image.sha .Values.haproxy.image.digest) | default "" -}}
 {{- $tag    := trim $tagRaw -}}
 
