@@ -3178,7 +3178,7 @@ entries:
       repository: https://helm.vector.dev
       version: ~0.1.0
     deprecated: true
-    description: A Helm chart to collect Kubernetes logs with Vector
+    description: '[DEPRECATED] A Helm chart to collect Kubernetes logs with Vector'
     digest: ec764a9c6a18b7c943fc25f94fe08d33ee730f273a6c32f104681eabb7e99c0f
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
@@ -3656,7 +3656,7 @@ entries:
       repository: https://helm.vector.dev
       version: ~0.1.0
     deprecated: true
-    description: A Helm chart to aggregate data with Vector
+    description: '[DEPRECATED] A Helm chart to aggregate data with Vector'
     digest: aa087200a2c3f28acce02fe478478079eef5bbd327a3acab98c9c0291b3a84cf
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
@@ -3919,7 +3919,7 @@ entries:
   - apiVersion: v2
     created: "2022-02-11T20:40:35.582076713Z"
     deprecated: true
-    description: Shared dependencies of Vector Helm charts
+    description: '[DEPRECATED] Shared dependencies of Vector Helm charts'
     digest: ec2c4022c2b0bc9aec430b975d0e64b667052a85ba19cce963dd49863547ef85
     home: https://vector.dev/
     icon: https://vector.dev/press/vector-icon.svg
