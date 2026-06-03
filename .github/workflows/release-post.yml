@@ -5,6 +5,11 @@ on:
     types: [closed]
     branches: [develop]
   workflow_dispatch:
+    inputs:
+      release_ref:
+        description: 'Git ref (branch or commit SHA) to sync to master, e.g. release-0.56.0'
+        required: true
+        type: string
 
 jobs:
   post-release:
@@ -26,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: develop
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || 'develop' }}
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
