@@ -63,6 +63,10 @@ spec:
 {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
   - metadata:
       name: data
+      {{- with .Values.persistence.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       accessModes: {{ .Values.persistence.accessModes }}
       {{- if .Values.persistence.storageClassName }}
