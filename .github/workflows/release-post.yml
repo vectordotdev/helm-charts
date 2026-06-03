@@ -4,11 +4,12 @@ on:
   pull_request:
     types: [closed]
     branches: [develop]
+  workflow_dispatch:
 
 jobs:
   post-release:
-    # Only run when a release-* branch is merged into develop
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-')
+    # Only run when a release-* branch is merged into develop, or manually triggered
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -41,11 +42,14 @@ jobs:
 
       - name: Merge develop into master
         run: |
-          git fetch origin master
-          git switch master
-          git pull
-          git merge develop
-          git push origin master
+          PR_URL=$(gh pr create \
+            --title "chore(releasing): Merge develop into master" \
+            --body "Post release: sync master with the latest release changes from develop." \
+            --base master \
+            --head develop)
+          gh pr merge "$PR_URL" --auto --squash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Read and bump chart version
         id: version
