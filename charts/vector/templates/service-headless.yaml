@@ -11,7 +11,7 @@ metadata:
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
-  {{- with .Values.service.annotations }}
+  {{- with .Values.serviceHeadless.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
