@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.55.0] - 2026-06-03
+
+### Releasing
+
+#### Features
+
+- Replace release.sh with GitHub Actions workflows (#546) ([c5d9c19](https://github.com/vectordotdev/helm-charts/commit/c5d9c1910ec1dcc5e05ef8f7e74e53128c4f28d3))
+- Lockstep chart version with Vector version (#561) ([f2c7ef2](https://github.com/vectordotdev/helm-charts/commit/f2c7ef276df20929b42f05d79b888cdef4d68760))
+
+### Vector
+
+#### Features
+
+- Add support for custom annotations on sts pvc (#552) ([ed76b0d](https://github.com/vectordotdev/helm-charts/commit/ed76b0d036b16aa90f5bc556db91a5ac7d8ed5d1))
+- Bump Vector to 0.56.0 and update Helm docs ([8cfd192](https://github.com/vectordotdev/helm-charts/commit/8cfd1922b3e46a07dddf108a1ab9387475e9a9f2))
+
 ## [vector-0.52.0] - 2026-04-22
 
 ### Releasing
