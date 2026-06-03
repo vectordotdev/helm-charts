@@ -42,11 +42,15 @@ jobs:
 
       - name: Merge develop into master
         run: |
+          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          SYNC_BRANCH="release-sync/${CHART_VERSION}"
+          git checkout -b "$SYNC_BRANCH"
+          git push origin "$SYNC_BRANCH"
           PR_URL=$(gh pr create \
-            --title "chore(releasing): Merge develop into master" \
-            --body "Post release: sync master with the latest release changes from develop." \
+            --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
+            --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
             --base master \
-            --head develop)
+            --head "$SYNC_BRANCH")
           gh pr merge "$PR_URL" --auto --squash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
