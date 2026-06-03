@@ -4,11 +4,17 @@ on:
   pull_request:
     types: [closed]
     branches: [develop]
+  workflow_dispatch:
+    inputs:
+      release_ref:
+        description: 'Git ref (branch or commit SHA) to sync to master, e.g. release-0.56.0'
+        required: true
+        type: string
 
 jobs:
   post-release:
-    # Only run when a release-* branch is merged into develop
-    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-')
+    # Only run when a release-* branch is merged into develop, or manually triggered
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: develop
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || 'develop' }}
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
@@ -41,11 +47,18 @@ jobs:
 
       - name: Merge develop into master
         run: |
-          git fetch origin master
-          git switch master
-          git pull
-          git merge develop
-          git push origin master
+          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          SYNC_BRANCH="release-sync/${CHART_VERSION}"
+          git checkout -b "$SYNC_BRANCH"
+          git push origin "$SYNC_BRANCH"
+          PR_URL=$(gh pr create \
+            --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
+            --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
+            --base master \
+            --head "$SYNC_BRANCH")
+          gh pr merge "$PR_URL" --auto --merge
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Read and bump chart version
         id: version
