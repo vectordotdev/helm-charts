@@ -13,7 +13,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 #### Features
 
-- Replace release.sh with GitHub Actions workflows (#546) ([c5d9c19](https://github.com/vectordotdev/helm-charts/commit/c5d9c1910ec1dcc5e05ef8f7e74e53128c4f28d3))
 - Lockstep chart version with Vector version (#561) ([f2c7ef2](https://github.com/vectordotdev/helm-charts/commit/f2c7ef276df20929b42f05d79b888cdef4d68760))
 
 ### Vector
