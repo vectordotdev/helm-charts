@@ -51,7 +51,7 @@ jobs:
             --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
             --base master \
             --head "$SYNC_BRANCH")
-          gh pr merge "$PR_URL" --auto --squash
+          gh pr merge "$PR_URL" --auto --merge
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
