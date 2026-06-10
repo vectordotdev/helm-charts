@@ -33,7 +33,7 @@ spec:
   trafficDistribution: {{ .Values.service.trafficDistribution }}
 {{- end }}
   ports:
-{{- if or .Values.service.ports .Values.existingConfigMaps }}
+{{- if .Values.service.ports }}
   {{- toYaml .Values.service.ports | nindent 4 }}
 {{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}
