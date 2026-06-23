@@ -56,10 +56,8 @@ containers:
         value: {{ .Values.configSidecar.watchMethod }}
       - name: LABEL
         value: "{{ .Values.configSidecar.label }}"
-      {{- with .Values.configSidecar.labelValue }}
       - name: LABEL_VALUE
-        value: {{ quote . }}
-      {{- end }}
+        value: {{ .Values.configSidecar.labelValue | default .Release.Name }}
       {{- with .Values.configSidecar.logLevel }}
       - name: LOG_LEVEL
         value: "{{ . }}"
@@ -95,8 +93,22 @@ containers:
   {{- if not (has "--allow-empty-config" $args) }}
     {{ $args = append $args "--allow-empty-config" }}
   {{- end }}
-  {{- if not (has "--config-dir" $args) }}
-    {{ $args = concat $args (list "--config-dir" "/etc/vector/")  }}
+  {{- $hasConfigDir := false }}
+  {{- range $args }}
+    {{- if or (eq . "--config-dir") (hasPrefix "--config-dir=" .) }}
+      {{- $hasConfigDir = true }}
+      {{- if $.Values.configSidecar.enabled }}
+        {{- if and (ne . "--config-dir") (ne . "--config-dir=/etc/vector/") }}
+          {{- $msg := "When configSidecar is enabled, args must not contain --config-dir pointing outside /etc/vector/. " }}
+          {{- $msg = printf "%sThe sidecar is hardcoded to write to /etc/vector/ and Vector must watch the same directory. " $msg }}
+          {{- $msg = printf "%sRemove --config-dir from args or disable configSidecar." $msg }}
+          {{- fail $msg }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if not $hasConfigDir }}
+    {{ $args = concat $args (list "--config-dir" "/etc/vector/") }}
   {{- end }}
 {{- end }}
 {{- if $.Values.configSidecar.enabled }}

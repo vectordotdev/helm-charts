@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "vector.labels" . | nindent 4 }}
     {{- if .Values.configSidecar.enabled}}
-    {{ .Values.configSidecar.label }}: {{ quote .Values.configSidecar.labelValue }}
+    {{ .Values.configSidecar.label }}: {{ quote (.Values.configSidecar.labelValue | default .Release.Name) }}
     {{- end }}
 data:
   {{- if .Values.customConfig }}

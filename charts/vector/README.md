@@ -149,17 +149,17 @@ helm install <RELEASE_NAME> \
 | autoscaling.targetMemoryUtilizationPercentage | int | `nil` | Target memory utilization for Vector's HPA. |
 | command | list | `[]` | Override Vector's default command. |
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
-| configSidecar | object | `{"enabled":false,"ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"true","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":true,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
+| configSidecar | object | `{"enabled":false,"ignoreAlreadyProcessed":false,"image":{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.4"},"imagePullPolicy":"IfNotPresent","label":"vector-config","labelValue":"","logLevel":"INFO","rbac":{"create":true},"uniqueFilenames":true,"watchMethod":"WATCH"}` | Sidecar container collects the configmaps with specified label and stores the included files into the respective folders. If existingConfigMaps parameter is used and configSidecar is enabled, ensure that the configmaps are marked with the appropriate label. |
 | configSidecar.enabled | bool | `false` | If true, create and use a sidecar container to manage vector configuration. |
 | configSidecar.ignoreAlreadyProcessed | bool | `false` | If true, already processed ConfigMaps are ignored on subsequent runs. |
-| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.1"}` | Define the sidecar image to use. |
+| configSidecar.image | object | `{"registry":"quay.io","repository":"kiwigrid/k8s-sidecar","sha":"","tag":"2.7.4"}` | Define the sidecar image to use. |
 | configSidecar.image.registry | string | `"quay.io"` | Override default registry for the sidecar image. |
 | configSidecar.image.repository | string | `"kiwigrid/k8s-sidecar"` | Override default repository and name for the sidecar image. |
 | configSidecar.image.sha | string | `""` | The SHA to use for the sidecar image. |
-| configSidecar.image.tag | string | `"2.7.1"` | The tag to use for the sidecar image. |
+| configSidecar.image.tag | string | `"2.7.4"` | The tag to use for the sidecar image. |
 | configSidecar.imagePullPolicy | string | `"IfNotPresent"` | sidecar image pull policy. |
 | configSidecar.label | string | `"vector-config"` | Label that the configmaps have to be marked with to be collected by the sidecar. |
-| configSidecar.labelValue | string | `"true"` | Value of the label that the configmaps are set to. |
+| configSidecar.labelValue | string | `""` | Value of the label that the configmaps are set to. Defaults to release name. |
 | configSidecar.logLevel | string | `"INFO"` | Log level for the sidecar container. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL. |
 | configSidecar.rbac | object | `{"create":true}` | RBAC settings for config sidecar |
 | configSidecar.rbac.create | bool | `true` | Create Role and RoleBinding for config sidecar |
