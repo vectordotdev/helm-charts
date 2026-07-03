@@ -57,7 +57,7 @@ containers:
       - name: LABEL
         value: "{{ .Values.configSidecar.label }}"
       - name: LABEL_VALUE
-        value: {{ .Values.configSidecar.labelValue | default .Release.Name }}
+        value: {{ .Values.configSidecar.labelValue | default .Release.Name | quote }}
       {{- with .Values.configSidecar.logLevel }}
       - name: LOG_LEVEL
         value: "{{ . }}"
