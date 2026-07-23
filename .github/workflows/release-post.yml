@@ -12,7 +12,7 @@ on:
         type: string
 
 jobs:
-  post-release:
+  sync-to-master:
     # Only run when a release-* branch is merged into develop, or manually triggered
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
     runs-on: ubuntu-latest
@@ -40,30 +40,77 @@ jobs:
           git config user.name "vectordotdev-bot[bot]"
           git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
 
+      - name: Merge develop into master
+        run: |
+          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          [[ "$CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "ERROR: Invalid CHART_VERSION: '$CHART_VERSION'"; exit 1; }
+          SYNC_BRANCH="release-sync/${CHART_VERSION}"
+          git checkout -b "$SYNC_BRANCH"
+          git push origin "$SYNC_BRANCH"
+          EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all --json url,state,autoMergeRequest -q '.[0]')
+          PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+          PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+          PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+          if [ "$PR_STATE" = "MERGED" ]; then
+            echo "Sync PR already merged, no action taken: $PR_URL"
+          elif [ "$PR_STATE" = "CLOSED" ]; then
+            echo "ERROR: Sync PR was closed without merging: $PR_URL"; exit 1
+          else
+            if [ -z "$PR_URL" ]; then
+              PR_URL=$(gh pr create \
+                --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
+                --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
+                --base master \
+                --head "$SYNC_BRANCH")
+            fi
+            if [ -z "$PR_AUTO_MERGE" ]; then
+              gh pr merge "$PR_URL" --auto --merge
+            else
+              echo "Auto-merge already enabled, no action taken: $PR_URL"
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+  bump-version:
+    needs: [sync-to-master]
+    # Only run when a release-* branch is merged into develop, or manually triggered
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "vectordotdev-bot[bot]"
+          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+
       - name: Install helm-docs
         uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
         with:
           version: 1.11.0
 
-      - name: Merge develop into master
-        run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
-          SYNC_BRANCH="release-sync/${CHART_VERSION}"
-          git checkout -b "$SYNC_BRANCH"
-          git push origin "$SYNC_BRANCH"
-          PR_URL=$(gh pr create \
-            --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
-            --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
-            --base master \
-            --head "$SYNC_BRANCH")
-          gh pr merge "$PR_URL" --auto --merge
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Read and bump chart version
         id: version
         run: |
           CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          [[ "$CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "ERROR: Invalid CHART_VERSION: '$CHART_VERSION'"; exit 1; }
           MAJOR=$(echo "$CHART_VERSION" | cut -d. -f1)
           MINOR=$(echo "$CHART_VERSION" | cut -d. -f2)
           NEW_VERSION="${MAJOR}.$((MINOR + 1)).0"
@@ -72,13 +119,14 @@ jobs:
 
       - name: Create version bump branch
         run: |
-          git switch develop
           git checkout -b "bump-chart-version-${{ steps.version.outputs.next }}"
 
       - name: Bump chart version
         run: |
-          sed -i 's/version: "${{ steps.version.outputs.current }}"/version: "${{ steps.version.outputs.next }}"/' \
-            charts/vector/Chart.yaml
+          CURRENT="${{ steps.version.outputs.current }}"
+          NEXT="${{ steps.version.outputs.next }}"
+          ESCAPED_CURRENT=$(printf '%s' "$CURRENT" | sed 's/\./\\./g')
+          sed -i "s/version: \"${ESCAPED_CURRENT}\"/version: \"${NEXT}\"/" charts/vector/Chart.yaml
 
       - name: Update Helm docs
         run: helm-docs
@@ -87,15 +135,19 @@ jobs:
         run: |
           git add .
           git commit -m "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}"
-          git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}"
+          git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}" --force-with-lease
 
       - name: Create and auto-merge PR
         run: |
-          gh pr create \
-            --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
-            --body "Post release version bump." \
-            --base develop \
-            --head "bump-chart-version-${{ steps.version.outputs.next }}"
-          gh pr merge "bump-chart-version-${{ steps.version.outputs.next }}" --auto --squash
+          BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
+          EXISTING_PR=$(gh pr list --head "$BUMP_BRANCH" --base develop --json url -q '.[0].url // empty')
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
+              --body "Post release version bump." \
+              --base develop \
+              --head "$BUMP_BRANCH"
+          fi
+          gh pr merge "$BUMP_BRANCH" --auto --squash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
