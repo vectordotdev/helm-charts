@@ -54,7 +54,7 @@ jobs:
           CHART_VERSION="${{ steps.read-version.outputs.chart_version }}"
           SYNC_BRANCH="release-sync/${CHART_VERSION}"
           git checkout -b "$SYNC_BRANCH"
-          git push origin "$SYNC_BRANCH"
+          git push origin "$SYNC_BRANCH" --force-with-lease
           EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all --json url,state,autoMergeRequest -q '.[0]')
           PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
           PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
@@ -147,14 +147,27 @@ jobs:
       - name: Create and auto-merge PR
         run: |
           BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
-          EXISTING_PR=$(gh pr list --head "$BUMP_BRANCH" --base develop --json url -q '.[0].url // empty')
-          if [ -z "$EXISTING_PR" ]; then
-            gh pr create \
-              --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
-              --body "Post release version bump." \
-              --base develop \
-              --head "$BUMP_BRANCH"
+          EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --json url,state,autoMergeRequest -q '.[0]')
+          PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+          PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+          PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+          if [ "$PR_STATE" = "MERGED" ]; then
+            echo "Bump PR already merged, no action taken: $PR_URL"
+          elif [ "$PR_STATE" = "CLOSED" ]; then
+            echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1
+          else
+            if [ -z "$PR_URL" ]; then
+              PR_URL=$(gh pr create \
+                --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
+                --body "Post release version bump." \
+                --base develop \
+                --head "$BUMP_BRANCH")
+            fi
+            if [ -z "$PR_AUTO_MERGE" ]; then
+              gh pr merge "$BUMP_BRANCH" --auto --squash
+            else
+              echo "Auto-merge already enabled, no action taken: $PR_URL"
+            fi
           fi
-          gh pr merge "$BUMP_BRANCH" --auto --squash
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
