@@ -151,13 +151,36 @@ jobs:
       - name: Create and auto-merge PR
         run: |
           BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
-          gh pr create \
+          if ! gh pr create \
             --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
             --body "Post release version bump." \
             --base develop \
-            --head "$BUMP_BRANCH" \
-            || echo "Bump PR already exists, skipping creation"
-          gh pr merge "$BUMP_BRANCH" --auto --squash \
-            || echo "Auto-merge already set or PR in terminal state, skipping"
+            --head "$BUMP_BRANCH"; then
+            EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
+              --json url,state -q '.[0]')
+            PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+            PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+            case "$PR_STATE" in
+              OPEN)   echo "Bump PR already exists, skipping creation: $PR_URL" ;;
+              MERGED) echo "Bump PR already merged, no further action needed: $PR_URL"; exit 0 ;;
+              CLOSED) echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1 ;;
+              *)      echo "ERROR: Failed to create bump PR"; exit 1 ;;
+            esac
+          fi
+          if ! gh pr merge "$BUMP_BRANCH" --auto --squash; then
+            EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
+              --json url,state,autoMergeRequest -q '.[0]')
+            PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+            PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+            case "$PR_STATE" in
+              MERGED) echo "Bump PR already merged, no action taken" ;;
+              CLOSED) echo "ERROR: Bump PR was closed without merging"; exit 1 ;;
+              OPEN)
+                [ -n "$PR_AUTO_MERGE" ] \
+                  && echo "Auto-merge already enabled, no action taken" \
+                  || { echo "ERROR: gh pr merge failed on open PR"; exit 1; } ;;
+              *) echo "ERROR: gh pr merge failed (state: ${PR_STATE:-unknown})"; exit 1 ;;
+            esac
+          fi
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
