@@ -147,27 +147,13 @@ jobs:
       - name: Create and auto-merge PR
         run: |
           BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
-          EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --json url,state,autoMergeRequest -q '.[0]')
-          PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
-          PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
-          PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
-          if [ "$PR_STATE" = "MERGED" ]; then
-            echo "Bump PR already merged, no action taken: $PR_URL"
-          elif [ "$PR_STATE" = "CLOSED" ]; then
-            echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1
-          else
-            if [ -z "$PR_URL" ]; then
-              PR_URL=$(gh pr create \
-                --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
-                --body "Post release version bump." \
-                --base develop \
-                --head "$BUMP_BRANCH")
-            fi
-            if [ -z "$PR_AUTO_MERGE" ]; then
-              gh pr merge "$BUMP_BRANCH" --auto --squash
-            else
-              echo "Auto-merge already enabled, no action taken: $PR_URL"
-            fi
-          fi
+          gh pr create \
+            --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
+            --body "Post release version bump." \
+            --base develop \
+            --head "$BUMP_BRANCH" \
+            || echo "Bump PR already exists, skipping creation"
+          gh pr merge "$BUMP_BRANCH" --auto --squash \
+            || echo "Auto-merge already set or PR in terminal state, skipping"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
