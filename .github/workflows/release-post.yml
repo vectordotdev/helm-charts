@@ -19,6 +19,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      chart_version: ${{ steps.read-version.outputs.chart_version }}
 
     steps:
       - name: Generate App token
@@ -40,10 +42,16 @@ jobs:
           git config user.name "vectordotdev-bot[bot]"
           git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
 
-      - name: Merge develop into master
+      - name: Read chart version
+        id: read-version
         run: |
           CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
           [[ "$CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "ERROR: Invalid CHART_VERSION: '$CHART_VERSION'"; exit 1; }
+          echo "chart_version=$CHART_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Merge develop into master
+        run: |
+          CHART_VERSION="${{ steps.read-version.outputs.chart_version }}"
           SYNC_BRANCH="release-sync/${CHART_VERSION}"
           git checkout -b "$SYNC_BRANCH"
           git push origin "$SYNC_BRANCH"
@@ -109,8 +117,7 @@ jobs:
       - name: Read and bump chart version
         id: version
         run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
-          [[ "$CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "ERROR: Invalid CHART_VERSION: '$CHART_VERSION'"; exit 1; }
+          CHART_VERSION="${{ needs.sync-to-master.outputs.chart_version }}"
           MAJOR=$(echo "$CHART_VERSION" | cut -d. -f1)
           MINOR=$(echo "$CHART_VERSION" | cut -d. -f2)
           NEW_VERSION="${MAJOR}.$((MINOR + 1)).0"
