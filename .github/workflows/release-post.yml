@@ -59,7 +59,9 @@ jobs:
           EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all \
             --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
             | jq --arg branch "$SYNC_BRANCH" --arg owner "$REPO_OWNER" \
-              '[.[] | select(.headRefName == $branch and .headRepositoryOwner.login == $owner)] | .[0]')
+              'map(select(.headRefName == $branch and .headRepositoryOwner.login == $owner))
+              | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+              | .[0]')
           PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
           PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
           PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
@@ -76,7 +78,26 @@ jobs:
                 --head "$SYNC_BRANCH")
             fi
             if [ -z "$PR_AUTO_MERGE" ]; then
-              gh pr merge "$PR_URL" --auto --merge
+              if ! gh pr merge "$PR_URL" --auto --merge; then
+                RECHECK=$(gh pr list --head "$SYNC_BRANCH" --base master --state all \
+                  --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+                  | jq --arg branch "$SYNC_BRANCH" --arg owner "$REPO_OWNER" \
+                    'map(select(.headRefName == $branch and .headRepositoryOwner.login == $owner))
+                    | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+                    | .[0]')
+                RECHECK_STATE=$(echo "$RECHECK" | jq -r '.state // empty')
+                RECHECK_AUTO_MERGE=$(echo "$RECHECK" | jq -r '.autoMergeRequest // empty')
+                RECHECK_URL=$(echo "$RECHECK" | jq -r '.url // empty')
+                case "$RECHECK_STATE" in
+                  MERGED) echo "Sync PR already merged, no action taken: $RECHECK_URL" ;;
+                  CLOSED) echo "ERROR: Sync PR was closed without merging: $RECHECK_URL"; exit 1 ;;
+                  OPEN)
+                    [ -n "$RECHECK_AUTO_MERGE" ] \
+                      && echo "Auto-merge already enabled, no action taken: $RECHECK_URL" \
+                      || { echo "ERROR: gh pr merge failed on open sync PR: $RECHECK_URL"; exit 1; } ;;
+                  *) echo "ERROR: gh pr merge failed (no matching sync PR found)"; exit 1 ;;
+                esac
+              fi
             else
               echo "Auto-merge already enabled, no action taken: $PR_URL"
             fi
@@ -86,8 +107,6 @@ jobs:
 
   bump-version:
     needs: [sync-to-master]
-    # Only run when a release-* branch is merged into develop, or manually triggered
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
