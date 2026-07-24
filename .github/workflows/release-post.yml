@@ -145,6 +145,14 @@ jobs:
       - name: Commit and push
         run: |
           git add .
+          if git diff --cached --quiet; then
+            ACTUAL=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+            if [ "$ACTUAL" = "${{ steps.version.outputs.next }}" ]; then
+              echo "Chart version already at ${{ steps.version.outputs.next }} — bump already applied, nothing to commit"
+              exit 0
+            fi
+            echo "ERROR: No staged changes but chart version is '$ACTUAL' (expected '${{ steps.version.outputs.next }}')"; exit 1
+          fi
           git commit -m "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}"
           git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}" --force-with-lease
 
@@ -152,6 +160,13 @@ jobs:
         run: |
           BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
           REPO_OWNER=$(gh repo view --json owner -q '.owner.login')
+          MERGED_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop --state merged \
+            --json url,headRefName,headRepositoryOwner \
+            | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+              'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
+          if [ -n "$MERGED_URL" ]; then
+            echo "Bump PR already merged, no action taken: $MERGED_URL"; exit 0
+          fi
           if ! gh pr create \
             --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
             --body "Post release version bump." \
@@ -164,15 +179,7 @@ jobs:
             if [ -n "$OPEN_URL" ]; then
               echo "Bump PR already exists, skipping creation: $OPEN_URL"
             else
-              MERGED_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop --state merged \
-                --json url,headRefName,headRepositoryOwner \
-                | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
-                  'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
-              if [ -n "$MERGED_URL" ]; then
-                echo "Bump PR already merged, no further action needed: $MERGED_URL"; exit 0
-              else
-                echo "ERROR: Failed to create bump PR"; exit 1
-              fi
+              echo "ERROR: Failed to create bump PR"; exit 1
             fi
           fi
           if ! gh pr merge "$BUMP_BRANCH" --auto --squash; then
