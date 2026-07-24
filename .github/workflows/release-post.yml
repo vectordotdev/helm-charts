@@ -151,35 +151,48 @@ jobs:
       - name: Create and auto-merge PR
         run: |
           BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
+          REPO_OWNER=$(gh repo view --json owner -q '.owner.login')
           if ! gh pr create \
             --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
             --body "Post release version bump." \
             --base develop \
             --head "$BUMP_BRANCH"; then
-            EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
-              --json url,state -q '.[0]')
-            PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
-            PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
-            case "$PR_STATE" in
-              OPEN)   echo "Bump PR already exists, skipping creation: $PR_URL" ;;
-              MERGED) echo "Bump PR already merged, no further action needed: $PR_URL"; exit 0 ;;
-              CLOSED) echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1 ;;
-              *)      echo "ERROR: Failed to create bump PR"; exit 1 ;;
-            esac
+            OPEN_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop \
+              --json url,headRefName,headRepositoryOwner \
+              | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
+            if [ -n "$OPEN_URL" ]; then
+              echo "Bump PR already exists, skipping creation: $OPEN_URL"
+            else
+              MERGED_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop --state merged \
+                --json url,headRefName,headRepositoryOwner \
+                | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+                  'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
+              if [ -n "$MERGED_URL" ]; then
+                echo "Bump PR already merged, no further action needed: $MERGED_URL"; exit 0
+              else
+                echo "ERROR: Failed to create bump PR"; exit 1
+              fi
+            fi
           fi
           if ! gh pr merge "$BUMP_BRANCH" --auto --squash; then
             EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
-              --json url,state,autoMergeRequest -q '.[0]')
+              --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+              | jq --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o))
+                | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+                | .[0]')
             PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
             PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+            PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
             case "$PR_STATE" in
-              MERGED) echo "Bump PR already merged, no action taken" ;;
-              CLOSED) echo "ERROR: Bump PR was closed without merging"; exit 1 ;;
+              MERGED) echo "Bump PR already merged, no action taken: $PR_URL" ;;
+              CLOSED) echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1 ;;
               OPEN)
                 [ -n "$PR_AUTO_MERGE" ] \
-                  && echo "Auto-merge already enabled, no action taken" \
-                  || { echo "ERROR: gh pr merge failed on open PR"; exit 1; } ;;
-              *) echo "ERROR: gh pr merge failed (state: ${PR_STATE:-unknown})"; exit 1 ;;
+                  && echo "Auto-merge already enabled, no action taken: $PR_URL" \
+                  || { echo "ERROR: gh pr merge failed on open PR: $PR_URL"; exit 1; } ;;
+              *) echo "ERROR: gh pr merge failed (no matching PR found)"; exit 1 ;;
             esac
           fi
         env:
