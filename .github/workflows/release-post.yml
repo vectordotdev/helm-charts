@@ -55,7 +55,11 @@ jobs:
           SYNC_BRANCH="release-sync/${CHART_VERSION}"
           git checkout -b "$SYNC_BRANCH"
           git push origin "$SYNC_BRANCH" --force-with-lease
-          EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all --json url,state,autoMergeRequest -q '.[0]')
+          REPO_OWNER=$(gh repo view --json owner -q '.owner.login')
+          EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all \
+            --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+            | jq --arg branch "$SYNC_BRANCH" --arg owner "$REPO_OWNER" \
+              '[.[] | select(.headRefName == $branch and .headRepositoryOwner.login == $owner)] | .[0]')
           PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
           PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
           PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
