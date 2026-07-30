@@ -380,6 +380,14 @@ configSidecar:
     sha: ""
   # configSidecar.imagePullPolicy -- sidecar image pull policy.
   imagePullPolicy: IfNotPresent
+  # configSidecar.resources -- Set configSidecar resource requests and limits.
+  resources: {}
+    # requests:
+    #   cpu: 200m
+    #   memory: 256Mi
+    # limits:
+    #   cpu: 200m
+    #   memory: 256Mi
   # configSidecar.label -- Label that the configmaps have to be marked with to be collected by the sidecar.
   label: "vector-config"
   # configSidecar.labelValue -- Value of the label that the configmaps are set to. Defaults to release name.

@@ -90,8 +90,9 @@ spec:
   {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}
+{{- if not .Values.emptyConfig }}
   ports:
-{{- if or .Values.service.ports (and .Values.existingConfigMaps (not .Values.emptyConfig) (not .Values.configSidecar.enabled)) }}
+{{- if or .Values.service.ports (and .Values.existingConfigMaps (not .Values.configSidecar.enabled)) }}
   {{- toYaml .Values.service.ports | nindent 4 }}
 {{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}
@@ -120,7 +121,8 @@ spec:
     - name: prom-exporter
       port: 9090
       protocol: TCP
-  {{- end }}
+{{- end }}
+{{- end }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP

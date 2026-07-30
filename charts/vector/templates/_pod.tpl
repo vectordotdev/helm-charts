@@ -70,6 +70,10 @@ containers:
       - name: UNIQUE_FILENAMES
         value: "true"
       {{- end }}
+    {{- with .Values.configSidecar.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     volumeMounts:
       - name: config
         mountPath: "/etc/vector/"
