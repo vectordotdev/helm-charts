@@ -3,6 +3,9 @@ Defines the PodSpec for Vector.
 */}}
 {{- define "vector.pod" -}}
 serviceAccountName: {{ include "vector.serviceAccountName" . }}
+{{- if or .Values.serviceAccount.automountToken .Values.configSidecar.enabled }}
+automountServiceAccountToken: true
+{{- end }}
 {{- with .Values.podHostNetwork }}
 hostNetwork: {{ . }}
 {{- end }}
@@ -36,7 +39,7 @@ initContainers:
 {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 containers:
-{{- if .Values.configSidecar.enabled }}
+{{- if .Values.configSidecar.enabled | default false }}
   - name: config-sidecar
     {{- $sidecarSha := .Values.configSidecar.image.sha | trimPrefix "sha256:" | default "" -}}
     {{- if and .Values.configSidecar.image.tag $sidecarSha }}
@@ -72,6 +75,10 @@ containers:
       {{- end }}
     {{- with .Values.configSidecar.resources }}
     resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.configSidecar.securityContext }}
+    securityContext:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     volumeMounts:

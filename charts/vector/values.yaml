@@ -400,6 +400,9 @@ configSidecar:
   logLevel: "INFO"
   # configSidecar.uniqueFilenames -- If true, the sidecar will ensure that filenames are unique where duplicate data keys exist.
   uniqueFilenames: true
+  # configSidecar.securityContext -- Security context for the config sidecar container.
+  securityContext: {}
+
   # configSidecar.rbac -- RBAC settings for config sidecar
   rbac:
     # configSidecar.rbac.create -- Create Role and RoleBinding for config sidecar

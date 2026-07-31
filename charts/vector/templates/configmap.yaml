@@ -6,8 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "vector.labels" . | nindent 4 }}
-    {{- if .Values.configSidecar.enabled}}
-    {{ .Values.configSidecar.label }}: {{ .Values.configSidecar.labelValue | default .Release.Name | quote }}
+      {{- if .Values.configSidecar.enabled | default false}}
+      {{ .Values.configSidecar.label }}: {{ .Values.configSidecar.labelValue | default .Release.Name | quote }}
     {{- end }}
 data:
   {{- if .Values.customConfig }}
