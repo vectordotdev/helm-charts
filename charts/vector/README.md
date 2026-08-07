@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.51.0](https://img.shields.io/badge/Version-0.51.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.53.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.53.0--distroless--libc-informational?style=flat-square)
+![Version: 0.58.0](https://img.shields.io/badge/Version-0.58.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.57.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.57.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -15,7 +15,7 @@ helm repo update
 
 ## Requirements
 
-Kubernetes: `>=1.15.0-0`
+Kubernetes: `>=1.28.0-0`
 
 ## Quick start
 
@@ -106,6 +106,18 @@ customConfig:
           {{ print "{{ source_type }}" }}
 ```
 
+### API exposure and health probes
+
+When using chart-managed default configuration (without `customConfig` and `existingConfigMaps`),
+Vector's API listens on `0.0.0.0:8686`, and the chart applies a default readiness probe
+(`grpc` on port `8686`).
+
+If you use `customConfig`, ensure `api.enabled`/`api.address` and probe settings are aligned
+with your configuration.
+
+As this API can expose internal state, restrict reachability with Kubernetes controls such as
+`NetworkPolicy` and carefully scoped Service/Ingress exposure.
+
 ## All configuration options
 
 The following table lists the configurable parameters of the Vector chart and their default values. Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
@@ -137,6 +149,7 @@ helm install <RELEASE_NAME> \
 | commonLabels | object | `{}` | Add additional labels to all created resources. |
 | containerPorts | list | `[]` | Manually define Vector's containerPorts, overriding automated generation of containerPorts. |
 | customConfig | object | `{}` | Override Vector's default configs, if used **all** options need to be specified. This section supports using helm templates to populate dynamic values. See Vector's [configuration documentation](https://vector.dev/docs/reference/configuration/) for all options. |
+| daemonSet.apiVersion | string | `""` | Override the DaemonSet apiVersion. Valid for the "Agent" role. |
 | dataDir | string | `""` | Specify the path for Vector's data, only used when existingConfigMaps are used. |
 | defaultVolumeMounts | list | See `values.yaml` | Default volume mounts. Corresponds to `volumes`. |
 | defaultVolumes | list | See `values.yaml` | Default volumes that are mounted into pods. In most cases, these should not be changed. Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes. |
@@ -164,12 +177,13 @@ helm install <RELEASE_NAME> \
 | ingress.tls | list | `[]` | Configure TLS for the Ingress. |
 | initContainers | list | `[]` | Init Containers to be added to the Vector Pods. This also supports template content, which will eventually be converted to yaml. |
 | lifecycle | object | `{}` | Set lifecycle hooks for Vector containers. |
-| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| livenessProbe | object | `{}` | Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | logLevel | string | `"info"` |  |
 | minReadySeconds | int | `0` | Specify the minimum number of seconds a newly spun up pod should wait to pass healthchecks before it is considered available. |
 | nameOverride | string | `""` | Override the name of resources. |
 | nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for Vector Pods. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role. |
+| persistence.annotations | object | `{}` | Set annotations on the PersistentVolumeClaims created by the StatefulSet. |
 | persistence.enabled | bool | `false` | If true, create and use PersistentVolumeClaims. |
 | persistence.existingClaim | string | `""` | Name of an existing PersistentVolumeClaim to use. Valid for the "Aggregator" role. |
 | persistence.finalizers | list | `["kubernetes.io/pvc-protection"]` | Specifies the finalizers of PersistentVolumeClaims. Valid for the "Aggregator" role. |
@@ -202,13 +216,14 @@ helm install <RELEASE_NAME> \
 | psp.create | bool | `false` | If true, create a [PodSecurityPolicy](https://kubernetes.io/docs/concepts/security/pod-security-policy/) resource. PodSecurityPolicy is deprecated as of Kubernetes v1.21, and will be removed in v1.25. Intended for use with the "Agent" role. |
 | rbac.create | bool | `true` | If true, create and use RBAC resources. Only valid for the "Agent" role. |
 | rbac.extraRules | list | `[]` | List of additional Kubernetes RBAC rules to append to the ClusterRole. Rules defined here are appended after the chart's standard rules. Each item must follow the Kubernetes ClusterRole rule syntax.  Example: extraRules:   - apiGroups: [""]     resources: ["nodes/metrics", "nodes/stats"]     verbs: ["get"] |
-| readinessProbe | object | `{}` | Override default readiness probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. |
+| readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
 | role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
 | rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
 | rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
+| secrets.annotations | object | `{}` | Set annotations on Vector Secrets. |
 | secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values. **NOTE: Don't commit unencrypted secrets to git!** |
 | securityContext | object | `{}` | Specify securityContext on Vector containers. |
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
@@ -229,9 +244,11 @@ helm install <RELEASE_NAME> \
 | serviceHeadless.annotations | string | `nil` | Set annotations on Vector's Headless Service. |
 | serviceHeadless.enabled | bool | `true` | If true, create and provide a Headless Service resource for Vector. |
 | shareProcessNamespace | bool | `false` | Specify the [shareProcessNamespace](https://kubernetes.io/docs/tasks/configure-pod-container/share-process-namespace/) options for Vector Pods. |
+| startupProbe | object | `{}` | Override default startup probe settings. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
+| statefulSet.apiVersion | string | `""` | Override the StatefulSet apiVersion. Valid for the "Aggregator" role. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |
-| topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
+| topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles.  If no "labelSelector" is defined, Vector's selector labels will be used by default. |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods, this is also used for the DeploymentStrategy for the "Stateless-Aggregators". Valid options depend on the chosen role. |
 | workloadResourceAnnotations | object | `{}` | Set annotations on the Vector DaemonSet, Deployment or StatefulSet. |
 
