@@ -41,11 +41,7 @@ containers:
     securityContext:
 {{ toYaml . | indent 6 }}
 {{- end }}
-{{- if .Values.image.sha }}
-    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}@sha256:{{ .Values.image.sha }}"
-{{- else }}
-    image: "{{ .Values.image.repository }}:{{ include "vector.image.tag" . }}"
-{{- end }}
+    image: "{{ include "vector.image" . }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- with .Values.command }}
     command:
@@ -126,8 +122,17 @@ containers:
     livenessProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
-{{- with .Values.readinessProbe }}
+{{- if .Values.readinessProbe }}
     readinessProbe:
+      {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8686
+{{- end }}
+{{- with .Values.startupProbe }}
+    startupProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
 {{- with .Values.resources }}

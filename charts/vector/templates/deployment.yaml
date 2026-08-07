@@ -9,6 +9,9 @@ metadata:
   annotations:
     {{- toYaml .Values.workloadResourceAnnotations | nindent 4 }}
 spec:
+  {{- with .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
+  {{- end }}
   {{- if not (or .Values.autoscaling.enabled .Values.autoscaling.external) }}
   replicas: {{ .Values.replicas }}
   {{- end }}
