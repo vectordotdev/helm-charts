@@ -223,6 +223,7 @@ helm install <RELEASE_NAME> \
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
 | rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
 | rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
+| secrets.annotations | object | `{}` | Set annotations on Vector Secrets. |
 | secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values. **NOTE: Don't commit unencrypted secrets to git!** |
 | securityContext | object | `{}` | Specify securityContext on Vector containers. |
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
