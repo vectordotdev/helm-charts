@@ -3,6 +3,144 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.57.0] - 2026-07-14
+
+### Vector
+
+#### Features
+
+- Bump Vector to 0.57.0 and update Helm docs ([c50f225](https://github.com/vectordotdev/helm-charts/commit/c50f225afab20636f3d34f9dda91f3eb72f41d44))
+
+## [vector-0.56.0] - 2026-06-03
+
+### Releasing
+
+#### Bug Fixes
+
+- Bump develop chart version to 0.56.0 (#566) ([2456205](https://github.com/vectordotdev/helm-charts/commit/2456205027e414b36786b5b866e4f05d7767e6f9))
+
+#### Features
+
+- Lockstep chart version with Vector version (#561) ([f2c7ef2](https://github.com/vectordotdev/helm-charts/commit/f2c7ef276df20929b42f05d79b888cdef4d68760))
+
+### Vector
+
+#### Features
+
+- Add support for custom annotations on sts pvc (#552) ([ed76b0d](https://github.com/vectordotdev/helm-charts/commit/ed76b0d036b16aa90f5bc556db91a5ac7d8ed5d1))
+- Bump Vector to 0.56.0 and update Helm docs ([94dbe2d](https://github.com/vectordotdev/helm-charts/commit/94dbe2d48dc4dc4b375ada3c46522621955d73cc))
+
+## [vector-0.52.0] - 2026-04-22
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.55.0 and Helm docs (#558) ([6ce3699](https://github.com/vectordotdev/helm-charts/commit/6ce36995480f6dcafd81c162e4377f5e0a6035eb))
+
+### Vector
+
+#### Bug Fixes
+
+- Use haproxy podPriorityClassName in haproxy deployment (#538) ([889084a](https://github.com/vectordotdev/helm-charts/commit/889084aca571c176abb553f86ee600b739bf4289))
+- Set haproxy terminationGracePeriodSeconds on pod spec (#539) ([b261a43](https://github.com/vectordotdev/helm-charts/commit/b261a432e9fac7afbabf5ace5625eef7dbf63f14))
+- Add missing namespace to HPA and PDB templates (#537) ([40adbf7](https://github.com/vectordotdev/helm-charts/commit/40adbf7c21d895c9e217ef0f33073186c415cc49))
+
+#### Features
+
+- Add startupProbe option to pod template (#550) ([e3ce248](https://github.com/vectordotdev/helm-charts/commit/e3ce248883d3ddcde9c5bb4ea66bbfe61cdaefd1))
+- Default API bind and readiness for chart-managed config (#540) ([82773e7](https://github.com/vectordotdev/helm-charts/commit/82773e79041172ddeed13efe7ab679a79fb72fa7))
+
+## [vector-0.51.0] - 2026-03-10
+
+### Vector
+
+#### Features
+
+- Update Vector version to 0.54.0 and Helm docs (#541) ([50b5922](https://github.com/vectordotdev/helm-charts/commit/50b59229fb81044a4dcd5020cd7d53788375d2c2))
+
+## [vector-0.50.0] - 2026-01-27
+
+### Vector
+
+#### Features
+
+- Bump Vector to 0.53.0 and update Helm docs ([ebe4be6](https://github.com/vectordotdev/helm-charts/commit/ebe4be6421a9aaeadff0f0ab77ae2f29312af2f0))
+
+## [vector-0.49.0] - 2025-12-16
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.52.0 and Helm docs (#525) ([9474ee8](https://github.com/vectordotdev/helm-charts/commit/9474ee81b8f38debbc65df650d9a044d4d9b8804))
+
+## [vector-0.48.0] - 2025-11-13
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.51.1 and Helm docs (#518) ([354e8b1](https://github.com/vectordotdev/helm-charts/commit/354e8b137d18c66727aa89c056aecdaa71ada178))
+
+## [vector-0.47.0] - 2025-11-04
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.51.0 and Helm docs (#513) ([b1394e3](https://github.com/vectordotdev/helm-charts/commit/b1394e34c527e45c3a372be0f0212a46214f9344))
+
+## [vector-0.46.0] - 2025-09-23
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.50.0 and Helm docs (#498) ([02a7d06](https://github.com/vectordotdev/helm-charts/commit/02a7d069d4c90262971d24fa0c99118d25aa4e68))
+
+### Vector
+
+#### Features
+
+- Allow specifying additional ClusterRole rules (#495) ([23f60fe](https://github.com/vectordotdev/helm-charts/commit/23f60fec2332b20a301796c80bf7c5b49b383045))
+
+## [vector-0.45.0] - 2025-08-12
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.49.0 and Helm docs (#489) ([3c8c2d3](https://github.com/vectordotdev/helm-charts/commit/3c8c2d3918d086d0cae569c64283383b76ace45e))
+
+### Vector
+
+#### Features
+
+- Bump Vector to v0.49.0 ([9107539](https://github.com/vectordotdev/helm-charts/commit/9107539199a0970b65603220dad2c736d602fe94))
+
+## [vector-0.44.0] - 2025-06-30
+
+### Releasing
+
+#### Features
+
+- Update Vector version to 0.48.0 and Helm docs (#483) ([35b36a9](https://github.com/vectordotdev/helm-charts/commit/35b36a9610809b2d512403a69570fa4536c92d32))
+
+### Vector
+
+#### Features
+
+- Allow configuration of service `trafficDistribution` (#481) ([ae7b2f3](https://github.com/vectordotdev/helm-charts/commit/ae7b2f3a76b89e16c5db48216818531989c72cf3))
+
+## [vector-0.43.0] - 2025-05-20
+
+### Vector
+
+#### Features
+
+- Update Vector version to 0.47.0 and Helm docs (#478) ([fbb9d0c](https://github.com/vectordotdev/helm-charts/commit/fbb9d0cf8ba7c3b47337b1eb5fdf1ada7751c5c0))
+
 ## [vector-0.42.1] - 2025-04-15
 
 ### Vector

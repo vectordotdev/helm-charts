@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "haproxy.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
     {{- include "haproxy.labels" . | nindent 4 }}
 spec:
@@ -38,7 +39,8 @@ spec:
       serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.haproxy.podSecurityContext | nindent 8 }}
-      {{- with .Values.priorityClassName }}
+      terminationGracePeriodSeconds: {{ .Values.haproxy.terminationGracePeriodSeconds }}
+      {{- with .Values.haproxy.podPriorityClassName }}
       priorityClassName: {{ . }}
       {{- end }}
       {{- if .Values.haproxy.initContainers }}
