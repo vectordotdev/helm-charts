@@ -106,7 +106,7 @@ customConfig:
 
 ### API exposure and health probes
 
-When using chart-managed default configuration (without `customConfig` and `existingConfigMaps`),
+When using chart-managed default configuration (without `customConfig`, `existingConfigMaps` and `emptyConfig`),
 Vector's API listens on `0.0.0.0:8686`, and the chart applies a default readiness probe
 (`grpc` on port `8686`).
 

@@ -3,6 +3,9 @@ Defines the PodSpec for Vector.
 */}}
 {{- define "vector.pod" -}}
 serviceAccountName: {{ include "vector.serviceAccountName" . }}
+{{- if or .Values.serviceAccount.automountToken .Values.configSidecar.enabled }}
+automountServiceAccountToken: true
+{{- end }}
 {{- with .Values.podHostNetwork }}
 hostNetwork: {{ . }}
 {{- end }}
@@ -36,6 +39,52 @@ initContainers:
 {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 containers:
+{{- if .Values.configSidecar.enabled | default false }}
+  - name: config-sidecar
+    {{- $sidecarSha := .Values.configSidecar.image.sha | trimPrefix "sha256:" | default "" -}}
+    {{- if and .Values.configSidecar.image.tag $sidecarSha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag }}@sha256:{{ $sidecarSha }}"
+    {{- else if and (not .Values.configSidecar.image.tag) $sidecarSha }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}@sha256:{{ $sidecarSha }}"
+    {{- else }}
+    image: "{{ .Values.configSidecar.image.registry }}/{{ .Values.configSidecar.image.repository }}:{{ .Values.configSidecar.image.tag | default "latest" }}"
+    {{- end }}
+    imagePullPolicy: {{ .Values.configSidecar.imagePullPolicy }}
+    env:
+      {{- if .Values.configSidecar.ignoreAlreadyProcessed }}
+      - name: IGNORE_ALREADY_PROCESSED
+        value: "true"
+      {{- end }}
+      - name: METHOD
+        value: {{ .Values.configSidecar.watchMethod }}
+      - name: LABEL
+        value: "{{ .Values.configSidecar.label }}"
+      - name: LABEL_VALUE
+        value: {{ .Values.configSidecar.labelValue | default .Release.Name | quote }}
+      {{- with .Values.configSidecar.logLevel }}
+      - name: LOG_LEVEL
+        value: "{{ . }}"
+      {{- end }}
+      - name: FOLDER
+        value: "/etc/vector/"
+      - name: RESOURCE
+        value: "configmap"
+      {{- if .Values.configSidecar.uniqueFilenames }}
+      - name: UNIQUE_FILENAMES
+        value: "true"
+      {{- end }}
+    {{- with .Values.configSidecar.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .Values.configSidecar.securityContext }}
+    securityContext:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    volumeMounts:
+      - name: config
+        mountPath: "/etc/vector/"
+{{- end }}
   - name: vector
 {{- with .Values.securityContext }}
     securityContext:
@@ -47,9 +96,40 @@ containers:
     command:
     {{- toYaml . | nindent 6 }}
 {{- end }}
-{{- with .Values.args }}
+{{- $args := list }}
+{{- if .Values.args }}
+{{- $args = .Values.args }}
+{{- end }}
+{{- if or $.Values.emptyConfig $.Values.configSidecar.enabled }}
+  {{- if not (has "--allow-empty-config" $args) }}
+    {{ $args = append $args "--allow-empty-config" }}
+  {{- end }}
+  {{- $hasConfigDir := false }}
+  {{- range $args }}
+    {{- if or (eq . "--config-dir") (hasPrefix "--config-dir=" .) }}
+      {{- $hasConfigDir = true }}
+      {{- if $.Values.configSidecar.enabled }}
+        {{- if and (ne . "--config-dir") (ne . "--config-dir=/etc/vector/") }}
+          {{- $msg := "When configSidecar is enabled, args must not contain --config-dir pointing outside /etc/vector/. " }}
+          {{- $msg = printf "%sThe sidecar is hardcoded to write to /etc/vector/ and Vector must watch the same directory. " $msg }}
+          {{- $msg = printf "%sRemove --config-dir from args or disable configSidecar." $msg }}
+          {{- fail $msg }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if not $hasConfigDir }}
+    {{ $args = concat $args (list "--config-dir" "/etc/vector/") }}
+  {{- end }}
+{{- end }}
+{{- if $.Values.configSidecar.enabled }}
+  {{- if not (has "--watch-config" $args) }}
+    {{ $args = append $args "--watch-config"  }}
+  {{- end }}
+{{- end }}
+{{- if $args }}
     args:
-    {{- toYaml . | nindent 6 }}
+    {{- toYaml $args | nindent 6 }}
 {{- end }}
     env:
       - name: VECTOR_LOG
@@ -125,7 +205,7 @@ containers:
 {{- if .Values.readinessProbe }}
     readinessProbe:
       {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
-{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) (not .Values.emptyConfig) }}
     readinessProbe:
       httpGet:
         path: /health
@@ -145,14 +225,18 @@ containers:
 {{- end }}
     volumeMounts:
       - name: data
-        {{- if .Values.existingConfigMaps }}
+        {{- if or .Values.emptyConfig .Values.configSidecar.enabled }}
+        mountPath: "/var/lib/vector/"
+        {{- else if .Values.existingConfigMaps }}
         mountPath: "{{ if .Values.dataDir }}{{ .Values.dataDir }}{{ else }}{{ fail "Specify `dataDir` if you're using `existingConfigMaps`" }}{{ end }}"
         {{- else }}
         mountPath: "{{ .Values.customConfig.data_dir | default "/vector-data-dir" }}"
         {{- end }}
       - name: config
         mountPath: "/etc/vector/"
+{{- if not .Values.configSidecar.enabled }}
         readOnly: true
+{{- end }}
 {{- if (eq .Values.role "Agent") }}
 {{- with .Values.defaultVolumeMounts }}
 {{- toYaml . | nindent 6 }}
@@ -201,6 +285,9 @@ volumes:
     emptyDir: {}
 {{- end }}
   - name: config
+{{- if or .Values.emptyConfig .Values.configSidecar.enabled }}
+    emptyDir: {}
+{{- else }}
     projected:
       sources:
 {{- if .Values.existingConfigMaps }}
@@ -211,6 +298,7 @@ volumes:
 {{- else }}
         - configMap:
             name: {{ template "vector.fullname" . }}
+{{- end }}
 {{- end }}
 {{- if (eq .Values.role "Agent") }}
   - name: data
