@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 #### Features
 
 - Add support for string templating in extraObjects (#512) ([97b043d](https://github.com/vectordotdev/helm-charts/commit/97b043d506d1a8f4fcf1d7182778927a8059e845))
+- Add default selectorLabel to topologySpreadConstraints if not otherwise specified (#429) ([e626b5b](https://github.com/vectordotdev/helm-charts/commit/e626b5b5777144ea80afc6b808e64dbc39001c16))
 - Add secret annotations (#480) ([762b90b](https://github.com/vectordotdev/helm-charts/commit/762b90bdfe61bdbdb78377274f73c2cadfa7de44))
 - Bump Vector to 0.58.0 and update Helm docs ([9a876a4](https://github.com/vectordotdev/helm-charts/commit/9a876a4889232698d665cfc923a3cee8041d1aa1))
 
