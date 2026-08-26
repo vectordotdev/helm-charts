@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.57.0](https://img.shields.io/badge/Version-0.57.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.57.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.57.0--distroless--libc-informational?style=flat-square)
+![Version: 0.58.0](https://img.shields.io/badge/Version-0.58.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.58.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.58.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -223,6 +223,7 @@ helm install <RELEASE_NAME> \
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
 | rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
 | rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
+| secrets.annotations | object | `{}` | Set annotations on Vector Secrets. |
 | secrets.generic | object | `{}` | Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64 encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values. **NOTE: Don't commit unencrypted secrets to git!** |
 | securityContext | object | `{}` | Specify securityContext on Vector containers. |
 | service.annotations | object | `{}` | Set annotations on Vector's Service. |
@@ -246,7 +247,7 @@ helm install <RELEASE_NAME> \
 | statefulSet.apiVersion | string | `""` | Override the StatefulSet apiVersion. Valid for the "Aggregator" role. |
 | terminationGracePeriodSeconds | int | `60` | Override Vector's terminationGracePeriodSeconds. |
 | tolerations | list | `[]` | Configure Vector Pods to be scheduled on [tainted](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) nodes. |
-| topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
+| topologySpreadConstraints | list | `[]` | Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles.  If no "labelSelector" is defined, Vector's selector labels will be used by default. |
 | updateStrategy | object | `{}` | Customize the updateStrategy used to replace Vector Pods, this is also used for the DeploymentStrategy for the "Stateless-Aggregators". Valid options depend on the chosen role. |
 | workloadResourceAnnotations | object | `{}` | Set annotations on the Vector DaemonSet, Deployment or StatefulSet. |
 

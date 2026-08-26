@@ -179,6 +179,14 @@ tolerations:
 {{- end }}
 {{- with  .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
+{{- range $_, $entry := . }}
+{{- if not (hasKey $entry "labelSelector") }}
+  {{- $ls := dict -}}
+  {{- $_ := set $ls "labelSelector" dict -}}
+  {{- $_ := set $ls.labelSelector "matchLabels" (include "vector.selectorLabels" $ | fromYaml) }}
+  {{- $entry := merge $entry $ls }}
+{{- end }}
+{{- end }}
 {{- toYaml . | nindent 2 }}
 {{- end }}
 volumes:
