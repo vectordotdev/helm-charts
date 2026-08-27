@@ -36,9 +36,11 @@ footer = """
 """
 
 [git]
-# allow only conventional commits
-# https://www.conventionalcommits.org
+# parse commits according to the conventional commits specification
 conventional_commits = true
+# keep non-conventional commits instead of dropping them (e.g. merge commits,
+# subjects that do not follow the conventional format)
+filter_unconventional = false
 # regex for parsing and grouping commits
 commit_parsers = [
     { message = "^(feat|enhancement)", group = "Features"},
@@ -47,6 +49,10 @@ commit_parsers = [
     { message = "^perf", group = "Performance"},
     { message = "^refactor", group = "Refactor"},
     { body = ".*security", group = "Security"},
+    { message = "^Merge", skip = true },
+    { message = "^GHA trigger", skip = true },
+    { message = '^chore\(deps', skip = true },
+    { message = ".*", group = "Other", default_scope = "other"},
 ]
 # filter out the commits that are not matched by commit parsers
 filter_commits = true
