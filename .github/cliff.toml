@@ -52,6 +52,8 @@ commit_parsers = [
     { message = "^Merge", skip = true },
     { message = "^GHA trigger", skip = true },
     { message = '^chore\(deps', skip = true },
+    # non-conventional commits need an explicit scope (git-cliff cannot infer it)
+    { message = "selectorLabel", group = "Other", scope = "Vector" },
     { message = ".*", group = "Other", default_scope = "other"},
 ]
 # filter out the commits that are not matched by commit parsers
