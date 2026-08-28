@@ -294,6 +294,8 @@ service:
   internalTrafficPolicy: ""
   # service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
   loadBalancerIP: ""
+  # service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service) to restrict client IP ranges that can access the LoadBalancer Service.
+  loadBalancerSourceRanges: []
   # service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
   ipFamilyPolicy: ""
   # service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
@@ -653,6 +655,8 @@ haproxy:
     externalTrafficPolicy: ""
     # haproxy.service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
     loadBalancerIP: ""
+    # haproxy.service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service) to restrict client IP ranges that can access the LoadBalancer Service.
+    loadBalancerSourceRanges: []
     # haproxy.service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
     ipFamilyPolicy: ""
     # haproxy.service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
