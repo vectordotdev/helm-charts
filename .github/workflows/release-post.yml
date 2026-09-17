@@ -12,9 +12,101 @@ on:
         type: string
 
 jobs:
-  post-release:
+  sync-to-master:
     # Only run when a release-* branch is merged into develop, or manually triggered
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      chart_version: ${{ steps.read-version.outputs.chart_version }}
+
+    steps:
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "vectordotdev-bot[bot]"
+          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+
+      - name: Read chart version
+        id: read-version
+        run: |
+          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          [[ "$CHART_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "ERROR: Invalid CHART_VERSION: '$CHART_VERSION'"; exit 1; }
+          echo "chart_version=$CHART_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Merge develop into master
+        run: |
+          CHART_VERSION="${{ steps.read-version.outputs.chart_version }}"
+          SYNC_BRANCH="release-sync/${CHART_VERSION}"
+          git checkout -b "$SYNC_BRANCH"
+          git push origin "$SYNC_BRANCH" --force-with-lease
+          REPO_OWNER=$(gh repo view --json owner -q '.owner.login')
+          EXISTING=$(gh pr list --head "$SYNC_BRANCH" --base master --state all \
+            --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+            | jq --arg branch "$SYNC_BRANCH" --arg owner "$REPO_OWNER" \
+              'map(select(.headRefName == $branch and .headRepositoryOwner.login == $owner))
+              | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+              | .[0]')
+          PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+          PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+          PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+          if [ "$PR_STATE" = "MERGED" ]; then
+            echo "Sync PR already merged, no action taken: $PR_URL"
+          elif [ "$PR_STATE" = "CLOSED" ]; then
+            echo "ERROR: Sync PR was closed without merging: $PR_URL"; exit 1
+          else
+            if [ -z "$PR_URL" ]; then
+              PR_URL=$(gh pr create \
+                --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
+                --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
+                --base master \
+                --head "$SYNC_BRANCH")
+            fi
+            if [ -z "$PR_AUTO_MERGE" ]; then
+              if ! gh pr merge "$PR_URL" --auto --merge; then
+                RECHECK=$(gh pr list --head "$SYNC_BRANCH" --base master --state all \
+                  --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+                  | jq --arg branch "$SYNC_BRANCH" --arg owner "$REPO_OWNER" \
+                    'map(select(.headRefName == $branch and .headRepositoryOwner.login == $owner))
+                    | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+                    | .[0]')
+                RECHECK_STATE=$(echo "$RECHECK" | jq -r '.state // empty')
+                RECHECK_AUTO_MERGE=$(echo "$RECHECK" | jq -r '.autoMergeRequest // empty')
+                RECHECK_URL=$(echo "$RECHECK" | jq -r '.url // empty')
+                case "$RECHECK_STATE" in
+                  MERGED) echo "Sync PR already merged, no action taken: $RECHECK_URL" ;;
+                  CLOSED) echo "ERROR: Sync PR was closed without merging: $RECHECK_URL"; exit 1 ;;
+                  OPEN)
+                    [ -n "$RECHECK_AUTO_MERGE" ] \
+                      && echo "Auto-merge already enabled, no action taken: $RECHECK_URL" \
+                      || { echo "ERROR: gh pr merge failed on open sync PR: $RECHECK_URL"; exit 1; } ;;
+                  *) echo "ERROR: gh pr merge failed (no matching sync PR found)"; exit 1 ;;
+                esac
+              fi
+            else
+              echo "Auto-merge already enabled, no action taken: $PR_URL"
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+  bump-version:
+    needs: [sync-to-master]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -31,7 +123,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || 'develop' }}
+          ref: develop
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
@@ -45,25 +137,10 @@ jobs:
         with:
           version: 1.11.0
 
-      - name: Merge develop into master
-        run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
-          SYNC_BRANCH="release-sync/${CHART_VERSION}"
-          git checkout -b "$SYNC_BRANCH"
-          git push origin "$SYNC_BRANCH"
-          PR_URL=$(gh pr create \
-            --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
-            --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
-            --base master \
-            --head "$SYNC_BRANCH")
-          gh pr merge "$PR_URL" --auto --merge
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Read and bump chart version
         id: version
         run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+          CHART_VERSION="${{ needs.sync-to-master.outputs.chart_version }}"
           MAJOR=$(echo "$CHART_VERSION" | cut -d. -f1)
           MINOR=$(echo "$CHART_VERSION" | cut -d. -f2)
           NEW_VERSION="${MAJOR}.$((MINOR + 1)).0"
@@ -72,13 +149,14 @@ jobs:
 
       - name: Create version bump branch
         run: |
-          git switch develop
           git checkout -b "bump-chart-version-${{ steps.version.outputs.next }}"
 
       - name: Bump chart version
         run: |
-          sed -i 's/version: "${{ steps.version.outputs.current }}"/version: "${{ steps.version.outputs.next }}"/' \
-            charts/vector/Chart.yaml
+          CURRENT="${{ steps.version.outputs.current }}"
+          NEXT="${{ steps.version.outputs.next }}"
+          ESCAPED_CURRENT=$(printf '%s' "$CURRENT" | sed 's/\./\\./g')
+          sed -i "s/version: \"${ESCAPED_CURRENT}\"/version: \"${NEXT}\"/" charts/vector/Chart.yaml
 
       - name: Update Helm docs
         run: helm-docs
@@ -86,16 +164,62 @@ jobs:
       - name: Commit and push
         run: |
           git add .
+          if git diff --cached --quiet; then
+            ACTUAL=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
+            if [ "$ACTUAL" = "${{ steps.version.outputs.next }}" ]; then
+              echo "Chart version already at ${{ steps.version.outputs.next }} — bump already applied, nothing to commit"
+              exit 0
+            fi
+            echo "ERROR: No staged changes but chart version is '$ACTUAL' (expected '${{ steps.version.outputs.next }}')"; exit 1
+          fi
           git commit -m "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}"
-          git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}"
+          git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}" --force-with-lease
 
       - name: Create and auto-merge PR
         run: |
-          gh pr create \
+          BUMP_BRANCH="bump-chart-version-${{ steps.version.outputs.next }}"
+          REPO_OWNER=$(gh repo view --json owner -q '.owner.login')
+          MERGED_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop --state merged \
+            --json url,headRefName,headRepositoryOwner \
+            | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+              'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
+          if [ -n "$MERGED_URL" ]; then
+            echo "Bump PR already merged, no action taken: $MERGED_URL"; exit 0
+          fi
+          if ! gh pr create \
             --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
             --body "Post release version bump." \
             --base develop \
-            --head "bump-chart-version-${{ steps.version.outputs.next }}"
-          gh pr merge "bump-chart-version-${{ steps.version.outputs.next }}" --auto --squash
+            --head "$BUMP_BRANCH"; then
+            OPEN_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop \
+              --json url,headRefName,headRepositoryOwner \
+              | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
+            if [ -n "$OPEN_URL" ]; then
+              echo "Bump PR already exists, skipping creation: $OPEN_URL"
+            else
+              echo "ERROR: Failed to create bump PR"; exit 1
+            fi
+          fi
+          if ! gh pr merge "$BUMP_BRANCH" --auto --squash; then
+            EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
+              --json url,state,autoMergeRequest,headRefName,headRepositoryOwner \
+              | jq --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
+                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o))
+                | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+                | .[0]')
+            PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+            PR_AUTO_MERGE=$(echo "$EXISTING" | jq -r '.autoMergeRequest // empty')
+            PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+            case "$PR_STATE" in
+              MERGED) echo "Bump PR already merged, no action taken: $PR_URL" ;;
+              CLOSED) echo "ERROR: Bump PR was closed without merging: $PR_URL"; exit 1 ;;
+              OPEN)
+                [ -n "$PR_AUTO_MERGE" ] \
+                  && echo "Auto-merge already enabled, no action taken: $PR_URL" \
+                  || { echo "ERROR: gh pr merge failed on open PR: $PR_URL"; exit 1; } ;;
+              *) echo "ERROR: gh pr merge failed (no matching PR found)"; exit 1 ;;
+            esac
+          fi
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
