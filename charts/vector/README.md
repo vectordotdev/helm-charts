@@ -192,6 +192,7 @@ helm install <RELEASE_NAME> \
 | persistence.retentionPolicy | object | `{}` | Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims. Valid for the "Aggregator" role. |
+| persistence.volumeAttributesClassName | string | `""` | VolumeAttributesClass for PersistentVolumeClaims. Valid for the "Aggregator" role. Requires VolumeAttributesClass support in the Kubernetes cluster and CSI driver. |
 | podAnnotations | object | `{}` | Set annotations on Vector Pods. |
 | podDisruptionBudget.enabled | bool | `false` | Enable a [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for Vector. |
 | podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction. |
