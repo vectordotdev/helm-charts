@@ -191,15 +191,19 @@ jobs:
             --body "Post release version bump." \
             --base develop \
             --head "$BUMP_BRANCH"; then
-            OPEN_URL=$(gh pr list --head "$BUMP_BRANCH" --base develop \
-              --json url,headRefName,headRepositoryOwner \
+            EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
+              --json url,state,headRefName,headRepositoryOwner \
               | jq -r --arg b "$BUMP_BRANCH" --arg o "$REPO_OWNER" \
-                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o)) | .[0].url // empty')
-            if [ -n "$OPEN_URL" ]; then
-              echo "Bump PR already exists, skipping creation: $OPEN_URL"
-            else
-              echo "ERROR: Failed to create bump PR"; exit 1
-            fi
+                'map(select(.headRefName == $b and .headRepositoryOwner.login == $o))
+                | sort_by(if .state == "OPEN" then 0 elif .state == "MERGED" then 1 else 2 end)
+                | .[0]')
+            PR_STATE=$(echo "$EXISTING" | jq -r '.state // empty')
+            PR_URL=$(echo "$EXISTING" | jq -r '.url // empty')
+            case "$PR_STATE" in
+              MERGED) echo "Bump PR already merged, no action taken: $PR_URL" ;;
+              OPEN) echo "Bump PR already exists, skipping creation: $PR_URL" ;;
+              *) echo "ERROR: Failed to create bump PR"; exit 1 ;;
+            esac
           fi
           if ! gh pr merge "$BUMP_BRANCH" --auto --squash; then
             EXISTING=$(gh pr list --head "$BUMP_BRANCH" --base develop --state all \
