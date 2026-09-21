@@ -140,12 +140,20 @@ jobs:
             const pr = await readPullRequest();
             if (alreadyHandled(pr)) return;
 
-            // Like gh pr merge --auto, merge now if checks permit it.
-            const autoMerge = pr.isMergeQueueEnabled
-              || !['CLEAN', 'HAS_HOOKS', 'UNSTABLE'].includes(pr.mergeStateStatus);
+            // Merge or enqueue ready PRs; enable auto-merge while requirements are pending.
+            const autoMerge = !['CLEAN', 'HAS_HOOKS', 'UNSTABLE'].includes(pr.mergeStateStatus);
             const mutation = autoMerge ? 'enablePullRequestAutoMerge' : 'mergePullRequest';
             const inputType = autoMerge ? 'EnablePullRequestAutoMergeInput' : 'MergePullRequestInput';
             try {
+              if (!autoMerge && pr.isMergeQueueEnabled) {
+                await github.graphql(`
+                  mutation($input: EnqueuePullRequestInput!) {
+                    enqueuePullRequest(input: $input) { mergeQueueEntry { id } }
+                  }
+                `, { input: { pullRequestId: pr.id } });
+                core.info(`PR added to merge queue: ${pr.url}`);
+                return;
+              }
               await github.graphql(`
                 mutation($input: ${inputType}!) {
                   ${mutation}(input: $input) { pullRequest { url } }
@@ -153,7 +161,7 @@ jobs:
               `, { input: { pullRequestId: pr.id, mergeMethod: process.env.MERGE_METHOD } });
               core.info(`${autoMerge ? 'Auto-merge enabled' : 'PR merged'}: ${pr.url}`);
             } catch (error) {
-              // Another run may have merged the PR or enabled auto-merge.
+              // Another run may have merged, queued, or enabled auto-merge for the PR.
               if (!alreadyHandled(await readPullRequest())) throw error;
             }
 
