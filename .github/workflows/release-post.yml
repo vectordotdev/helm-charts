@@ -55,15 +55,8 @@ jobs:
             }
             core.setOutput('chart_version', version);
 
-      - name: Push sync branch
-        env:
-          CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
-        run: |
-          git checkout -b "release-sync/${CHART_VERSION}"
-          git push origin "release-sync/${CHART_VERSION}" --force-with-lease
-
-      - name: Create sync PR
-        id: pull-request
+      - name: Find sync PR
+        id: existing-pr
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
@@ -90,80 +83,44 @@ jobs:
             if (pr?.state === 'closed') {
               throw new Error(`Sync PR was closed without merging: ${pr.html_url}`);
             }
-            if (!pr) {
-              ({ data: pr } = await github.rest.pulls.create({
-                owner, repo, base: 'master', head: branch,
-                title: `chore(releasing): Merge develop into master for ${version}`,
-                body: `Post release: sync master with the release changes from develop for ${version}.`,
-              }));
+            if (pr) {
+              core.setOutput('number', pr.number);
+            } else {
+              core.setOutput('create', 'true');
             }
+
+      - name: Push sync branch
+        if: steps.existing-pr.outputs.create == 'true'
+        env:
+          CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
+        run: |
+          git checkout -b "release-sync/${CHART_VERSION}"
+          git push origin "release-sync/${CHART_VERSION}"
+
+      - name: Create sync PR
+        if: steps.existing-pr.outputs.create == 'true'
+        id: pull-request
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const { owner, repo } = context.repo;
+            const version = process.env.CHART_VERSION;
+            const { data: pr } = await github.rest.pulls.create({
+              owner, repo, base: 'master', head: `release-sync/${version}`,
+              title: `chore(releasing): Merge develop into master for ${version}`,
+              body: `Post release: sync master with the release changes from develop for ${version}.`,
+            });
             core.setOutput('number', pr.number);
 
       - name: Merge or enable auto-merge
-        if: steps.pull-request.outputs.number != ''
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        if: steps.existing-pr.outputs.number != '' || steps.pull-request.outputs.number != ''
         env:
-          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
-          MERGE_METHOD: MERGE
-        with:
-          github-token: ${{ steps.app-token.outputs.token }}
-          script: &merge-pr |
-            async function readPullRequest() {
-              const { repository } = await github.graphql(`
-                query($owner: String!, $repo: String!, $number: Int!) {
-                  repository(owner: $owner, name: $repo) {
-                    pullRequest(number: $number) {
-                      id url state mergeStateStatus isInMergeQueue isMergeQueueEnabled
-                      autoMergeRequest { enabledAt }
-                    }
-                  }
-                }
-              `, { ...context.repo, number: Number(process.env.PR_NUMBER) });
-              return repository.pullRequest;
-            }
-
-            function alreadyHandled(pr) {
-              if (pr.state === 'MERGED') {
-                core.info(`PR already merged: ${pr.url}`);
-                return true;
-              }
-              if (pr.state === 'CLOSED') {
-                throw new Error(`PR was closed without merging: ${pr.url}`);
-              }
-              if (pr.autoMergeRequest || pr.isInMergeQueue) {
-                core.info(`PR already scheduled to merge: ${pr.url}`);
-                return true;
-              }
-              return false;
-            }
-
-            const pr = await readPullRequest();
-            if (alreadyHandled(pr)) return;
-
-            // Merge or enqueue ready PRs; enable auto-merge while requirements are pending.
-            const autoMerge = !['CLEAN', 'HAS_HOOKS', 'UNSTABLE'].includes(pr.mergeStateStatus);
-            const mutation = autoMerge ? 'enablePullRequestAutoMerge' : 'mergePullRequest';
-            const inputType = autoMerge ? 'EnablePullRequestAutoMergeInput' : 'MergePullRequestInput';
-            try {
-              if (!autoMerge && pr.isMergeQueueEnabled) {
-                await github.graphql(`
-                  mutation($input: EnqueuePullRequestInput!) {
-                    enqueuePullRequest(input: $input) { mergeQueueEntry { id } }
-                  }
-                `, { input: { pullRequestId: pr.id } });
-                core.info(`PR added to merge queue: ${pr.url}`);
-                return;
-              }
-              await github.graphql(`
-                mutation($input: ${inputType}!) {
-                  ${mutation}(input: $input) { pullRequest { url } }
-                }
-              `, { input: { pullRequestId: pr.id, mergeMethod: process.env.MERGE_METHOD } });
-              core.info(`${autoMerge ? 'Auto-merge enabled' : 'PR merged'}: ${pr.url}`);
-            } catch (error) {
-              // Another run may have merged, queued, or enabled auto-merge for the PR.
-              if (!alreadyHandled(await readPullRequest())) throw error;
-            }
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.existing-pr.outputs.number || steps.pull-request.outputs.number }}
+        run: gh pr merge "$PR_NUMBER" --auto --merge
 
   bump-version:
     needs: [sync-to-master]
@@ -192,12 +149,7 @@ jobs:
           git config user.name "vectordotdev-bot[bot]"
           git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
 
-      - name: Install helm-docs
-        uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
-        with:
-          version: 1.11.0
-
-      - name: Read and bump chart version
+      - name: Calculate next chart version
         id: version
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
@@ -209,11 +161,68 @@ jobs:
             core.setOutput('current', current);
             core.setOutput('next', `${major}.${Number(minor) + 1}.0`);
 
+      - name: Check bump completion and find PR
+        id: existing-pr
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          CURRENT: ${{ steps.version.outputs.current }}
+          NEXT: ${{ steps.version.outputs.next }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const { owner, repo } = context.repo;
+            const next = process.env.NEXT;
+            const branch = `bump-chart-version-${next}`;
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner, repo, head: `${owner}:${branch}`, base: 'develop', state: 'all',
+            });
+            const matching = pulls.filter(pr =>
+              pr.head.ref === branch && pr.head.repo?.owner.login === owner
+            );
+            const merged = matching.find(pr => pr.merged_at);
+            if (merged) {
+              core.info(`Bump PR already merged: ${merged.html_url}`);
+              return;
+            }
+
+            const fs = require('node:fs');
+            const chart = fs.readFileSync('charts/vector/Chart.yaml', 'utf8');
+            const actual = chart.match(/^version: "(\d+\.\d+\.\d+)"\r?$/m)?.[1];
+            if (!actual) throw new Error('Chart.yaml must contain a valid chart version');
+            const parts = actual.split('.').map(Number);
+            const target = next.split('.').map(Number);
+            const difference = parts.map((part, index) => part - target[index]).find(value => value !== 0) ?? 0;
+            if (difference >= 0) {
+              core.info(`Chart version ${actual} already includes bump to ${next}`);
+              return;
+            }
+
+            const pr = matching.find(pr => pr.state === 'open') ?? matching[0];
+            if (pr?.state === 'closed') {
+              throw new Error(`Bump PR was closed without merging: ${pr.html_url}`);
+            }
+            if (pr) {
+              core.setOutput('number', pr.number);
+              return;
+            }
+            if (actual !== process.env.CURRENT) {
+              throw new Error(`Chart version is '${actual}' (expected '${process.env.CURRENT}')`);
+            }
+            core.setOutput('create', 'true');
+
+      - name: Install helm-docs
+        if: steps.existing-pr.outputs.create == 'true'
+        uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
+        with:
+          version: 1.11.0
+
       - name: Create version bump branch
+        if: steps.existing-pr.outputs.create == 'true'
         run: |
           git checkout -b "bump-chart-version-${{ steps.version.outputs.next }}"
 
       - name: Bump chart version
+        if: steps.existing-pr.outputs.create == 'true'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           CURRENT: ${{ steps.version.outputs.current }}
@@ -229,9 +238,11 @@ jobs:
             ));
 
       - name: Update Helm docs
+        if: steps.existing-pr.outputs.create == 'true'
         run: helm-docs
 
       - name: Commit and push
+        if: steps.existing-pr.outputs.create == 'true'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           NEXT: ${{ steps.version.outputs.next }}
@@ -239,24 +250,11 @@ jobs:
           script: |
             const next = process.env.NEXT;
             await exec.exec('git', ['add', '.']);
-            const status = await exec.exec('git', ['diff', '--cached', '--quiet'], {
-              ignoreReturnCode: true,
-            });
-            if (status === 0) {
-              const fs = require('node:fs');
-              const chart = fs.readFileSync('charts/vector/Chart.yaml', 'utf8');
-              const actual = chart.match(/^version: "([^"]*)"\r?$/m)?.[1];
-              if (actual !== next) {
-                throw new Error(`No staged changes but chart version is '${actual}' (expected '${next}')`);
-              }
-              core.info(`Chart version already at ${next}; nothing to commit`);
-              return;
-            }
-            if (status !== 1) throw new Error(`git diff failed with exit code ${status}`);
             await exec.exec('git', ['commit', '-m', `chore(releasing): Bump chart version to ${next}`]);
-            await exec.exec('git', ['push', '-u', 'origin', `bump-chart-version-${next}`, '--force-with-lease']);
+            await exec.exec('git', ['push', '-u', 'origin', `bump-chart-version-${next}`]);
 
       - name: Create version bump PR
+        if: steps.existing-pr.outputs.create == 'true'
         id: pull-request
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
@@ -267,51 +265,16 @@ jobs:
             const { owner, repo } = context.repo;
             const next = process.env.NEXT;
             const branch = `bump-chart-version-${next}`;
-            async function findPullRequests(state) {
-              const pulls = await github.paginate(github.rest.pulls.list, {
-                owner, repo, head: `${owner}:${branch}`, base: 'develop', state,
-              });
-              return pulls.filter(pr =>
-                pr.head.ref === branch && pr.head.repo?.owner.login === owner
-              );
-            }
-
-            const merged = (await findPullRequests('closed')).find(pr => pr.merged_at);
-            if (merged) {
-              core.info(`Bump PR already merged: ${merged.html_url}`);
-              return;
-            }
-
-            let pr;
-            try {
-              ({ data: pr } = await github.rest.pulls.create({
-                owner, repo, base: 'develop', head: branch,
-                title: `chore(releasing): Bump chart version to ${next}`,
-                body: 'Post release version bump.',
-              }));
-            } catch (error) {
-              const matching = await findPullRequests('all');
-              pr = matching.find(pr => pr.state === 'open')
-                ?? matching.find(pr => pr.merged_at)
-                ?? matching[0];
-              if (!pr) throw error;
-              if (pr.merged_at) {
-                core.info(`Bump PR already merged: ${pr.html_url}`);
-                return;
-              }
-              if (pr.state === 'closed') {
-                throw new Error(`Bump PR was closed without merging: ${pr.html_url}`);
-              }
-              core.info(`Bump PR already exists: ${pr.html_url}`);
-            }
+            const { data: pr } = await github.rest.pulls.create({
+              owner, repo, base: 'develop', head: branch,
+              title: `chore(releasing): Bump chart version to ${next}`,
+              body: 'Post release version bump.',
+            });
             core.setOutput('number', pr.number);
 
       - name: Merge or enable auto-merge
-        if: steps.pull-request.outputs.number != ''
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        if: steps.existing-pr.outputs.number != '' || steps.pull-request.outputs.number != ''
         env:
-          PR_NUMBER: ${{ steps.pull-request.outputs.number }}
-          MERGE_METHOD: SQUASH
-        with:
-          github-token: ${{ steps.app-token.outputs.token }}
-          script: *merge-pr
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ steps.existing-pr.outputs.number || steps.pull-request.outputs.number }}
+        run: gh pr merge "$PR_NUMBER" --auto --squash
