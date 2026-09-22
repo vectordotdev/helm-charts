@@ -84,12 +84,17 @@ jobs:
               throw new Error(`Sync PR was closed without merging: ${pr.html_url}`);
             }
             if (pr) {
-              // An open PR may predate a newer checked-out ref; its head SHA is the
-              // lease for refreshing the branch, empty when creating it.
+              // An open PR may predate a newer checked-out ref; use its head SHA
+              // as the lease for refreshing the branch.
               core.setOutput('remote_sha', pr.head.sha);
               core.setOutput('number', pr.number);
               core.setOutput('push', 'true');
             } else {
+              // A previous run may have pushed the branch but failed to create
+              // the PR; record its SHA (empty if absent) as the push lease.
+              const remote = await exec.getExecOutput('git', ['ls-remote', '--heads', 'origin', `refs/heads/${branch}`]);
+              const remoteSha = remote.stdout.trim().split('\t')[0] ?? '';
+              core.setOutput('remote_sha', remoteSha);
               core.setOutput('push', 'true');
               core.setOutput('create', 'true');
             }
