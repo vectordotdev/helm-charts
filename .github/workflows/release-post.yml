@@ -208,6 +208,11 @@ jobs:
             if (actual !== process.env.CURRENT) {
               throw new Error(`Chart version is '${actual}' (expected '${process.env.CURRENT}')`);
             }
+            // An orphaned branch may exist if a previous run pushed but failed to
+            // create the PR; record its SHA (empty if absent) as the push lease.
+            const remote = await exec.getExecOutput('git', ['ls-remote', '--heads', 'origin', `refs/heads/${branch}`]);
+            const remoteSha = remote.stdout.trim().split('\t')[0] ?? '';
+            core.setOutput('remote_sha', remoteSha);
             core.setOutput('create', 'true');
 
       - name: Install helm-docs
@@ -246,12 +251,16 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           NEXT: ${{ steps.version.outputs.next }}
+          REMOTE_SHA: ${{ steps.existing-pr.outputs.remote_sha }}
         with:
           script: |
             const next = process.env.NEXT;
             await exec.exec('git', ['add', '.']);
             await exec.exec('git', ['commit', '-m', `chore(releasing): Bump chart version to ${next}`]);
-            await exec.exec('git', ['push', '-u', 'origin', `bump-chart-version-${next}`]);
+            // Lease-guarded atomic create-or-update of the (possibly orphaned) branch.
+            const branch = `bump-chart-version-${next}`;
+            const lease = `refs/heads/${branch}:${process.env.REMOTE_SHA ?? ''}`;
+            await exec.exec('git', ['push', '-u', 'origin', `--force-with-lease=${lease}`, branch]);
 
       - name: Create version bump PR
         if: steps.existing-pr.outputs.create == 'true'
