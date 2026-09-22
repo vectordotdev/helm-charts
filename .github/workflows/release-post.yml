@@ -84,18 +84,26 @@ jobs:
               throw new Error(`Sync PR was closed without merging: ${pr.html_url}`);
             }
             if (pr) {
+              // An open PR may predate a newer checked-out ref; its head SHA is the
+              // lease for refreshing the branch, empty when creating it.
+              core.setOutput('remote_sha', pr.head.sha);
               core.setOutput('number', pr.number);
+              core.setOutput('push', 'true');
             } else {
+              core.setOutput('push', 'true');
               core.setOutput('create', 'true');
             }
 
       - name: Push sync branch
-        if: steps.existing-pr.outputs.create == 'true'
+        if: steps.existing-pr.outputs.push == 'true' || steps.existing-pr.outputs.create == 'true'
         env:
           CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
+          REMOTE_SHA: ${{ steps.existing-pr.outputs.remote_sha }}
         run: |
-          git checkout -b "release-sync/${CHART_VERSION}"
-          git push origin "release-sync/${CHART_VERSION}"
+          BRANCH="release-sync/${CHART_VERSION}"
+          # Lease-guarded atomic create-or-update of the (possibly open) sync branch.
+          git checkout -B "$BRANCH"
+          git push -u origin --force-with-lease="refs/heads/${BRANCH}:${REMOTE_SHA}" "$BRANCH"
 
       - name: Create sync PR
         if: steps.existing-pr.outputs.create == 'true'
