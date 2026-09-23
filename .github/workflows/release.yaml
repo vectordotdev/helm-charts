@@ -10,8 +10,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  check:
+    name: Check chart release status
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.chart.outputs.version }}
+      released: ${{ steps.check.outputs.released }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Read chart version
+        id: chart
+        run: |
+          version=$(sed -nE 's/^version: "?([0-9]+\.[0-9]+\.[0-9]+)"?$/\1/p' charts/vector/Chart.yaml)
+          [[ -n "$version" ]] || { echo "No chart version found" >&2; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      # chart-releaser creates a vector-<version> release per published chart.
+      - name: Check if already released
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.chart.outputs.version }}
+        run: |
+          if gh release view "vector-$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    name: Release charts
+    needs: check
+    if: needs.check.outputs.released == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -45,3 +81,30 @@ jobs:
             fi
             helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
           done
+
+  dispatch:
+    name: Trigger Vector manifest refresh
+    needs: [check, release]
+    # Run even when `release` was skipped because the version was already
+    # released, so a failed dispatch can be retried after a successful release.
+    if: "!cancelled() && needs.check.result == 'success' && (needs.release.result == 'success' || needs.release.result == 'skipped')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Vector bot token
+        id: vector-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          owner: vectordotdev
+          repositories: vector
+          permission-actions: write
+      - name: Trigger Vector manifest refresh
+        env:
+          GH_TOKEN: ${{ steps.vector-token.outputs.token }}
+          CHART_VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          gh workflow run release_manifests.yml \
+            --repo vectordotdev/vector --ref master \
+            -f chart_version="$CHART_VERSION"
+          echo "Dispatched Vector manifest refresh for chart ${CHART_VERSION}." >> "$GITHUB_STEP_SUMMARY"
