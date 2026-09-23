@@ -44,7 +44,7 @@ jobs:
 
       - name: Read chart version
         id: read-version
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const fs = require('node:fs');
@@ -57,7 +57,7 @@ jobs:
 
       - name: Find sync PR
         id: existing-pr
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
         with:
@@ -113,7 +113,7 @@ jobs:
       - name: Create sync PR
         if: steps.existing-pr.outputs.create == 'true'
         id: pull-request
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
         with:
@@ -164,7 +164,7 @@ jobs:
 
       - name: Calculate next chart version
         id: version
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           CHART_VERSION: ${{ needs.sync-to-master.outputs.chart_version }}
         with:
@@ -176,7 +176,7 @@ jobs:
 
       - name: Check bump completion and find PR
         id: existing-pr
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           CURRENT: ${{ steps.version.outputs.current }}
           NEXT: ${{ steps.version.outputs.next }}
@@ -241,7 +241,7 @@ jobs:
 
       - name: Bump chart version
         if: steps.existing-pr.outputs.create == 'true'
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           CURRENT: ${{ steps.version.outputs.current }}
           NEXT: ${{ steps.version.outputs.next }}
@@ -261,7 +261,7 @@ jobs:
 
       - name: Commit and push
         if: steps.existing-pr.outputs.create == 'true'
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           NEXT: ${{ steps.version.outputs.next }}
           REMOTE_SHA: ${{ steps.existing-pr.outputs.remote_sha }}
@@ -278,7 +278,7 @@ jobs:
       - name: Create version bump PR
         if: steps.existing-pr.outputs.create == 'true'
         id: pull-request
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           NEXT: ${{ steps.version.outputs.next }}
         with:
