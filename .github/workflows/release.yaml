@@ -43,7 +43,6 @@ jobs:
   release:
     name: Release charts
     needs: check
-    if: needs.check.outputs.released == 'false'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -62,6 +61,7 @@ jobs:
           helm repo add vector https://helm.vector.dev
           helm repo update
       - name: Run chart-releaser
+        if: needs.check.outputs.released == 'false'
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -73,21 +73,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push charts to GHCR
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
         run: |
-          shopt -s nullglob
-          for pkg in .cr-release-packages/*.tgz; do
-            if [ -z "${pkg:-}" ]; then
-              break
-            fi
-            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
-          done
+          # Package explicitly: chart-releaser is skipped on partial-release retries.
+          helm package charts/vector --destination .cr-release-packages
+          helm push ".cr-release-packages/vector-${VERSION}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
 
   dispatch:
     name: Trigger Vector manifest refresh
     needs: [check, release]
-    # Run even when `release` was skipped because the version was already
-    # released, so a failed dispatch can be retried after a successful release.
-    if: "!cancelled() && needs.check.result == 'success' && (needs.release.result == 'success' || needs.release.result == 'skipped')"
+    # Dispatch only after both GitHub and GHCR publication succeed.
+    if: "!cancelled() && needs.check.result == 'success' && needs.release.result == 'success'"
     runs-on: ubuntu-latest
     steps:
       - name: Create Vector bot token
