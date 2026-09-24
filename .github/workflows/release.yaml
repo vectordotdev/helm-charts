@@ -75,7 +75,30 @@ jobs:
       - name: Push charts to GHCR
         env:
           VERSION: ${{ needs.check.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
+          repository="${GITHUB_REPOSITORY_OWNER}/helm-charts/vector"
+          token=$(curl --fail --silent --show-error \
+            --user "${GITHUB_ACTOR}:${GH_TOKEN}" \
+            "https://ghcr.io/token?service=ghcr.io&scope=repository:${repository}:pull" \
+            | jq -er '.token')
+          status=$(curl --silent --show-error --head --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${token}" \
+            --header 'Accept: application/vnd.oci.image.manifest.v1+json' \
+            "https://ghcr.io/v2/${repository}/manifests/${VERSION}")
+          case "$status" in
+            200)
+              echo "OCI chart ${VERSION} already exists; skipping publication."
+              exit 0
+              ;;
+            404) ;; # Only a missing manifest permits publication.
+            *)
+              echo "Cannot check OCI chart ${VERSION}: HTTP ${status}" >&2
+              exit 1
+              ;;
+          esac
+
           # Package explicitly: chart-releaser is skipped on partial-release retries.
           helm package charts/vector --destination .cr-release-packages
           helm push ".cr-release-packages/vector-${VERSION}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
