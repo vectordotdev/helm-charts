@@ -9,14 +9,57 @@ on:
       - "charts/**"
   workflow_dispatch:
 
+# Cover the release checks as well as publication; all versions share the index.
+concurrency:
+  group: chart-publication
+  queue: max
+  cancel-in-progress: false
+
 jobs:
-  release:
+  check:
+    name: Check chart release status
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.chart.outputs.version }}
+      released: ${{ steps.check.outputs.released }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Read chart version
+        id: chart
+        run: |
+          version=$(sed -nE 's/^version: "?([0-9]+\.[0-9]+\.[0-9]+)"?$/\1/p' charts/vector/Chart.yaml)
+          [[ -n "$version" ]] || { echo "No chart version found" >&2; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      # chart-releaser creates a vector-<version> release per published chart.
+      - name: Check if already released
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.chart.outputs.version }}
+        run: |
+          if gh release view "vector-$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    name: Release charts
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          # Recover an existing release from its original commit, not a later checkout.
+          ref: ${{ needs.check.outputs.released == 'true' && format('refs/tags/vector-{0}', needs.check.outputs.version) || github.sha }}
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -25,11 +68,37 @@ jobs:
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
-      - name: Run chart-releaser
+      - name: Install chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        with:
+          install_only: true
+      - name: Publish GitHub chart asset and index
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_SKIP_EXISTING: true
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check.outputs.version }}
+          RELEASED: ${{ needs.check.outputs.released }}
+        run: |
+          set -euo pipefail
+          tag="vector-${VERSION}"
+          asset="${tag}.tgz"
+          if [[ "$RELEASED" == 'false' ]]; then
+            cr package charts/vector
+            cr upload --owner "$GITHUB_REPOSITORY_OWNER" --git-repo "${GITHUB_REPOSITORY#*/}" --commit "$GITHUB_SHA"
+          fi
+
+          # A release can exist before its asset upload completes.
+          assets=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets)
+          if ! jq -e --arg name "$asset" '.assets | any(.name == $name and .state == "uploaded")' <<< "$assets" >/dev/null; then
+            cr package charts/vector
+            gh release upload "$tag" ".cr-release-packages/${asset}" --repo "$GITHUB_REPOSITORY" --clobber
+          fi
+
+          # Use the published bytes for both the index digest and OCI publication.
+          mkdir -p .cr-release-packages .cr-index
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$asset" --dir .cr-release-packages --clobber
+          cr index --owner "$GITHUB_REPOSITORY_OWNER" --git-repo "${GITHUB_REPOSITORY#*/}" --push
       - name: Login to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -37,11 +106,56 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push charts to GHCR
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          shopt -s nullglob
-          for pkg in .cr-release-packages/*.tgz; do
-            if [ -z "${pkg:-}" ]; then
-              break
-            fi
-            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
-          done
+          set -euo pipefail
+          repository="${GITHUB_REPOSITORY_OWNER}/helm-charts/vector"
+          token=$(curl --fail --silent --show-error \
+            --user "${GITHUB_ACTOR}:${GH_TOKEN}" \
+            "https://ghcr.io/token?service=ghcr.io&scope=repository:${repository}:pull" \
+            | jq -er '.token')
+          status=$(curl --silent --show-error --head --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${token}" \
+            --header 'Accept: application/vnd.oci.image.manifest.v1+json' \
+            "https://ghcr.io/v2/${repository}/manifests/${VERSION}")
+          case "$status" in
+            200)
+              echo "OCI chart ${VERSION} already exists; skipping publication."
+              exit 0
+              ;;
+            404) ;; # Only a missing manifest permits publication.
+            *)
+              echo "Cannot check OCI chart ${VERSION}: HTTP ${status}" >&2
+              exit 1
+              ;;
+          esac
+
+          helm push ".cr-release-packages/vector-${VERSION}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
+
+  dispatch:
+    name: Trigger Vector manifest refresh
+    needs: [check, release]
+    # Dispatch only after both GitHub and GHCR publication succeed.
+    if: "!cancelled() && needs.check.result == 'success' && needs.release.result == 'success'"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Vector bot token
+        id: vector-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          owner: vectordotdev
+          repositories: vector
+          permission-actions: write
+      - name: Trigger Vector manifest refresh
+        env:
+          GH_TOKEN: ${{ steps.vector-token.outputs.token }}
+          CHART_VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          gh workflow run release_manifests.yml \
+            --repo vectordotdev/vector --ref master \
+            -f chart_version="$CHART_VERSION"
+          echo "Dispatched Vector manifest refresh for chart ${CHART_VERSION}." >> "$GITHUB_STEP_SUMMARY"
