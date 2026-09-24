@@ -12,6 +12,7 @@ on:
 # Cover the release checks as well as publication; all versions share the index.
 concurrency:
   group: chart-publication
+  queue: max
   cancel-in-progress: false
 
 jobs:
