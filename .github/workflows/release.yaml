@@ -9,6 +9,11 @@ on:
       - "charts/**"
   workflow_dispatch:
 
+# Cover the release checks as well as publication; all versions share the index.
+concurrency:
+  group: chart-publication
+  cancel-in-progress: false
+
 jobs:
   check:
     name: Check chart release status
@@ -52,6 +57,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          # Recover an existing release from its original commit, not a later checkout.
+          ref: ${{ needs.check.outputs.released == 'true' && format('refs/tags/vector-{0}', needs.check.outputs.version) || github.sha }}
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
@@ -60,12 +67,37 @@ jobs:
         run: |
           helm repo add vector https://helm.vector.dev
           helm repo update
-      - name: Run chart-releaser
-        if: needs.check.outputs.released == 'false'
+      - name: Install chart-releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        with:
+          install_only: true
+      - name: Publish GitHub chart asset and index
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_SKIP_EXISTING: true
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check.outputs.version }}
+          RELEASED: ${{ needs.check.outputs.released }}
+        run: |
+          set -euo pipefail
+          tag="vector-${VERSION}"
+          asset="${tag}.tgz"
+          if [[ "$RELEASED" == 'false' ]]; then
+            cr package charts/vector
+            cr upload --owner "$GITHUB_REPOSITORY_OWNER" --git-repo "${GITHUB_REPOSITORY#*/}" --commit "$GITHUB_SHA"
+          fi
+
+          # A release can exist before its asset upload completes.
+          assets=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets)
+          if ! jq -e --arg name "$asset" '.assets | any(.name == $name and .state == "uploaded")' <<< "$assets" >/dev/null; then
+            cr package charts/vector
+            gh release upload "$tag" ".cr-release-packages/${asset}" --repo "$GITHUB_REPOSITORY" --clobber
+          fi
+
+          # Use the published bytes for both the index digest and OCI publication.
+          mkdir -p .cr-release-packages .cr-index
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
+            --pattern "$asset" --dir .cr-release-packages --clobber
+          cr index --owner "$GITHUB_REPOSITORY_OWNER" --git-repo "${GITHUB_REPOSITORY#*/}" --push
       - name: Login to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -99,8 +131,6 @@ jobs:
               ;;
           esac
 
-          # Package explicitly: chart-releaser is skipped on partial-release retries.
-          helm package charts/vector --destination .cr-release-packages
           helm push ".cr-release-packages/vector-${VERSION}.tgz" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/helm-charts"
 
   dispatch:
