@@ -44,13 +44,12 @@ runs:
           echo "HEAD is not a fast-forward of ${TARGET}; re-run this workflow." >&2
           exit 1
         }
-        # GitHub Apps need the Workflows permission to push workflow file changes.
-        workflows=''
-        git diff --quiet "$base" HEAD -- .github/workflows || workflows='write'
+        # No Workflows permission: GitHub checks it only for new commits, and the
+        # release creates commits that change only release files. master
+        # fast-forwards to commits that already exist on develop.
         {
           echo "sha=$(git rev-parse HEAD)"
           echo "base=$base"
-          echo "workflows=$workflows"
         } >> "$GITHUB_OUTPUT"
 
     - name: Require active release freeze
@@ -69,7 +68,6 @@ runs:
         private-key: ${{ inputs.app-private-key }}
         permission-contents: write
         permission-actions: read
-        permission-workflows: ${{ steps.inspect.outputs.workflows }}
 
     # A commit that already passed CI (for example the release commit, before
     # master fast-forwards to it) does not run CI again.
@@ -155,7 +153,6 @@ runs:
         app-id: ${{ inputs.app-id }}
         private-key: ${{ inputs.app-private-key }}
         permission-contents: write
-        permission-workflows: ${{ steps.inspect.outputs.workflows }}
 
     - name: Push commit to target branch
       shell: bash

@@ -6,7 +6,7 @@ Charts are packaged and released with [`cr`](https://github.com/helm/chart-relea
 
 ## Prerequisites
 
-The release workflows authenticate as the `vectordotdev-bot` GitHub App. The App must be installed on this repo with **Contents** write, **Actions** read, and **Administration** write (to update rulesets) permissions. A release that changes files under `.github/workflows` also needs **Workflows** write: the fast-forward of `master` then changes workflow files, and GitHub rejects App pushes that change workflow files without it.
+The release workflows authenticate as the `vectordotdev-bot` GitHub App. The App must be installed on this repo with **Contents** write, **Actions** read, and **Administration** write (to update rulesets) permissions. It does not need **Workflows** write: GitHub checks that permission only for new commits, the release creates commits that change only release files, and `master` fast-forwards to commits that already exist on `develop`.
 
 Configure the following under **Settings → Secrets and variables → Actions**:
 
