@@ -1,0 +1,184 @@
+name: Push after CI
+description: Push HEAD directly to a frozen release branch once CI has passed on that exact commit.
+inputs:
+  target-branch:
+    description: Release branch to fast-forward to HEAD, master or develop.
+    required: true
+  releasing-branch:
+    description: Branch under releasing/ that runs CI on HEAD before the push, unless CI already passed on HEAD.
+    required: true
+  app-id:
+    description: ID of the vectordotdev-bot GitHub App.
+    required: true
+  app-private-key:
+    description: Private key of the vectordotdev-bot GitHub App.
+    required: true
+  freeze-ruleset-id:
+    description: Repository variable RELEASE_FREEZE_RULESET_ID (the vars context is unavailable in composite actions).
+    required: true
+  bot-bypass-ruleset-ids:
+    description: Repository variable RELEASE_FREEZE_BOT_BYPASS, comma-separated ruleset IDs (the vars context is unavailable in composite actions).
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Inspect commit
+      id: inspect
+      shell: bash
+      env:
+        TARGET: ${{ inputs.target-branch }}
+        RELEASING_BRANCH: ${{ inputs.releasing-branch }}
+      run: |
+        set -euo pipefail
+        [[ "$TARGET" == master || "$TARGET" == develop ]] || {
+          echo "Target branch must be master or develop: $TARGET" >&2
+          exit 1
+        }
+        # ci.yaml runs on pushes to releasing/**.
+        [[ "$RELEASING_BRANCH" == releasing/* ]] || {
+          echo "Releasing branch must be under releasing/: $RELEASING_BRANCH" >&2
+          exit 1
+        }
+        base=$(git rev-parse --verify "refs/remotes/origin/${TARGET}")
+        git merge-base --is-ancestor "$base" HEAD || {
+          echo "HEAD is not a fast-forward of ${TARGET}; re-run this workflow." >&2
+          exit 1
+        }
+        # GitHub Apps need the Workflows permission to push workflow file changes.
+        workflows=''
+        git diff --quiet "$base" HEAD -- .github/workflows || workflows='write'
+        {
+          echo "sha=$(git rev-parse HEAD)"
+          echo "base=$base"
+          echo "workflows=$workflows"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Require active release freeze
+      uses: ./.github/actions/require-release-freeze
+      with:
+        app-id: ${{ inputs.app-id }}
+        app-private-key: ${{ inputs.app-private-key }}
+        freeze-ruleset-id: ${{ inputs.freeze-ruleset-id }}
+        bot-bypass-ruleset-ids: ${{ inputs.bot-bypass-ruleset-ids }}
+
+    - name: Create bot token for CI
+      id: ci-token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.app-private-key }}
+        permission-contents: write
+        permission-actions: read
+        permission-workflows: ${{ steps.inspect.outputs.workflows }}
+
+    # A commit that already passed CI (for example the release commit, before
+    # master fast-forwards to it) does not run CI again.
+    - name: Find passing CI run
+      id: existing
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.ci-token.outputs.token }}
+        SHA: ${{ steps.inspect.outputs.sha }}
+      run: |
+        set -euo pipefail
+        run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yaml --commit "$SHA" --event push \
+          --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+        if [[ -n "$run" ]]; then
+          echo "CI already passed on ${SHA}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${run}"
+        fi
+        echo "run=$run" >> "$GITHUB_OUTPUT"
+
+    - name: Push commit to releasing branch
+      if: steps.existing.outputs.run == ''
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.ci-token.outputs.token }}
+        TARGET: ${{ inputs.target-branch }}
+        RELEASING_BRANCH: ${{ inputs.releasing-branch }}
+        SHA: ${{ steps.inspect.outputs.sha }}
+        BASE: ${{ steps.inspect.outputs.base }}
+      run: |
+        set -euo pipefail
+        # The checkout ran with persist-credentials: false, so origin has no credentials.
+        remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        current=$(git ls-remote --exit-code "$remote" "refs/heads/${TARGET}")
+        [[ "${current%%$'\t'*}" == "$BASE" ]] || {
+          echo "${TARGET} moved since checkout; re-run this workflow." >&2
+          exit 1
+        }
+        # The releasing branch only carries this commit to CI, so replace any
+        # leftover from an earlier attempt.
+        git push --force "$remote" "${SHA}:refs/heads/${RELEASING_BRANCH}"
+
+    - name: Wait for CI on the releasing branch
+      if: steps.existing.outputs.run == ''
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.ci-token.outputs.token }}
+        RELEASING_BRANCH: ${{ inputs.releasing-branch }}
+        SHA: ${{ steps.inspect.outputs.sha }}
+      run: |
+        set -euo pipefail
+        # The push starts "Lint and Test Charts" asynchronously.
+        run=''
+        for _ in $(seq 30); do
+          run=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yaml --commit "$SHA" --event push \
+            --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          [[ -n "$run" ]] && break
+          sleep 10
+        done
+        [[ -n "$run" ]] || {
+          echo "CI did not start for ${SHA} on ${RELEASING_BRANCH}." >&2
+          exit 1
+        }
+        echo "Waiting for ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${run}"
+        gh run watch "$run" --repo "$GITHUB_REPOSITORY" --interval 30 > /dev/null
+        conclusion=$(gh run view "$run" --repo "$GITHUB_REPOSITORY" --json conclusion --jq .conclusion)
+        [[ "$conclusion" == success ]] || {
+          echo "CI run ${run} for ${SHA} concluded '${conclusion}'; nothing was pushed." >&2
+          exit 1
+        }
+
+    - name: Require active release freeze
+      uses: ./.github/actions/require-release-freeze
+      with:
+        app-id: ${{ inputs.app-id }}
+        app-private-key: ${{ inputs.app-private-key }}
+        freeze-ruleset-id: ${{ inputs.freeze-ruleset-id }}
+        bot-bypass-ruleset-ids: ${{ inputs.bot-bypass-ruleset-ids }}
+
+    # A fresh token: the CI token may be close to expiry after a long CI run.
+    - name: Create bot token for the push
+      id: push-token
+      uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.app-private-key }}
+        permission-contents: write
+        permission-workflows: ${{ steps.inspect.outputs.workflows }}
+
+    - name: Push commit to target branch
+      shell: bash
+      env:
+        GH_TOKEN: ${{ steps.push-token.outputs.token }}
+        TARGET: ${{ inputs.target-branch }}
+        RELEASING_BRANCH: ${{ inputs.releasing-branch }}
+        USED_RELEASING_BRANCH: ${{ steps.existing.outputs.run == '' }}
+        SHA: ${{ steps.inspect.outputs.sha }}
+        BASE: ${{ steps.inspect.outputs.base }}
+      run: |
+        set -euo pipefail
+        remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        current=$(git ls-remote --exit-code "$remote" "refs/heads/${TARGET}")
+        [[ "${current%%$'\t'*}" == "$BASE" ]] || {
+          echo "${TARGET} moved while CI ran; re-run this workflow." >&2
+          exit 1
+        }
+        # Plain non-force push: GitHub rejects anything but a fast-forward and
+        # enforces the required status checks, which passed on this commit above.
+        # Never rebase, retry, or force-push.
+        git push "$remote" "${SHA}:refs/heads/${TARGET}"
+        if [[ "$USED_RELEASING_BRANCH" == true ]]; then
+          git push "$remote" --delete "$RELEASING_BRANCH"
+        fi
+        echo "Pushed ${SHA} to ${TARGET} after CI passed on it." >> "$GITHUB_STEP_SUMMARY"

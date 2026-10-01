@@ -3,6 +3,11 @@ name: Lint and Test Charts
 
 on:
   pull_request:
+  # Release automation pushes to master and develop directly. It pushes each
+  # commit here first, so the required checks pass on that exact commit.
+  push:
+    branches:
+      - "releasing/**"
 
 jobs:
   lint-chart:

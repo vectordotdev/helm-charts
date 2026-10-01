@@ -3,101 +3,191 @@ name: Prepare Release
 on:
   workflow_dispatch:
 
-# Uses the vectordotdev-bot GitHub App so that PR creation and pushes can
-# trigger downstream workflows (the default GITHUB_TOKEN cannot do that).
-# Requires the App to be installed on this repo, with VECTORDOTDEV_BOT_APP_ID
-# (variable) and VECTORDOTDEV_BOT_PRIVATE_KEY (secret) configured.
+permissions:
+  contents: read
+
+# One group for every freeze transition and release push: an activation that
+# overlaps a closeout could end with a disabled freeze and a restored bypass.
+concurrency:
+  group: release-freeze
+  queue: max
+  cancel-in-progress: false
+
+# Releases the latest stable Vector version without pull requests. The job
+# freezes master and develop, pushes the release commits directly to develop
+# after CI passes on them, and starts Post Release to finish the release.
+# The vectordotdev-bot GitHub App makes the pushes; RELEASING.md lists the
+# secrets, variables, and rulesets that it needs.
 jobs:
   prepare:
+    name: Commit the release to develop
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+      actions: write # Start Post Release
 
     steps:
-      - name: Generate App token
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
-          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
-
       - name: Checkout develop
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: develop
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
 
-      - name: Configure Git
+      - name: Get latest Vector version
+        id: vector
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "vectordotdev-bot[bot]"
-          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+          set -euo pipefail
+          # releases/latest can point at other release trains (for example vdev),
+          # so take the highest stable Vector version.
+          version=$(gh release list --repo vectordotdev/vector --limit 100 --exclude-drafts --exclude-pre-releases \
+            --json tagName --jq '.[].tagName | select(test("^v[0-9]+\\.[0-9]+\\.[0-9]+$")) | ltrimstr("v")' \
+            | sort -V | tail -n 1)
+          [[ -n "$version" ]] || {
+            echo "No stable Vector release found." >&2
+            exit 1
+          }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # Freeze master and develop until Post Release has pushed to both.
+      - name: Activate release freeze
+        uses: ./.github/actions/activate-release-freeze
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}
+
+      - name: Use frozen develop
+        run: |
+          # develop may have advanced between checkout and freeze activation.
+          git fetch origin refs/heads/develop:refs/remotes/origin/develop
+          git switch --detach origin/develop
+
+      - name: Check release state
+        id: state
+        env:
+          VERSION: ${{ steps.vector.outputs.version }}
+        run: |
+          set -euo pipefail
+          # A re-run finds the release commit that an earlier run pushed.
+          subject="feat(vector): Regenerate CHANGELOG for ${VERSION}"
+          # awk reads the whole log: exiting early would fail the pipe (SIGPIPE) under pipefail.
+          release=$(git log --format='%H %s' origin/develop \
+            | awk -v s="$subject" '!found && substr($0, 42) == s { print $1; found = 1 }')
+          if [[ -n "$release" ]]; then
+            echo "develop already contains the release commit ${release}."
+            echo "release_sha=$release" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          current=$(sed -nE 's/^appVersion: "?([0-9]+\.[0-9]+\.[0-9]+)-distroless-libc"?$/\1/p' charts/vector/Chart.yaml)
+          chart=$(sed -nE 's/^version: "?([0-9]+\.[0-9]+\.[0-9]+)"?$/\1/p' charts/vector/Chart.yaml)
+          [[ -n "$current" && -n "$chart" ]] || {
+            echo "Cannot read version and appVersion from charts/vector/Chart.yaml." >&2
+            exit 1
+          }
+          if [[ "$current" == "$VERSION" || "$(printf '%s\n' "$current" "$VERSION" | sort -V | tail -n 1)" != "$VERSION" ]]; then
+            echo "Vector ${VERSION} is not newer than appVersion ${current}." >&2
+            exit 1
+          fi
+          echo "chart_version=$chart" >> "$GITHUB_OUTPUT"
+          echo "generate=true" >> "$GITHUB_OUTPUT"
 
       - name: Install helm-docs
+        if: steps.state.outputs.generate == 'true'
         uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
         with:
           version: 1.11.0
 
       - name: Install yq
+        if: steps.state.outputs.generate == 'true'
         run: |
           sudo curl -sSL -o /usr/local/bin/yq \
             https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
       - name: Install git-cliff
+        if: steps.state.outputs.generate == 'true'
         run: |
           curl -sSL https://github.com/orhun/git-cliff/releases/download/v2.7.0/git-cliff-2.7.0-x86_64-unknown-linux-gnu.tar.gz \
             | sudo tar xz -C /usr/local/bin --strip-components=1 git-cliff-2.7.0/git-cliff
 
-      - name: Get latest Vector version
-        id: vector
+      - name: Configure Git
+        if: steps.state.outputs.generate == 'true'
         run: |
-          VERSION=$(curl -s https://api.github.com/repos/vectordotdev/vector/releases/latest \
-            | grep -oE '"tag_name": *"[^"]+"' \
-            | sed 's/"tag_name": *"v//;s/"//')
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Create release branch
-        run: git checkout -b "release-${{ steps.vector.outputs.version }}"
+          git config user.name "vectordotdev-bot[bot]"
+          git config user.email "vectordotdev-bot[bot]@users.noreply.github.com"
 
       - name: Update Vector appVersion
-        run: .github/release-vector-version.sh
+        if: steps.state.outputs.generate == 'true'
+        env:
+          VERSION: ${{ steps.vector.outputs.version }}
+        run: .github/release-vector-version.sh "$VERSION"
 
       - name: Update Helm docs
+        if: steps.state.outputs.generate == 'true'
         run: helm-docs
 
       - name: Commit version bump
+        if: steps.state.outputs.generate == 'true'
+        env:
+          VERSION: ${{ steps.vector.outputs.version }}
         run: |
-          git add .
-          git commit -m "feat(vector): Bump Vector to ${{ steps.vector.outputs.version }} and update Helm docs"
+          set -euo pipefail
+          grep -qxF "appVersion: \"${VERSION}-distroless-libc\"" charts/vector/Chart.yaml || {
+            echo "charts/vector/Chart.yaml does not set appVersion to ${VERSION}-distroless-libc." >&2
+            exit 1
+          }
+          git add --all
+          git commit -m "feat(vector): Bump Vector to ${VERSION} and update Helm docs"
 
+      # git-cliff reads the history, so the changelog lists the bump commit above.
       - name: Regenerate CHANGELOG
+        if: steps.state.outputs.generate == 'true'
         run: .github/release-changelog.sh
 
       - name: Commit changelog
-        run: |
-          git add .
-          git commit -m "feat(vector): Regenerate CHANGELOG for ${{ steps.vector.outputs.version }}"
-
-      - name: Push branch
-        run: git push -u origin "release-${{ steps.vector.outputs.version }}"
-
-      - name: Create PR
-        run: |
-          gh pr create \
-            --title "feat(releasing): Release Vector ${{ steps.vector.outputs.version }}" \
-            --body "$(cat <<'EOF'
-          Automated release PR for Vector ${{ steps.vector.outputs.version }}.
-
-          ## Reviewer checklist
-
-          - [ ] Review `CHANGELOG.md` and edit if needed (drop reverted/housekeeping entries, fix miscategorized commits).
-          - [ ] Confirm `appVersion` in `charts/vector/Chart.yaml` matches the intended Vector release.
-          - [ ] Merge via **squash** so the commit history stays clean — the Post Release workflow fires on merge and will merge `develop` into `master`, triggering the chart release.
-          EOF
-          )" \
-            --base develop \
-            --head "release-${{ steps.vector.outputs.version }}"
+        id: commit
+        if: steps.state.outputs.generate == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.vector.outputs.version }}
+          CHART_VERSION: ${{ steps.state.outputs.chart_version }}
+        run: |
+          set -euo pipefail
+          grep -qF "## [vector-${CHART_VERSION}]" CHANGELOG.md || {
+            echo "CHANGELOG.md has no vector-${CHART_VERSION} entry." >&2
+            exit 1
+          }
+          git add --all
+          git commit -m "feat(vector): Regenerate CHANGELOG for ${VERSION}"
+          # No one reviews these commits, so they may only change the release files.
+          unexpected=$(git diff --name-only origin/develop HEAD \
+            | grep -vxF -e CHANGELOG.md -e charts/vector/Chart.yaml -e charts/vector/README.md || true)
+          [[ -z "$unexpected" ]] || {
+            printf 'Unexpected release changes:\n%s\n' "$unexpected" >&2
+            exit 1
+          }
+          echo "release_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Push release to develop after CI
+        if: steps.state.outputs.generate == 'true'
+        uses: ./.github/actions/push-after-ci
+        with:
+          target-branch: develop
+          releasing-branch: releasing/release-${{ steps.state.outputs.chart_version }}
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}
+
+      # Post Release waits in the release-freeze concurrency group until this run ends.
+      - name: Start Post Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.state.outputs.release_sha || steps.commit.outputs.release_sha }}
+        run: |
+          gh workflow run release-post.yml --repo "$GITHUB_REPOSITORY" --ref develop -f release_ref="$RELEASE_SHA"
+          echo "Started Post Release for ${RELEASE_SHA}." >> "$GITHUB_STEP_SUMMARY"
