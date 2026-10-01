@@ -62,9 +62,13 @@ jobs:
           bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}
 
       - name: Use frozen develop
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          # develop may have advanced between checkout and freeze activation.
-          git fetch origin refs/heads/develop:refs/remotes/origin/develop
+          # develop may have advanced between checkout and freeze activation. The
+          # checkout ran with persist-credentials: false, so authenticate the fetch.
+          git fetch "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            +refs/heads/develop:refs/remotes/origin/develop
           git switch --detach origin/develop
 
       - name: Check release state
