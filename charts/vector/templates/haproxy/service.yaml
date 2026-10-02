@@ -17,6 +17,10 @@ spec:
 {{- if .Values.haproxy.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.haproxy.service.loadBalancerIP }}
 {{- end }}
+{{- with .Values.haproxy.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
 {{- if .Values.haproxy.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.haproxy.service.ipFamilyPolicy }}
 {{- end }}
