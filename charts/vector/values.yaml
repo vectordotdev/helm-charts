@@ -160,7 +160,8 @@ serviceAccount:
   # serviceAccount.automountToken -- Automount API credentials for Vector's ServiceAccount.
   automountToken: true
 
-# podAnnotations -- Set annotations on Vector Pods.
+# podAnnotations -- Set annotations on Vector Pods. Values are rendered with `tpl`, so
+# templated strings (e.g. a checksum of an externally managed ConfigMap) are supported.
 podAnnotations: {}
 
 # podLabels -- Set labels on Vector Pods.

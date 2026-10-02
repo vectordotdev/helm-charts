@@ -192,7 +192,7 @@ helm install <RELEASE_NAME> \
 | persistence.retentionPolicy | object | `{}` | Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims. Valid for the "Aggregator" role. |
-| podAnnotations | object | `{}` | Set annotations on Vector Pods. |
+| podAnnotations | object | `{}` | Set annotations on Vector Pods. Values are rendered with `tpl`, so templated strings (e.g. a checksum of an externally managed ConfigMap) are supported. |
 | podDisruptionBudget.enabled | bool | `false` | Enable a [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for Vector. |
 | podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction. |
 | podDisruptionBudget.minAvailable | int | `1` | The number of Pods that must still be available after an eviction. |
