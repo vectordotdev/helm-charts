@@ -107,7 +107,7 @@ autoscaling:
   # autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for Vector's HPA.
   targetMemoryUtilizationPercentage:
   # autoscaling.customMetric -- Target a custom metric for autoscaling.
-  customMetric: {}
+  customMetric: []
     #  - type: Pods
     #    pods:
     #      metric:
@@ -702,7 +702,7 @@ haproxy:
     # haproxy.autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for HAProxy's HPA.
     targetMemoryUtilizationPercentage:
     # haproxy.autoscaling.customMetric -- Target a custom metric for autoscaling.
-    customMetric: {}
+    customMetric: []
       #  - type: Pods
       #    pods:
       #      metric:
