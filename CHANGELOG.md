@@ -3,6 +3,43 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.59.0] - 2026-10-06
+
+### Other
+
+#### Other
+
+- Dispatch Vector manifest refresh after chart release (#599) ([2f619d1](https://github.com/vectordotdev/helm-charts/commit/2f619d10c31e67a1a1f916297e582c04d99e87d2))
+- Add CODEOWNERS file (#602) ([639aa12](https://github.com/vectordotdev/helm-charts/commit/639aa12b18646515453607abec06e551a3e60a06))
+
+### Releasing
+
+#### Bug Fixes
+
+- Make post-release steps idempotent and retry-safe (#583) ([c0ffcd7](https://github.com/vectordotdev/helm-charts/commit/c0ffcd73a23593fb7d7a44e99d8ab51421997a26))
+
+#### Features
+
+- Release without pull requests during a release freeze (#601) ([5eed843](https://github.com/vectordotdev/helm-charts/commit/5eed843eb271d8d381e39a8a0c266e257e4614a4))
+
+#### Other
+
+- Bump chart version to 0.59.0 (#592) ([d78fa0b](https://github.com/vectordotdev/helm-charts/commit/d78fa0b6666c3888802d12cdba0612340d6559c9))
+- Include non-conventional commits in changelog (#594) ([ecf9276](https://github.com/vectordotdev/helm-charts/commit/ecf9276ae2dffdfde1e8ae8ff2fe6caa4ad96c62))
+
+### Unscoped
+
+#### Documentation
+
+- Trim down RELEASING.md (#603) ([9cccbf8](https://github.com/vectordotdev/helm-charts/commit/9cccbf8f55330ecfedd40c105f8b070635f175db))
+
+### Vector
+
+#### Features
+
+- Allow templating pod annotations (#588) ([e5750a4](https://github.com/vectordotdev/helm-charts/commit/e5750a42b835d7e687cdaee0e40f8235337fa27d))
+- Bump Vector to 0.59.0 and update Helm docs ([36687bb](https://github.com/vectordotdev/helm-charts/commit/36687bb7844f8fdc3be445dec45f8951e2632fbf))
+
 ## [vector-0.58.0] - 2026-08-26
 
 ### Vector
