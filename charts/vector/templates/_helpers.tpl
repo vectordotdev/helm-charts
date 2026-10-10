@@ -120,7 +120,7 @@ Selector labels.
 {{- define "vector.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if or (ne .Values.role "Agent") (ne .Values.role "Aggregator") (ne .Values.role "Stateless-Aggregator") }}
+{{- if or (ne (lower .Values.role) "agent") (ne (lower .Values.role) "aggregator") (ne (lower .Values.role) "stateless-aggregator") }}
 app.kubernetes.io/component: {{ .Values.role }}
 {{- end }}
 {{- end }}
@@ -292,9 +292,9 @@ true
 Return Vector's Resource type based on its `.Values.role`.
 */}}
 {{- define "_vector.role" -}}
-  {{- if eq $.Values.role "Stateless-Aggregator" -}}
+  {{- if eq (lower $.Values.role) "stateless-aggregator" -}}
 deployment
-  {{- else if eq $.Values.role "Agent" -}}
+  {{- else if eq (lower $.Values.role) "agent" -}}
 daemonset
   {{- else -}}
 statefulset
