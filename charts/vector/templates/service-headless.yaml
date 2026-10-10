@@ -3,6 +3,10 @@ TODO: Remove outer "if/elseif"
 */}}
 {{- if .Values.serviceHeadless }}
 {{- if .Values.serviceHeadless.enabled }}
+{{- $headlessAnnotations := .Values.service.annotations }}
+{{- if kindIs "map" .Values.serviceHeadless.annotations }}
+{{- $headlessAnnotations = .Values.serviceHeadless.annotations }}
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,7 +15,7 @@ metadata:
   labels:
     {{- include "vector.labels" . | nindent 4 }}
   annotations:
-  {{- with .Values.service.annotations }}
+  {{- with $headlessAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:

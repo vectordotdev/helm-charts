@@ -1,0 +1,11 @@
+# Test serviceHeadless with custom annotations
+## Values file for testing serviceHeadless annotations independent from service annotations.
+
+service:
+  enabled: true
+  annotations:
+    service-annotation: "service-value"
+serviceHeadless:
+  enabled: true
+  annotations:
+    headless-annotation: "headless-value"
