@@ -10,7 +10,7 @@ data:
   {{- if .Values.customConfig }}
   vector.yaml: |
 {{ tpl (toYaml .Values.customConfig) . | indent 4 }}
-  {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+  {{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
   aggregator.yaml: |
     data_dir: /vector-data-dir
     api:
@@ -53,7 +53,7 @@ data:
         inputs: [datadog_agent, fluent, logstash, splunk_hec, statsd, syslog, vector]
         encoding:
           codec: json
-  {{- else if (eq .Values.role "Agent") }}
+  {{- else if (eq (lower .Values.role) "agent") }}
   agent.yaml: |
     data_dir: /vector-data-dir
     api:

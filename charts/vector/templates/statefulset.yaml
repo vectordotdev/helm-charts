@@ -1,4 +1,4 @@
-{{- if (eq .Values.role "Aggregator") -}}
+{{- if (eq (lower .Values.role) "aggregator") -}}
 apiVersion: {{ .Values.statefulSet.apiVersion | default "apps/v1" }}
 kind: StatefulSet
 metadata:

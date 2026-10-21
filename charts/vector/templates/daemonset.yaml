@@ -1,4 +1,4 @@
-{{- if (eq .Values.role "Agent") -}}
+{{- if (eq (lower .Values.role) "agent") -}}
 apiVersion: {{ .Values.daemonSet.apiVersion | default "apps/v1" }}
 kind: DaemonSet
 metadata:
