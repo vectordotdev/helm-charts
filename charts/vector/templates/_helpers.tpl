@@ -50,7 +50,12 @@ Build a valid image reference from available fields:
 {{- /* Case 1: digest field wins */ -}}
 {{- if $sha -}}
   {{- if $tag -}}
-    {{- printf "%s:%s@%s" $repo $tag $sha -}}
+    {{- /* don't print tag if tag contains something looking like a digest reference */ -}}
+    {{- if contains "@sha256:" $tag -}}
+      {{- printf "%s@%s" $repo $sha -}}
+    {{- else -}}
+      {{- printf "%s:%s@%s" $repo $tag $sha -}}
+    {{- end -}}
   {{- else -}}
     {{- printf "%s@%s" $repo $sha -}}
   {{- end -}}
