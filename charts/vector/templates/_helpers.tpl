@@ -121,7 +121,7 @@ Selector labels.
 app.kubernetes.io/name: {{ include "vector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if or (ne (lower .Values.role) "agent") (ne (lower .Values.role) "aggregator") (ne (lower .Values.role) "stateless-aggregator") }}
-app.kubernetes.io/component: {{ .Values.role }}
+app.kubernetes.io/component: {{ lower .Values.role }}
 {{- end }}
 {{- end }}
 
