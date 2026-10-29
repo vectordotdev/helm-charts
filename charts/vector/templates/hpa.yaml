@@ -1,4 +1,4 @@
-{{- if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") -}}
+{{- if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") -}}
 {{- if .Values.autoscaling.enabled }}
 apiVersion: {{ template "autoscaling.apiVersion" . }}
 kind: HorizontalPodAutoscaler
@@ -12,9 +12,9 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    {{- if (eq .Values.role "Aggregator") }}
+    {{- if (eq (lower .Values.role) "aggregator") }}
     kind: StatefulSet
-    {{- else if (eq .Values.role "Stateless-Aggregator") }}
+    {{- else if (eq (lower .Values.role) "stateless-aggregator") }}
     kind: Deployment
     {{- end }}
     name: {{ include "vector.fullname" . }}
