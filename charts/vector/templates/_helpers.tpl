@@ -184,6 +184,50 @@ Iterate over the components defined in `.Values.customConfig`.
 {{- end }}
 
 {{/*
+Generate the ports of the Vector Service. Renders nothing when there are no
+ports to expose, for example when customConfig disables the API and defines no
+components with an address.
+*/}}
+{{- define "vector.servicePorts" -}}
+{{- if or .Values.service.ports .Values.existingConfigMaps }}
+  {{- with .Values.service.ports }}
+    {{- toYaml . }}
+  {{- end }}
+{{- else if .Values.customConfig }}
+  {{- include "vector.ports" . }}
+{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+- name: datadog-agent
+  port: 8282
+  protocol: TCP
+- name: fluent
+  port: 24224
+  protocol: TCP
+- name: logstash
+  port: 5044
+  protocol: TCP
+- name: splunk-hec
+  port: 8080
+  protocol: TCP
+- name: statsd
+  port: 8125
+  protocol: TCP
+- name: syslog
+  port: 9000
+  protocol: TCP
+- name: vector
+  port: 6000
+  protocol: TCP
+- name: prom-exporter
+  port: 9090
+  protocol: TCP
+{{- else if (eq .Values.role "Agent") }}
+- name: prom-exporter
+  port: 9090
+  protocol: TCP
+{{- end }}
+{{- end }}
+
+{{/*
 Generate a single ServicePort based on a component configuration.
 */}}
 {{- define "_helper.generatePort" -}}
