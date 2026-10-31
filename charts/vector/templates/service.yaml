@@ -1,4 +1,8 @@
+{{- $ports := "" }}
 {{- if .Values.service.enabled }}
+{{- $ports = include "vector.servicePorts" . | trim }}
+{{- end }}
+{{- if and .Values.service.enabled $ports }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,40 +41,7 @@ spec:
   trafficDistribution: {{ .Values.service.trafficDistribution }}
 {{- end }}
   ports:
-{{- if or .Values.service.ports .Values.existingConfigMaps }}
-  {{- toYaml .Values.service.ports | nindent 4 }}
-{{- else if .Values.customConfig }}
-  {{- include "vector.ports" . | indent 4 }}
-{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
-    - name: datadog-agent
-      port: 8282
-      protocol: TCP
-    - name: fluent
-      port: 24224
-      protocol: TCP
-    - name: logstash
-      port: 5044
-      protocol: TCP
-    - name: splunk-hec
-      port: 8080
-      protocol: TCP
-    - name: statsd
-      port: 8125
-      protocol: TCP
-    - name: syslog
-      port: 9000
-      protocol: TCP
-    - name: vector
-      port: 6000
-      protocol: TCP
-    - name: prom-exporter
-      port: 9090
-      protocol: TCP
-{{- else if (eq .Values.role "Agent") }}
-    - name: prom-exporter
-      port: 9090
-      protocol: TCP
-{{- end }}
+    {{- $ports | nindent 4 }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: {{ .Values.service.type }}
