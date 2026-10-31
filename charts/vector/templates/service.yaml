@@ -1,4 +1,7 @@
-{{- $ports := include "vector.servicePorts" . | trim }}
+{{- $ports := "" }}
+{{- if .Values.service.enabled }}
+{{- $ports = include "vector.servicePorts" . | trim }}
+{{- end }}
 {{- if and .Values.service.enabled $ports }}
 apiVersion: v1
 kind: Service
