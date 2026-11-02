@@ -61,7 +61,7 @@ spec:
             {{- toYaml .Values.haproxy.containerPorts | nindent 12 }}
           {{- else if .Values.customConfig }}
             {{- include "vector.containerPorts" . | indent 12 }}
-          {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+          {{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
             - name: datadog-agent
               containerPort: 8282
               protocol: TCP
@@ -86,7 +86,7 @@ spec:
             - name: prom-exporter
               containerPort: 9090
               protocol: TCP
-          {{- else if (eq .Values.role "Agent") }}
+          {{- else if (eq (lower .Values.role) "agent") }}
             - name: prom-exporter
               containerPort: 9090
               protocol: TCP
