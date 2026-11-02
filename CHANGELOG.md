@@ -3,6 +3,40 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.61.0] - 2026-10-29
+
+### Releasing
+
+#### Other
+
+- Bump chart version to 0.61.0 ([a5a5723](https://github.com/vectordotdev/helm-charts/commit/a5a572375cd173381e7c415019f8e4153d9e4f5c))
+
+### Vector
+
+#### Documentation
+
+- Describe chart as the Helm chart for Vector (#613) ([9f33b87](https://github.com/vectordotdev/helm-charts/commit/9f33b87e676f328c0284e5fe986a0fc5e3d6475a))
+
+#### Features
+
+- Bump Vector to 0.61.0 and update Helm docs ([0718d7d](https://github.com/vectordotdev/helm-charts/commit/0718d7d09fe0412d5e8632b27856c5db2333baa2))
+
+## [vector-0.60.0] - 2026-10-19
+
+### Releasing
+
+#### Other
+
+- Bump chart version to 0.60.0 ([674f603](https://github.com/vectordotdev/helm-charts/commit/674f603a0645b12b06d51eb2984f0f92a916509c))
+
+### Vector
+
+#### Features
+
+- Support volumeAttributesClassName (#606) ([8359893](https://github.com/vectordotdev/helm-charts/commit/8359893c305e7f533b6d3ddd61a76ca51216632d))
+- Add service loadBalancerSourceRanges field (#593) ([fe20e42](https://github.com/vectordotdev/helm-charts/commit/fe20e4262b404e7463239762d4129b5e3d6e67ff))
+- Bump Vector to 0.60.0 and update Helm docs ([f6762e0](https://github.com/vectordotdev/helm-charts/commit/f6762e050f36385ba4f55461d9c04cde53098c99))
+
 ## [vector-0.59.0] - 2026-10-06
 
 ### Other
