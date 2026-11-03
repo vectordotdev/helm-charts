@@ -61,7 +61,9 @@ spec:
       {{- include "vector.pod" . | nindent 6 }}
   volumeClaimTemplates:
 {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
-  - metadata:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
       name: data
       {{- with .Values.persistence.annotations }}
       annotations:
