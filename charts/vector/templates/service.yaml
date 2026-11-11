@@ -20,6 +20,10 @@ spec:
 {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
 {{- end }}
+{{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
 {{- if .Values.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
 {{- end }}
@@ -37,7 +41,7 @@ spec:
   {{- toYaml .Values.service.ports | nindent 4 }}
 {{- else if .Values.customConfig }}
   {{- include "vector.ports" . | indent 4 }}
-{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+{{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
     - name: datadog-agent
       port: 8282
       protocol: TCP
@@ -62,7 +66,7 @@ spec:
     - name: prom-exporter
       port: 9090
       protocol: TCP
-{{- else if (eq .Values.role "Agent") }}
+{{- else if (eq (lower .Values.role) "agent") }}
     - name: prom-exporter
       port: 9090
       protocol: TCP

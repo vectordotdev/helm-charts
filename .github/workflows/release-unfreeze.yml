@@ -1,0 +1,41 @@
+# Close the release freeze opened by "Prepare Release". Post Release closes it
+# automatically after pushing to master and develop. Dispatch this to abandon a
+# release whose preparation or Post Release cannot finish, or to retry a failed
+# closeout. It revokes the temporary vectordotdev-bot direct-push bypasses
+# before disabling the freeze: disabling the freeze first would leave master and
+# develop writable directly by the bot.
+name: Unfreeze release branches
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Shared with Prepare Release and Post Release: a closeout that overlaps an
+# activation could end with a disabled freeze and a restored bypass.
+concurrency:
+  group: release-freeze
+  queue: max
+  cancel-in-progress: false
+
+jobs:
+  unfreeze:
+    name: Close the release freeze
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
+          persist-credentials: false
+
+      - name: Revoke bypasses and unfreeze master and develop
+        uses: ./.github/actions/unfreeze-release
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}

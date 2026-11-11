@@ -1,101 +1,222 @@
 name: Post Release
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [develop]
   workflow_dispatch:
     inputs:
       release_ref:
-        description: 'Git ref (branch or commit SHA) to sync to master, e.g. release-0.56.0'
+        description: 'Release commit on develop (SHA or ref) to merge into master. Prepare Release passes the commit that it pushed.'
         required: true
         type: string
 
+permissions:
+  contents: read
+
+# Shared with Prepare Release and Unfreeze release branches: release pushes and
+# freeze transitions must not overlap.
+concurrency:
+  group: release-freeze
+  queue: max
+  cancel-in-progress: false
+
+# Started by Prepare Release. Pushes directly to master and develop as the
+# vectordotdev-bot during the release freeze, then closes the freeze. Each
+# commit passes CI on a releasing branch first; GitHub keeps enforcing the
+# required status checks on the bot's pushes.
 jobs:
-  post-release:
-    # Only run when a release-* branch is merged into develop, or manually triggered
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release-'))
+  sync-to-master:
+    name: Fast-forward master to the release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
+    timeout-minutes: 60
+    outputs:
+      chart_version: ${{ steps.read-version.outputs.chart_version }}
 
     steps:
-      - name: Generate App token
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
-          private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
-
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_ref || 'develop' }}
+          ref: ${{ inputs.release_ref }}
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
 
-      - name: Configure Git
+      - name: Read chart version
+        id: read-version
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('node:fs');
+            const chart = fs.readFileSync('charts/vector/Chart.yaml', 'utf8');
+            const version = chart.match(/^version: "(\d+\.\d+\.\d+)"\r?$/m)?.[1];
+            if (!version) {
+              throw new Error('Chart.yaml must contain a valid chart version (major.minor.patch)');
+            }
+            core.setOutput('chart_version', version);
+
+      - name: Check release commit
+        id: release
+        env:
+          CHART_VERSION: ${{ steps.read-version.outputs.chart_version }}
         run: |
-          git config user.name "vectordotdev-bot[bot]"
-          git config user.email "${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com"
+          set -euo pipefail
+          release=$(git rev-parse HEAD)
+          # Only develop history reaches master.
+          git merge-base --is-ancestor "$release" origin/develop || {
+            echo "${release} is not on develop." >&2
+            exit 1
+          }
+          # A release commit has a changelog entry for its chart version. This
+          # rejects commits before the release and after the version bump.
+          grep -qF "## [vector-${CHART_VERSION}]" CHANGELOG.md || {
+            echo "${release} has no CHANGELOG.md entry for chart ${CHART_VERSION}; it is not a release commit." >&2
+            exit 1
+          }
+          if git merge-base --is-ancestor "$release" origin/master; then
+            echo "master already contains ${release}; nothing to do."
+            exit 0
+          fi
+          # master only moves forward along develop, so it never needs a merge commit.
+          git merge-base --is-ancestor origin/master "$release" || {
+            echo "master has commits that develop does not have, so it cannot fast-forward to ${release}." >&2
+            exit 1
+          }
+          echo "push=true" >> "$GITHUB_OUTPUT"
+
+      # Prepare Release already ran CI on this commit, so this reuses that run.
+      - name: Fast-forward master after CI
+        if: steps.release.outputs.push == 'true'
+        uses: ./.github/actions/push-after-ci
+        with:
+          target-branch: master
+          releasing-branch: releasing/master-${{ steps.read-version.outputs.chart_version }}
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}
+
+  bump-version:
+    name: Bump the chart version on develop
+    needs: [sync-to-master]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Calculate next chart version
+        id: version
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CHART_VERSION: ${{ needs.sync-to-master.outputs.chart_version }}
+        with:
+          script: |
+            const current = process.env.CHART_VERSION;
+            const [major, minor] = current.split('.');
+            core.setOutput('current', current);
+            core.setOutput('next', `${major}.${Number(minor) + 1}.0`);
+
+      - name: Check bump state
+        id: state
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CURRENT: ${{ steps.version.outputs.current }}
+          NEXT: ${{ steps.version.outputs.next }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const next = process.env.NEXT;
+            const chart = fs.readFileSync('charts/vector/Chart.yaml', 'utf8');
+            const actual = chart.match(/^version: "(\d+\.\d+\.\d+)"\r?$/m)?.[1];
+            if (!actual) throw new Error('Chart.yaml must contain a valid chart version');
+            const parts = actual.split('.').map(Number);
+            const target = next.split('.').map(Number);
+            const difference = parts.map((part, index) => part - target[index]).find(value => value !== 0) ?? 0;
+            if (difference >= 0) {
+              core.info(`Chart version ${actual} already includes bump to ${next}`);
+              return;
+            }
+            if (actual !== process.env.CURRENT) {
+              throw new Error(`Chart version is '${actual}' (expected '${process.env.CURRENT}')`);
+            }
+            core.setOutput('bump', 'true');
 
       - name: Install helm-docs
+        if: steps.state.outputs.bump == 'true'
         uses: envoy/install-helm-docs@05313083ef2cfaea27c4c3d7cb725242d22ea88b # v1.0.0
         with:
           version: 1.11.0
 
-      - name: Merge develop into master
-        run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
-          SYNC_BRANCH="release-sync/${CHART_VERSION}"
-          git checkout -b "$SYNC_BRANCH"
-          git push origin "$SYNC_BRANCH"
-          PR_URL=$(gh pr create \
-            --title "chore(releasing): Merge develop into master for ${CHART_VERSION}" \
-            --body "Post release: sync master with the release changes from develop for ${CHART_VERSION}." \
-            --base master \
-            --head "$SYNC_BRANCH")
-          gh pr merge "$PR_URL" --auto --merge
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
-      - name: Read and bump chart version
-        id: version
-        run: |
-          CHART_VERSION=$(grep '^version:' charts/vector/Chart.yaml | sed 's/version: "\(.*\)"/\1/')
-          MAJOR=$(echo "$CHART_VERSION" | cut -d. -f1)
-          MINOR=$(echo "$CHART_VERSION" | cut -d. -f2)
-          NEW_VERSION="${MAJOR}.$((MINOR + 1)).0"
-          echo "current=$CHART_VERSION" >> "$GITHUB_OUTPUT"
-          echo "next=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Create version bump branch
-        run: |
-          git switch develop
-          git checkout -b "bump-chart-version-${{ steps.version.outputs.next }}"
-
       - name: Bump chart version
-        run: |
-          sed -i 's/version: "${{ steps.version.outputs.current }}"/version: "${{ steps.version.outputs.next }}"/' \
-            charts/vector/Chart.yaml
+        if: steps.state.outputs.bump == 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CURRENT: ${{ steps.version.outputs.current }}
+          NEXT: ${{ steps.version.outputs.next }}
+        with:
+          script: |
+            const fs = require('node:fs');
+            const path = 'charts/vector/Chart.yaml';
+            const chart = fs.readFileSync(path, 'utf8');
+            fs.writeFileSync(path, chart.replace(
+              `version: "${process.env.CURRENT}"`,
+              `version: "${process.env.NEXT}"`,
+            ));
 
       - name: Update Helm docs
+        if: steps.state.outputs.bump == 'true'
         run: helm-docs
 
-      - name: Commit and push
-        run: |
-          git add .
-          git commit -m "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}"
-          git push -u origin "bump-chart-version-${{ steps.version.outputs.next }}"
-
-      - name: Create and auto-merge PR
-        run: |
-          gh pr create \
-            --title "chore(releasing): Bump chart version to ${{ steps.version.outputs.next }}" \
-            --body "Post release version bump." \
-            --base develop \
-            --head "bump-chart-version-${{ steps.version.outputs.next }}"
-          gh pr merge "bump-chart-version-${{ steps.version.outputs.next }}" --auto --squash
+      - name: Commit version bump
+        if: steps.state.outputs.bump == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          NEXT: ${{ steps.version.outputs.next }}
+        run: |
+          set -euo pipefail
+          git add --all
+          # No one reviews this commit, so it may only change the version bump files.
+          unexpected=$(git diff --cached --name-only \
+            | grep -vxF -e charts/vector/Chart.yaml -e charts/vector/README.md || true)
+          [[ -z "$unexpected" ]] || {
+            printf 'Unexpected version bump changes:\n%s\n' "$unexpected" >&2
+            exit 1
+          }
+          git config user.name "vectordotdev-bot[bot]"
+          git config user.email "vectordotdev-bot[bot]@users.noreply.github.com"
+          git commit -m "chore(releasing): Bump chart version to ${NEXT}"
+
+      - name: Push to develop after CI
+        if: steps.state.outputs.bump == 'true'
+        uses: ./.github/actions/push-after-ci
+        with:
+          target-branch: develop
+          releasing-branch: releasing/bump-${{ steps.version.outputs.next }}
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}
+
+  # A failed push above skips this job and keeps the freeze for the retry. Use
+  # "Unfreeze release branches" to close the freeze on an abandoned release.
+  unfreeze:
+    name: Close the release freeze
+    needs: [sync-to-master, bump-version]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
+          persist-credentials: false
+
+      - name: Revoke bypasses and unfreeze master and develop
+        uses: ./.github/actions/unfreeze-release
+        with:
+          app-id: ${{ secrets.VECTORDOTDEV_BOT_APP_ID }}
+          app-private-key: ${{ secrets.VECTORDOTDEV_BOT_PRIVATE_KEY }}
+          freeze-ruleset-id: ${{ vars.RELEASE_FREEZE_RULESET_ID }}
+          bot-bypass-ruleset-ids: ${{ vars.RELEASE_FREEZE_BOT_BYPASS }}

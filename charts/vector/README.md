@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.58.0](https://img.shields.io/badge/Version-0.58.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.57.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.57.0--distroless--libc-informational?style=flat-square)
+![Version: 0.62.0](https://img.shields.io/badge/Version-0.62.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.61.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.61.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -138,7 +138,7 @@ helm install <RELEASE_NAME> \
 | args | list | `["--config-dir","/etc/vector/"]` | Override Vector's default arguments. |
 | autoscaling.annotations | object | `{}` | Annotations to add to Vector's HPA. |
 | autoscaling.behavior | object | `{}` | Configure separate scale-up and scale-down behaviors. |
-| autoscaling.customMetric | object | `{}` | Target a custom metric for autoscaling. |
+| autoscaling.customMetric | list | `[]` | Target a custom metric for autoscaling. |
 | autoscaling.enabled | bool | `false` | Create a [HorizontalPodAutoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) for Vector. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | autoscaling.external | bool | `false` | Set to `true` if using an external autoscaler like [KEDA](https://keda.sh/). Valid for the "Aggregator and "Stateless-Aggregator" roles. |
 | autoscaling.maxReplicas | int | `10` | Maximum replicas for Vector's HPA. |
@@ -192,7 +192,8 @@ helm install <RELEASE_NAME> \
 | persistence.retentionPolicy | object | `{}` | Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention) for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.selectors | object | `{}` | Specifies the selectors for PersistentVolumeClaims. Valid for the "Aggregator" role. |
 | persistence.size | string | `"10Gi"` | Specifies the size of PersistentVolumeClaims. Valid for the "Aggregator" role. |
-| podAnnotations | object | `{}` | Set annotations on Vector Pods. |
+| persistence.volumeAttributesClassName | string | `nil` | Specifies the volumeAttributesClassName for PersistentVolumeClaims. Valid for the "Aggregator" role. |
+| podAnnotations | object | `{}` | Set annotations on Vector Pods. Values are rendered with `tpl`, so templated strings (e.g. a checksum of an externally managed ConfigMap) are supported. |
 | podDisruptionBudget.enabled | bool | `false` | Enable a [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for Vector. |
 | podDisruptionBudget.maxUnavailable | int | `nil` | The number of Pods that can be unavailable after an eviction. |
 | podDisruptionBudget.minAvailable | int | `1` | The number of Pods that must still be available after an eviction. |
@@ -233,6 +234,7 @@ helm install <RELEASE_NAME> \
 | service.ipFamilies | list | `[]` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | service.ipFamilyPolicy | string | `""` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
+| service.loadBalancerSourceRanges | list | `[]` | Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/kubernetes-api/core/service-v1/#ServiceSpec) to restrict client IP ranges that can access the LoadBalancer Service. |
 | service.ports | list | `[]` | Manually set the Service ports, overriding automated generation of Service ports. |
 | service.topologyKeys | list | `[]` | Specify the [topologyKeys](https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology) field on Vector's Service. |
 | service.trafficDistribution | string | `""` | Specify the [Traffic distribution](https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution) additional Topology Aware Routing may be informative. Specify the [Topology Aware Routing](https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/) |
@@ -257,7 +259,7 @@ helm install <RELEASE_NAME> \
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | haproxy.affinity | object | `{}` | Configure [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) rules for HAProxy Pods. |
-| haproxy.autoscaling.customMetric | object | `{}` | Target a custom metric for autoscaling. |
+| haproxy.autoscaling.customMetric | list | `[]` | Target a custom metric for autoscaling. |
 | haproxy.autoscaling.enabled | bool | `false` | Create a HorizontalPodAutoscaler for HAProxy. |
 | haproxy.autoscaling.external | bool | `false` | HAProxy is controlled by an external HorizontalPodAutoscaler. |
 | haproxy.autoscaling.maxReplicas | int | `10` | Maximum replicas for HAProxy's HPA. |
@@ -292,6 +294,7 @@ helm install <RELEASE_NAME> \
 | haproxy.service.ipFamilies | list | `[]` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | haproxy.service.ipFamilyPolicy | string | `""` | Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). |
 | haproxy.service.loadBalancerIP | string | `""` | Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer). |
+| haproxy.service.loadBalancerSourceRanges | list | `[]` | Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/kubernetes-api/core/service-v1/#ServiceSpec) to restrict client IP ranges that can access the LoadBalancer Service. |
 | haproxy.service.ports | list | `[]` | Manually set HAPRoxy's Service ports, overrides automated generation of Service ports. |
 | haproxy.service.topologyKeys | list | `[]` | Specify the [topologyKeys](https://kubernetes.io/docs/concepts/services-networking/service-topology/#using-service-topology) field on HAProxy's Service spec. |
 | haproxy.service.type | string | `"ClusterIP"` | Set type of HAProxy's Service. |

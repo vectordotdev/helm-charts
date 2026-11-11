@@ -3,6 +3,11 @@ name: Lint and Test Charts
 
 on:
   pull_request:
+  # Release automation pushes to master and develop directly. It pushes each
+  # commit here first, so the required checks pass on that exact commit.
+  push:
+    branches:
+      - "releasing/**"
 
 jobs:
   lint-chart:
@@ -13,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
+        uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
@@ -84,11 +89,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create kind ${{ matrix.k8s }}
-        uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+        uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
         with:
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
+        uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (install)
