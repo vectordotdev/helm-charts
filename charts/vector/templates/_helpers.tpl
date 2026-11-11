@@ -125,8 +125,8 @@ Selector labels.
 {{- define "vector.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if or (ne .Values.role "Agent") (ne .Values.role "Aggregator") (ne .Values.role "Stateless-Aggregator") }}
-app.kubernetes.io/component: {{ .Values.role }}
+{{- if or (ne (lower .Values.role) "agent") (ne (lower .Values.role) "aggregator") (ne (lower .Values.role) "stateless-aggregator") }}
+app.kubernetes.io/component: {{ lower .Values.role }}
 {{- end }}
 {{- end }}
 
@@ -145,22 +145,14 @@ Create the name of the service account to use.
 Return the appropriate apiVersion for PodDisruptionBudget policy APIs.
 */}}
 {{- define "policy.poddisruptionbudget.apiVersion" -}}
-{{- if or (.Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget") (semverCompare ">=1.21" .Capabilities.KubeVersion.Version) -}}
 "policy/v1"
-{{- else -}}
-"policy/v1beta1"
-{{- end -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for HPA autoscaling APIs.
 */}}
 {{- define "autoscaling.apiVersion" -}}
-{{- if or (.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler") (semverCompare ">=1.23" .Capabilities.KubeVersion.Version) -}}
 "autoscaling/v2"
-{{- else -}}
-"autoscaling/v2beta2"
-{{- end -}}
 {{- end -}}
 
 {{/*
@@ -305,9 +297,9 @@ true
 Return Vector's Resource type based on its `.Values.role`.
 */}}
 {{- define "_vector.role" -}}
-  {{- if eq $.Values.role "Stateless-Aggregator" -}}
+  {{- if eq (lower $.Values.role) "stateless-aggregator" -}}
 deployment
-  {{- else if eq $.Values.role "Agent" -}}
+  {{- else if eq (lower $.Values.role) "agent" -}}
 daemonset
   {{- else -}}
 statefulset

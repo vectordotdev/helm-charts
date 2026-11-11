@@ -17,6 +17,16 @@ fullnameOverride: ""
 # Stateless-Aggregator = Deployment
 role: "Aggregator"
 
+# Workload API version overrides. Use these to switch to custom controllers
+# or to test new Kubernetes API versions.
+daemonSet:
+  # daemonSet.apiVersion -- Override the DaemonSet apiVersion. Valid for the "Agent" role.
+  apiVersion: ""
+
+statefulSet:
+  # statefulSet.apiVersion -- Override the StatefulSet apiVersion. Valid for the "Aggregator" role.
+  apiVersion: ""
+
 # rollWorkload -- Add a checksum of the generated ConfigMap to workload annotations.
 rollWorkload: true
 
@@ -30,9 +40,12 @@ rollWorkloadExtraObjects: false
 commonLabels: {}
 
 # Define the Vector image to use.
+# Vector images are available from:
+#   - Docker Hub: docker.io/timberio/vector
+#   - GitHub Container Registry: ghcr.io/vectordotdev/vector
 image:
   # image.repository -- Override default registry and name for Vector's image.
-  repository: timberio/vector
+  repository: docker.io/timberio/vector
   # image.pullPolicy -- The [pullPolicy](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) for
   # Vector's image.
   pullPolicy: IfNotPresent
@@ -65,6 +78,8 @@ podManagementPolicy: OrderedReady
 
 # Create a Secret resource for Vector to use.
 secrets:
+  # secrets.annotations -- Set annotations on Vector Secrets.
+  annotations: {}
   # secrets.generic -- Each Key/Value will be added to the Secret's data key, each value should be raw and NOT base64
   # encoded. Any secrets can be provided here. It's commonly used for credentials and other access related values.
   # **NOTE: Don't commit unencrypted secrets to git!**
@@ -92,7 +107,7 @@ autoscaling:
   # autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for Vector's HPA.
   targetMemoryUtilizationPercentage:
   # autoscaling.customMetric -- Target a custom metric for autoscaling.
-  customMetric: {}
+  customMetric: []
     #  - type: Pods
     #    pods:
     #      metric:
@@ -145,7 +160,8 @@ serviceAccount:
   # serviceAccount.automountToken -- Automount API credentials for Vector's ServiceAccount.
   automountToken: true
 
-# podAnnotations -- Set annotations on Vector Pods.
+# podAnnotations -- Set annotations on Vector Pods. Values are rendered with `tpl`, so
+# templated strings (e.g. a checksum of an externally managed ConfigMap) are supported.
 podAnnotations: {}
 
 # podLabels -- Set labels on Vector Pods.
@@ -252,6 +268,8 @@ affinity: {}
 
 # topologySpreadConstraints -- Configure [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
 # for Vector Pods. Valid for the "Aggregator" and "Stateless-Aggregator" roles.
+#
+# If no "labelSelector" is defined, Vector's selector labels will be used by default.
 topologySpreadConstraints: []
 
 # Configuration for Vector's Service.
@@ -277,6 +295,8 @@ service:
   internalTrafficPolicy: ""
   # service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
   loadBalancerIP: ""
+  # service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/kubernetes-api/core/service-v1/#ServiceSpec) to restrict client IP ranges that can access the LoadBalancer Service.
+  loadBalancerSourceRanges: []
   # service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
   ipFamilyPolicy: ""
   # service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
@@ -334,7 +354,6 @@ customConfig: {}
   # api:
   #   enabled: true
   #   address: 127.0.0.1:8686
-  #   playground: false
   # sources:
   #   vector:
   #     address: 0.0.0.0:6000
@@ -426,11 +445,18 @@ persistence:
   # "Aggregator" role.
   # storageClassName: default
 
+  # persistence.volumeAttributesClassName -- (string) Specifies the volumeAttributesClassName for PersistentVolumeClaims.
+  # Valid for the "Aggregator" role.
+  volumeAttributesClassName:
+
   # persistence.retentionPolicy -- Configure a [PersistentVolumeClaimRetentionPolicy](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention)
   # for Vector's PersistentVolumeClaims. Valid for the "Aggregator" role.
   retentionPolicy: {}
   #  whenDeleted: Retain
   #  whenScaled: Retain
+
+  # persistence.annotations -- Set annotations on the PersistentVolumeClaims created by the StatefulSet.
+  annotations: {}
 
   # persistence.accessModes -- Specifies the accessModes for PersistentVolumeClaims. Valid for the "Aggregator" role.
   accessModes:
@@ -473,18 +499,44 @@ dnsConfig: {}
 shareProcessNamespace: false
 
 # livenessProbe -- Override default liveness probe settings. If customConfig is used, requires customConfig.api.enabled
-# to be set to true.
+# to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept
+# for backwards compatibility with older Vector versions.
 livenessProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
+  # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
   # httpGet:
   #   path: /health
-  #   port: api
+  #   port: 8686
 
-# readinessProbe -- Override default readiness probe settings. If customConfig is used,
-# requires customConfig.api.enabled to be set to true.
+# readinessProbe -- Override default readiness probe settings. If not set, this chart applies an
+# `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used,
+# requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+;
+# the `httpGet /health` probe is kept for backwards compatibility with older Vector versions.
 readinessProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
+  # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
   # httpGet:
   #   path: /health
-  #   port: api
+  #   port: 8686
+
+# startupProbe -- Override default startup probe settings. If customConfig is used,
+# requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+;
+# the `httpGet /health` probe is kept for backwards compatibility with older Vector versions.
+startupProbe: {}
+  # Option 1: gRPC probe (uses grpc.health.v1.Health/Check, requires Vector 0.55+)
+  # grpc:
+  #   port: 8686
+  #
+  # Option 2: HTTP probe
+  # httpGet:
+  #   path: /health
+  #   port: 8686
 
 # Configure a PodMonitor for Vector, requires the PodMonitor CRD to be installed.
 podMonitor:
@@ -610,6 +662,8 @@ haproxy:
     externalTrafficPolicy: ""
     # haproxy.service.loadBalancerIP -- Specify the [loadBalancerIP](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
     loadBalancerIP: ""
+    # haproxy.service.loadBalancerSourceRanges -- Specify the [loadBalancerSourceRanges](https://kubernetes.io/docs/reference/kubernetes-api/core/service-v1/#ServiceSpec) to restrict client IP ranges that can access the LoadBalancer Service.
+    loadBalancerSourceRanges: []
     # haproxy.service.ipFamilyPolicy -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
     ipFamilyPolicy: ""
     # haproxy.service.ipFamilies -- Configure [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
@@ -654,7 +708,7 @@ haproxy:
     # haproxy.autoscaling.targetMemoryUtilizationPercentage -- (int) Target memory utilization for HAProxy's HPA.
     targetMemoryUtilizationPercentage:
     # haproxy.autoscaling.customMetric -- Target a custom metric for autoscaling.
-    customMetric: {}
+    customMetric: []
       #  - type: Pods
       #    pods:
       #      metric:

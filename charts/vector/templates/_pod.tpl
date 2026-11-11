@@ -59,7 +59,7 @@ containers:
     {{- toYaml . | nindent 6 }}
 {{- end }}
 {{- end }}
-{{- if (eq .Values.role "Agent") }}
+{{- if (eq (lower .Values.role) "agent") }}
       - name: VECTOR_SELF_NODE_NAME
         valueFrom:
           fieldRef:
@@ -88,7 +88,7 @@ containers:
     {{- toYaml .Values.containerPorts | nindent 6 }}
 {{- else if .Values.customConfig }}
     {{- include "vector.containerPorts" . | indent 6 }}
-{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+{{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
       - name: datadog-agent
         containerPort: 8282
         protocol: TCP
@@ -113,7 +113,7 @@ containers:
       - name: prom-exporter
         containerPort: 9090
         protocol: TCP
-{{- else if (eq .Values.role "Agent") }}
+{{- else if (eq (lower .Values.role) "agent") }}
       - name: prom-exporter
         containerPort: 9090
         protocol: TCP
@@ -122,8 +122,17 @@ containers:
     livenessProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
-{{- with .Values.readinessProbe }}
+{{- if .Values.readinessProbe }}
     readinessProbe:
+      {{- toYaml .Values.readinessProbe | trim | nindent 6 }}
+{{- else if and (not .Values.existingConfigMaps) (not .Values.customConfig) }}
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8686
+{{- end }}
+{{- with .Values.startupProbe }}
+    startupProbe:
       {{- toYaml . | trim | nindent 6 }}
 {{- end }}
 {{- with .Values.resources }}
@@ -144,7 +153,7 @@ containers:
       - name: config
         mountPath: "/etc/vector/"
         readOnly: true
-{{- if (eq .Values.role "Agent") }}
+{{- if (eq (lower .Values.role) "agent") }}
 {{- with .Values.defaultVolumeMounts }}
 {{- toYaml . | nindent 6 }}
 {{- end }}
@@ -170,16 +179,24 @@ tolerations:
 {{- end }}
 {{- with  .Values.topologySpreadConstraints }}
 topologySpreadConstraints:
+{{- range $_, $entry := . }}
+{{- if not (hasKey $entry "labelSelector") }}
+  {{- $ls := dict -}}
+  {{- $_ := set $ls "labelSelector" dict -}}
+  {{- $_ := set $ls.labelSelector "matchLabels" (include "vector.selectorLabels" $ | fromYaml) }}
+  {{- $entry := merge $entry $ls }}
+{{- end }}
+{{- end }}
 {{- toYaml . | nindent 2 }}
 {{- end }}
 volumes:
-{{- if and .Values.persistence.enabled (eq .Values.role "Aggregator") }}
+{{- if and .Values.persistence.enabled (eq (lower .Values.role) "aggregator") }}
 {{- with .Values.persistence.existingClaim }}
   - name: data
     persistentVolumeClaim:
       claimName: {{ . }}
 {{- end }}
-{{- else if (ne .Values.role "Agent") }}
+{{- else if (ne (lower .Values.role) "agent") }}
   - name: data
     emptyDir: {}
 {{- end }}
@@ -195,7 +212,7 @@ volumes:
         - configMap:
             name: {{ template "vector.fullname" . }}
 {{- end }}
-{{- if (eq .Values.role "Agent") }}
+{{- if (eq (lower .Values.role) "agent") }}
   - name: data
   {{- if .Values.persistence.hostPath.enabled }}
     hostPath:

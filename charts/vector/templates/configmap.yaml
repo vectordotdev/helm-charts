@@ -10,13 +10,12 @@ data:
   {{- if .Values.customConfig }}
   vector.yaml: |
 {{ tpl (toYaml .Values.customConfig) . | indent 4 }}
-  {{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+  {{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
   aggregator.yaml: |
     data_dir: /vector-data-dir
     api:
       enabled: true
-      address: 127.0.0.1:8686
-      playground: false
+      address: 0.0.0.0:8686
     sources:
       datadog_agent:
         address: 0.0.0.0:8282
@@ -54,13 +53,12 @@ data:
         inputs: [datadog_agent, fluent, logstash, splunk_hec, statsd, syslog, vector]
         encoding:
           codec: json
-  {{- else if (eq .Values.role "Agent") }}
+  {{- else if (eq (lower .Values.role) "agent") }}
   agent.yaml: |
     data_dir: /vector-data-dir
     api:
       enabled: true
-      address: 127.0.0.1:8686
-      playground: false
+      address: 0.0.0.0:8686
     sources:
       kubernetes_logs:
         type: kubernetes_logs

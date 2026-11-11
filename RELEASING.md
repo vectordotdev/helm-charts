@@ -2,60 +2,46 @@
 
 This document is intended for project maintainers.
 
-Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser) when the `develop` branch is merged into `master`.
+Charts are packaged and released with [`cr`](https://github.com/helm/chart-releaser) when `master` fast-forwards to a release commit on `develop`.
 
-Install the following required tools:
-* [`helm-docs`](https://github.com/norwoodj/helm-docs)
-* [`gh`](https://cli.github.com/)
-* [`yq`](https://github.com/mikefarah/yq)
-* [`git-cliff`](https://github.com/orhun/git-cliff)
+`master` only fast-forwards along `develop`, so `master` must always be an ancestor of `develop`. Do not commit to `master` directly: Post Release fails if `master` has commits that `develop` does not have.
 
+## Automated release
 
-Now run the release script:
+The Vector release workflow starts **Prepare Release** on `develop` for each Vector release. To start it yourself, go to **Actions → Prepare Release** and click **Run workflow**, or run:
 
 ```shell
-bash release.sh <Vector release GitHub issue link>
+gh workflow run release-prepare.yml
 ```
 
-This will create the pull requests and wait for them to be approved and merged. If the script fails, please refer to the following section and continue the release manually.
-
-After the script runs, the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml) should start automatically. Once it completes, you will have successfully released `helm-charts`!
+If a workflow fails, re-run it or run [Unfreeze release branches](https://github.com/vectordotdev/helm-charts/actions/workflows/release-unfreeze.yml) to abandon the release.
 
 ## Releasing manually
 
 <details>
-<summary>Always prefer the automated method described above. Use this guide only if the above method fails. </summary>
-To make releasing easier two scripts are utilized in the steps below.
+<summary>Use this only if the automated workflows fail.</summary>
 
-1. Run `$ .github/release-vector-version.sh`
-   - Update Helm docs by running `helm-docs`
-   - Commit the changes generated from step 1. This needs to be a
-      [conventional commit](https://www.conventionalcommits.org/).
-     - E.g. "feat(vector): Bump Vector to v0.29.0"
-     - Submit a PR with the changes.
-   - Notes:
-     - This queries [vectordotdev/vector](https://github.com/vectordotdev/vector)
-     for the latest release and updates the `vector` chart's default image.
-     - This is convenient when updating the chart after a Vector release.
-     - On macOS, install `gsed`
+1. Run `.github/release-vector-version.sh <vector version>` to update the Vector image version, then run `helm-docs`.
+  - Commit: `feat(vector): Bump Vector to <version> and update Helm docs`
 
-2. Run `$ .github/release-changelog.sh`
-   - Commit the changes generated from step 1. This needs to be a
-      [conventional commit](https://www.conventionalcommits.org/).
-      - E.g. "feat(vector): Regenerate CHANGELOG"
-   - Submit a PR with the changes.
-   - Notes:
-     - This pulls the current `vector` chart version and uses `git-cliff` to update
-       the [CHANGELOG.md](CHANGELOG.md). Run this to generate the final commit merged into
-       `develop` before merging `develop` into `master`.
-     - This script requires [`yq`](https://github.com/mikefarah/yq) and
-       [`git-cliff`](https://github.com/orhun/git-cliff) to be installed.
+2. Run `.github/release-changelog.sh` to regenerate the CHANGELOG.
+  - Commit: `feat(vector): Regenerate CHANGELOG for <version>`
 
-3. To kick off the [release workflow](https://github.com/vectordotdev/helm-charts/actions/workflows/release.yaml):
- ```
-   git switch master
-   git pull
-   git merge develop
-   git push
-```
+3. Push both commits to `develop` through a `releasing/` branch, and push them to `develop` only after Lint and Test Charts passes on them:
+   ```shell
+   git push origin HEAD:refs/heads/releasing/release-<chart version>
+   # Wait for Lint and Test Charts to pass on releasing/release-<chart version>.
+   git push origin HEAD:refs/heads/develop
+   git push origin --delete releasing/release-<chart version>
+   ```
+
+4. Fast-forward `master` to the release commit to trigger the release workflow. CI already passed on it in step 3:
+   ```shell
+   git push origin HEAD:refs/heads/master
+   ```
+
+5. Bump the chart minor version in `charts/vector/Chart.yaml`, run `helm-docs`, and push the commit to `develop` the same way as step 3, through `releasing/bump-<next version>`.
+
+6. If the freeze is still active, run [Unfreeze release branches](https://github.com/vectordotdev/helm-charts/actions/workflows/release-unfreeze.yml).
+
 </details>
