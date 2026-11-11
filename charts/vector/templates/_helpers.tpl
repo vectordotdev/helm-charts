@@ -120,8 +120,8 @@ Selector labels.
 {{- define "vector.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "vector.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if or (ne .Values.role "Agent") (ne .Values.role "Aggregator") (ne .Values.role "Stateless-Aggregator") }}
-app.kubernetes.io/component: {{ .Values.role }}
+{{- if or (ne (lower .Values.role) "agent") (ne (lower .Values.role) "aggregator") (ne (lower .Values.role) "stateless-aggregator") }}
+app.kubernetes.io/component: {{ lower .Values.role }}
 {{- end }}
 {{- end }}
 
@@ -195,7 +195,7 @@ components with an address.
   {{- end }}
 {{- else if .Values.customConfig }}
   {{- include "vector.ports" . }}
-{{- else if or (eq .Values.role "Aggregator") (eq .Values.role "Stateless-Aggregator") }}
+{{- else if or (eq (lower .Values.role) "aggregator") (eq (lower .Values.role) "stateless-aggregator") }}
 - name: datadog-agent
   port: 8282
   protocol: TCP
@@ -220,7 +220,7 @@ components with an address.
 - name: prom-exporter
   port: 9090
   protocol: TCP
-{{- else if (eq .Values.role "Agent") }}
+{{- else if (eq (lower .Values.role) "agent") }}
 - name: prom-exporter
   port: 9090
   protocol: TCP
@@ -336,9 +336,9 @@ true
 Return Vector's Resource type based on its `.Values.role`.
 */}}
 {{- define "_vector.role" -}}
-  {{- if eq $.Values.role "Stateless-Aggregator" -}}
+  {{- if eq (lower $.Values.role) "stateless-aggregator" -}}
 deployment
-  {{- else if eq $.Values.role "Agent" -}}
+  {{- else if eq (lower $.Values.role) "agent" -}}
 daemonset
   {{- else -}}
 statefulset
