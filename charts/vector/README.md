@@ -275,8 +275,8 @@ helm install <RELEASE_NAME> \
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy. |
 | haproxy.image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the HAProxy Pods. |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry and name for HAProxy. |
-| haproxy.image.sha | string | `nil` | The SHA to use for HAProxy's image. |
-| haproxy.image.tag | string | `"2.6.12"` | The tag to use for HAProxy's image. |
+| haproxy.image.sha | string | `nil` | The SHA-256 digest to use for HAProxy's image, with or without the sha256: prefix. Overrides any digest in image.tag. |
+| haproxy.image.tag | string | `"2.6.12"` | The tag, SHA-256 digest, or tag@sha256:digest to use for HAProxy's image. |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings. |
 | haproxy.nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for HAProxy Pods |

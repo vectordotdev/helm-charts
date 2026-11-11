@@ -19,6 +19,8 @@ jobs:
           fetch-depth: 0
       - name: Set up chart-testing
         uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
+      - name: Test rendered image references
+        run: python3 .github/test-image-references.py
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)

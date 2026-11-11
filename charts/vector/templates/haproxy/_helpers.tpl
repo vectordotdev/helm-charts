@@ -16,9 +16,20 @@ Build a valid image reference from available fields:
 */}}
 {{- define "haproxy.image" -}}
 {{- $repo   := .Values.haproxy.image.repository | default "haproxytech/haproxy-alpine" -}}
-{{- $tagRaw := .Values.haproxy.image.tag -}}
-{{- $shaRaw := (coalesce .Values.haproxy.image.sha .Values.haproxy.image.digest) | default "" -}}
-{{- $tag    := trim $tagRaw -}}
+{{- $tag := .Values.haproxy.image.tag | default "" | toString | trim -}}
+{{- $shaRaw := .Values.haproxy.image.sha | default "" | toString | trim -}}
+{{- $digest := .Values.haproxy.image.digest | default "" | toString | trim -}}
+{{- $shaRaw = coalesce $shaRaw $digest | default "" -}}
+
+{{- /* Extract an embedded digest before applying the explicit SHA override. */ -}}
+{{- if hasPrefix "sha256:" $tag -}}
+  {{- $shaRaw = default $tag $shaRaw -}}
+  {{- $tag = "" -}}
+{{- else if contains "@sha256:" $tag -}}
+  {{- $parts := splitList "@" $tag -}}
+  {{- $shaRaw = default (index $parts 1) $shaRaw -}}
+  {{- $tag = index $parts 0 -}}
+{{- end -}}
 
 {{- /* Normalize SHA to ensure it has sha256: prefix for backward compatibility */ -}}
 {{- $sha := "" -}}
@@ -30,35 +41,14 @@ Build a valid image reference from available fields:
   {{- end -}}
 {{- end -}}
 
-{{- /* Case 1: digest field wins */ -}}
-{{- if $sha -}}
-  {{- if $tag -}}
-    {{- /* don't print tag if tag contains something looking like a digest reference */ -}}
-    {{- if contains "@sha256:" $tag -}}
-      {{- printf "%s@%s" $repo $sha -}}
-    {{- else -}}
-      {{- printf "%s:%s@%s" $repo $tag $sha -}}
-    {{- end -}}
-  {{- else -}}
-    {{- printf "%s@%s" $repo $sha -}}
-  {{- end -}}
-
-{{- /* Case 2: tag looks like a digest */ -}}
-{{- else if hasPrefix "sha256:" $tag -}}
-  {{- printf "%s@%s" $repo $tag -}}
-
-{{- /* Case 3: tag@digest combined syntax */ -}}
-{{- else if contains "@sha256:" $tag -}}
-  {{- $parts := splitList "@" $tag -}}
-  {{- printf "%s:%s@%s" $repo (index $parts 0) (index $parts 1) -}}
-
-{{- /* Case 4: normal tag */ -}}
+{{- if and $tag $sha -}}
+  {{- printf "%s:%s@%s" $repo $tag $sha -}}
+{{- else if $sha -}}
+  {{- printf "%s@%s" $repo $sha -}}
 {{- else if $tag -}}
   {{- printf "%s:%s" $repo $tag -}}
-
-{{- /* Case 5: no tag or digest set */ -}}
 {{- else -}}
-  {{- printf "%s:%s" $repo "latest" -}}
+  {{- printf "%s:latest" $repo -}}
 {{- end }}
 {{- end }}
 
@@ -68,8 +58,10 @@ Common labels
 {{- define "haproxy.labels" -}}
 helm.sh/chart: {{ include "vector.chart" . }}
 {{ include "haproxy.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Values.haproxy.image.tag | quote }}
+{{- $tag := .Values.haproxy.image.tag | default "" | toString | trim }}
+{{- $version := first (splitList "@" $tag) }}
+{{- if and (not (hasPrefix "sha256:" $tag)) (le (len $version) 63) (regexMatch "^[a-zA-Z0-9]([a-zA-Z0-9_.-]*[a-zA-Z0-9])?$" $version) }}
+app.kubernetes.io/version: {{ $version | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
