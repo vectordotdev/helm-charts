@@ -8,6 +8,15 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Normalize the image tag, preserving explicit zero values while accepting null.
+*/}}
+{{- define "haproxy.image.tag" -}}
+{{- if ne .Values.haproxy.image.tag nil -}}
+{{- .Values.haproxy.image.tag | toString | trim -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Build a valid image reference from available fields:
   - tag only:         repo:tag
   - sha/digest only:  repo@sha256:…
@@ -16,7 +25,7 @@ Build a valid image reference from available fields:
 */}}
 {{- define "haproxy.image" -}}
 {{- $repo   := .Values.haproxy.image.repository | default "haproxytech/haproxy-alpine" -}}
-{{- $tag := .Values.haproxy.image.tag | default "" | toString | trim -}}
+{{- $tag := include "haproxy.image.tag" . -}}
 {{- $shaRaw := .Values.haproxy.image.sha | default "" | toString | trim -}}
 {{- $digest := .Values.haproxy.image.digest | default "" | toString | trim -}}
 {{- $shaRaw = coalesce $shaRaw $digest | default "" -}}
@@ -58,7 +67,7 @@ Common labels
 {{- define "haproxy.labels" -}}
 helm.sh/chart: {{ include "vector.chart" . }}
 {{ include "haproxy.selectorLabels" . }}
-{{- $tag := .Values.haproxy.image.tag | default "" | toString | trim }}
+{{- $tag := include "haproxy.image.tag" . }}
 {{- $version := first (splitList "@" $tag) }}
 {{- if and (not (hasPrefix "sha256:" $tag)) (le (len $version) 63) (regexMatch "^[a-zA-Z0-9]([a-zA-Z0-9_.-]*[a-zA-Z0-9])?$" $version) }}
 app.kubernetes.io/version: {{ $version | quote }}
