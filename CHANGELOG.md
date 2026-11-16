@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.62.1] - 2026-11-16
+
+### Releasing
+
+#### Other
+
+- Set chart version to 0.62.1 (#622) ([9696cee](https://github.com/vectordotdev/helm-charts/commit/9696ceee17146d1124da7ffa1f1365d1631e3abd))
+
+### Vector
+
+#### Bug Fixes
+
+- Keep role casing in app.kubernetes.io/component selector label (#621) ([6273ced](https://github.com/vectordotdev/helm-charts/commit/6273ceda966dd66c4dca0a71c5beff9a9d4a2934))
+  - 0.62.0 (#610) lowercased the role in the `app.kubernetes.io/component` label. This label is part of the immutable `spec.selector` of the DaemonSet, Deployment and StatefulSet, so `helm upgrade` from 0.61.0 to 0.62.0 fails with `field is immutable` (#620). This release restores the original role casing. Role matching stays case-insensitive.
+  - Upgrading from 0.61.0 or earlier: no action. Keep the original role casing (`Agent`, `Aggregator` or `Stateless-Aggregator`). A failed upgrade to 0.62.0 leaves the Services and the PodDisruptionBudget with lowercase selectors that match no pods. Upgrading to 0.62.1 fixes this.
+  - **BREAKING**: releases first installed on 0.62.0 have lowercase selectors, including releases that use the default `Aggregator`. To keep the existing selectors, set the role to lowercase (`role: agent`, `aggregator` or `stateless-aggregator`) before upgrading, and keep that value for later upgrades.
+
 ## [vector-0.62.0] - 2026-11-16
 
 ### Releasing
