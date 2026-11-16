@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.62.0] - 2026-11-16
+
+### Releasing
+
+#### Other
+
+- Bump chart version to 0.62.0 ([bb788ad](https://github.com/vectordotdev/helm-charts/commit/bb788adfdf0de4986c19607b13b1d7657383dab3))
+
+### Vector
+
+#### Features
+
+- Enable case insensitivity for role (#610) ([1094fe9](https://github.com/vectordotdev/helm-charts/commit/1094fe983b10895ac0129df2668bafd2aaa7f43d))
+- Add ability to provide a digest for haproxy (#524) ([b1943be](https://github.com/vectordotdev/helm-charts/commit/b1943beb6a824a938e5a2b58984553d9b1a34adc))
+- Bump Vector to 0.62.0 and update Helm docs ([e06a782](https://github.com/vectordotdev/helm-charts/commit/e06a782cff70dc57b2192b7ecf6c60e09c56a16c))
+
 ## [vector-0.61.0] - 2026-10-29
 
 ### Releasing
