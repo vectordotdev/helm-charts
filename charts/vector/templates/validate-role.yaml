@@ -1,0 +1,7 @@
+{{- /* Validate independently of resource switches, without changing selector labels. */ -}}
+{{- if not (kindIs "string" .Values.role) -}}
+{{- fail "role must be a string: Agent, Aggregator, or Stateless-Aggregator (case-insensitive)" -}}
+{{- end -}}
+{{- if not (has (lower .Values.role) (list "agent" "aggregator" "stateless-aggregator")) -}}
+{{- fail (printf "invalid role %q: expected Agent, Aggregator, or Stateless-Aggregator (case-insensitive)" .Values.role) -}}
+{{- end -}}

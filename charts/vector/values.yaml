@@ -9,7 +9,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 # role -- [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are:
-# "Agent", "Aggregator", and "Stateless-Aggregator".
+# "Agent", "Aggregator", and "Stateless-Aggregator" (case-insensitive). Invalid values are rejected.
 
 # Each role is created with the following workloads:
 # Agent = DaemonSet
