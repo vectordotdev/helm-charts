@@ -103,13 +103,18 @@ jobs:
 
   # `ct install --upgrade` compares against a git revision and skips whenever
   # the minor version changes, which is every PR during a release cycle. This
-  # job upgrades a release of the latest published chart in place, the way
-  # users upgrade.
-  upgrade-from-release:
+  # job upgrades a release in place, the way users upgrade, from:
+  # - release: the latest published chart.
+  # - base: the chart on the PR's base branch, so that a change marked breaking
+  #   that is not released yet doesn't hide the PR's own upgrade failures.
+  upgrade-chart:
     runs-on: ubuntu-latest
     needs:
       - lint-chart
       - kubeval-chart
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -119,47 +124,91 @@ jobs:
         uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
         with:
           node_image: kindest/node:v1.35.0
-      - name: Find the latest published chart
-        id: latest
+      - name: Upgrade in place
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
+          pattern='^[a-z]+(\([^)]*\))?!:'
+
+          # Read the title at run time so that a re-run sees an edited title.
+          title=""
+          if [ -n "$PR_NUMBER" ]; then
+            title=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json title --jq .title) \
+              || { echo "::error::Could not read the title of PR #${PR_NUMBER}"; exit 1; }
+          fi
+          pr_breaking=false
+          if grep -Eq "$pattern" <<< "$title"; then
+            pr_breaking=true
+          fi
+
+          # Installs the baseline chart with each values file and upgrades it in
+          # place to this chart. Every pair runs. A failed install always fails
+          # the job, and a failed upgrade fails it unless the baseline is exempt.
+          status=0
+          upgrade_from() {
+            local from=$1 chart=$2 exempt=$3 values name
+            for values in charts/vector/ci/*-default-values.yaml; do
+              name="${from}-$(basename "$values" -default-values.yaml)"
+              echo "::group::${name}"
+              if ! helm install "$name" "$chart" --values "$values" \
+                --namespace "$name" --create-namespace --wait --timeout 300s; then
+                echo "::error::${name}: installing the ${from} chart failed"
+                status=1
+              elif ! helm upgrade "$name" charts/vector --values "$values" \
+                --namespace "$name" --wait --timeout 300s; then
+                if [ "$exempt" = true ]; then
+                  echo "::warning::${name}: the upgrade failed, which a change marked breaking allows"
+                else
+                  echo "::error::${name}: the upgrade failed"
+                  status=1
+                fi
+              fi
+              echo "::endgroup::"
+            done
+          }
+
+          # The latest published chart. A change marked breaking in this PR or
+          # since that release may fail the upgrade from it.
           helm repo add vector https://helm.vector.dev
           version=$(helm search repo vector/vector --output json | jq -r '.[0].version')
           git rev-parse --verify --quiet "vector-${version}^{commit}" > /dev/null \
             || { echo "::error::Tag vector-${version} not found"; exit 1; }
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-
-          # A change marked breaking (`type(scope)!:`) in this PR or since the
-          # latest release is expected to fail the upgrade.
-          breaking=false
-          pattern='^[a-z]+(\([^)]*\))?!:'
-          if grep -Eq "$pattern" <<< "$PR_TITLE" \
-            || git log --format=%s "vector-${version}..HEAD" | grep -Eq "$pattern"; then
-            breaking=true
-            echo "::warning::Breaking change since ${version}: the upgrade test reports failures without blocking."
+          helm pull vector/vector --version "$version" --untar --untardir "$RUNNER_TEMP/release"
+          release_breaking=$pr_breaking
+          if git log --format=%s "vector-${version}..HEAD" | grep -Eq "$pattern"; then
+            release_breaking=true
           fi
-          echo "breaking=${breaking}" >> "$GITHUB_OUTPUT"
-      - name: Upgrade in place from ${{ steps.latest.outputs.version }}
-        continue-on-error: ${{ steps.latest.outputs.breaking == 'true' }}
-        env:
-          FROM_VERSION: ${{ steps.latest.outputs.version }}
-        run: |
-          for values in charts/vector/ci/*-default-values.yaml; do
-            release="upgrade-$(basename "$values" -default-values.yaml)"
-            helm install "$release" vector/vector --version "$FROM_VERSION" --values "$values" \
-              --namespace "$release" --create-namespace --wait --timeout 300s
-            helm upgrade "$release" charts/vector --values "$values" \
-              --namespace "$release" --wait --timeout 300s
-          done
+          upgrade_from release "$RUNNER_TEMP/release/vector" "$release_breaking"
+
+          # The chart on the PR's base branch. Only this PR's own breaking mark
+          # may fail the upgrade from it, so an unreleased breaking change
+          # doesn't hide this PR's failures. HEAD is the PR's merge commit, and
+          # its first parent is the base. Pushes to `releasing/**` have no PR.
+          if [ -n "$PR_NUMBER" ]; then
+            git worktree add --detach "$RUNNER_TEMP/base" HEAD^1
+            upgrade_from base "$RUNNER_TEMP/base/charts/vector" "$pr_breaking"
+          fi
+          exit "$status"
 
   pr-validated:
     name: pr-validated
     runs-on: ubuntu-latest
+    # Without always(), a failed dependency skips this job, and a skipped
+    # required check counts as passing.
+    if: ${{ always() }}
     needs:
       - install-chart
-      - upgrade-from-release
+      - upgrade-chart
       - lint-docs
     steps:
       - name: validate
-        run: echo "PR OK"
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          failed=$(jq -r 'to_entries[] | select(.value.result != "success") | "\(.key)=\(.value.result)"' <<< "$NEEDS")
+          if [ -n "$failed" ]; then
+            echo "::error::Required jobs did not succeed: $(paste -sd ' ' <<< "$failed")"
+            exit 1
+          fi
+          echo "PR OK"
