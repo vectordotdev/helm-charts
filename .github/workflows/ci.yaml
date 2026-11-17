@@ -103,18 +103,14 @@ jobs:
 
   # `ct install --upgrade` compares against a git revision and skips whenever
   # the minor version changes, which is every PR during a release cycle. This
-  # job upgrades a release in place, the way users upgrade, from:
-  # - release: the latest published chart.
-  # - base: the chart on the PR's base branch, so that a change marked breaking
-  #   that is not released yet doesn't hide the PR's own upgrade failures.
+  # job upgrades a release in place, the way users upgrade, from the latest
+  # published chart and, for PRs, from the chart at the PR's base. See
+  # "Upgrade tests" in CONTRIBUTING.md.
   upgrade-chart:
     runs-on: ubuntu-latest
     needs:
       - lint-chart
       - kubeval-chart
-    permissions:
-      contents: read
-      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -126,41 +122,45 @@ jobs:
           node_image: kindest/node:v1.35.0
       - name: Upgrade in place
         env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          IS_PR: ${{ github.event_name == 'pull_request' }}
         run: |
-          pattern='^[a-z]+(\([^)]*\))?!:'
-
-          # Read the title at run time so that a re-run sees an edited title.
-          title=""
-          if [ -n "$PR_NUMBER" ]; then
-            title=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json title --jq .title) \
-              || { echo "::error::Could not read the title of PR #${PR_NUMBER}"; exit 1; }
-          fi
-          pr_breaking=false
-          if grep -Eq "$pattern" <<< "$title"; then
-            pr_breaking=true
-          fi
+          # Whether a file under charts/vector/ci/upgrade/ applies to an upgrade.
+          # release-<version>/ files apply while <version> is the latest release.
+          # base/ files apply only in the PR that adds or changes them. HEAD is
+          # the PR's merge commit, and its first parent is the base.
+          applies() {
+            local from=$1 file=$2
+            [ -f "$file" ] || return 1
+            [ "$from" = release ] || ! git diff --quiet HEAD^1 HEAD -- "$file"
+          }
 
           # Installs the baseline chart with each values file and upgrades it in
-          # place to this chart. Every pair runs. A failed install always fails
-          # the job, and a failed upgrade fails it unless the baseline is exempt.
+          # place to this chart. Every pair runs, and a failed install or
+          # upgrade fails the job. In the baseline's directory, <values>.yaml
+          # adds the documented migration values to the upgrade, and
+          # <values>.unsupported skips an upgrade that isn't supported, with the
+          # reason as its content.
           status=0
           upgrade_from() {
-            local from=$1 chart=$2 exempt=$3 values name
+            local from=$1 chart=$2 dir=charts/vector/ci/upgrade/$3 values name release args
             for values in charts/vector/ci/*-default-values.yaml; do
-              name="${from}-$(basename "$values" -default-values.yaml)"
-              echo "::group::${name}"
-              if ! helm install "$name" "$chart" --values "$values" \
-                --namespace "$name" --create-namespace --wait --timeout 300s; then
-                echo "::error::${name}: installing the ${from} chart failed"
+              name=$(basename "$values" -default-values.yaml)
+              release="${from}-${name}"
+              echo "::group::${release}"
+              if ! helm install "$release" "$chart" --values "$values" \
+                --namespace "$release" --create-namespace --wait --timeout 300s; then
+                echo "::error::${release}: installing the ${from} chart failed"
                 status=1
-              elif ! helm upgrade "$name" charts/vector --values "$values" \
-                --namespace "$name" --wait --timeout 300s; then
-                if [ "$exempt" = true ]; then
-                  echo "::warning::${name}: the upgrade failed, which a change marked breaking allows"
-                else
-                  echo "::error::${name}: the upgrade failed"
+              elif applies "$from" "$dir/${name}.unsupported"; then
+                echo "::warning::${release}: the upgrade isn't supported: $(< "$dir/${name}.unsupported")"
+              else
+                args=(--values "$values")
+                if applies "$from" "$dir/${name}.yaml"; then
+                  args+=(--values "$dir/${name}.yaml")
+                fi
+                if ! helm upgrade "$release" charts/vector "${args[@]}" \
+                  --namespace "$release" --wait --timeout 300s; then
+                  echo "::error::${release}: the upgrade failed"
                   status=1
                 fi
               fi
@@ -168,26 +168,15 @@ jobs:
             done
           }
 
-          # The latest published chart. A change marked breaking in this PR or
-          # since that release may fail the upgrade from it.
           helm repo add vector https://helm.vector.dev
           version=$(helm search repo vector/vector --output json | jq -r '.[0].version')
-          git rev-parse --verify --quiet "vector-${version}^{commit}" > /dev/null \
-            || { echo "::error::Tag vector-${version} not found"; exit 1; }
           helm pull vector/vector --version "$version" --untar --untardir "$RUNNER_TEMP/release"
-          release_breaking=$pr_breaking
-          if git log --format=%s "vector-${version}..HEAD" | grep -Eq "$pattern"; then
-            release_breaking=true
-          fi
-          upgrade_from release "$RUNNER_TEMP/release/vector" "$release_breaking"
+          upgrade_from release "$RUNNER_TEMP/release/vector" "release-${version}"
 
-          # The chart on the PR's base branch. Only this PR's own breaking mark
-          # may fail the upgrade from it, so an unreleased breaking change
-          # doesn't hide this PR's failures. HEAD is the PR's merge commit, and
-          # its first parent is the base. Pushes to `releasing/**` have no PR.
-          if [ -n "$PR_NUMBER" ]; then
+          # Pushes to `releasing/**` have no PR base.
+          if [ "$IS_PR" = true ]; then
             git worktree add --detach "$RUNNER_TEMP/base" HEAD^1
-            upgrade_from base "$RUNNER_TEMP/base/charts/vector" "$pr_breaking"
+            upgrade_from base "$RUNNER_TEMP/base/charts/vector" base
           fi
           exit "$status"
 
