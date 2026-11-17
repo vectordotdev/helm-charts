@@ -29,6 +29,12 @@ helm install <RELEASE_NAME> vector/vector
 
 ### Upgrading
 
+#### Role validation
+
+The chart accepts `Agent`, `Aggregator`, and `Stateless-Aggregator` in any casing. Empty, unknown, or non-string `role` values fail during rendering. Earlier versions accepted invalid strings without creating a Vector workload; replace those values with a supported role before upgrading.
+
+Keep the original role casing for existing releases, because it is part of the immutable workload selector.
+
 #### From original charts
 
 * [Migrate from the `vector-agent` chart](docs/Migrate_from_vector-agent.md)

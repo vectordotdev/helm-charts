@@ -31,6 +31,12 @@ helm install <RELEASE_NAME> vector/vector
 
 ### Upgrading
 
+#### Role validation
+
+The chart accepts `Agent`, `Aggregator`, and `Stateless-Aggregator` in any casing. Empty, unknown, or non-string `role` values fail during rendering. Earlier versions accepted invalid strings without creating a Vector workload; replace those values with a supported role before upgrading.
+
+Keep the original role casing for existing releases, because it is part of the immutable workload selector.
+
 #### From original charts
 
 * [Migrate from the `vector-agent` chart](docs/Migrate_from_vector-agent.md)
@@ -220,7 +226,7 @@ helm install <RELEASE_NAME> \
 | readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
-| role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
+| role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator" (case-insensitive). Invalid values are rejected. |
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
 | rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
 | rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
