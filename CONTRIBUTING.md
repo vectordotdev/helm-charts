@@ -50,17 +50,6 @@ Use descriptive branch names that indicate the purpose of your changes.
 - Update documentation in `README.md.gotmpl` (not `README.md` directly) and then run `helm-docs`
 - Test your changes thoroughly
 
-#### Upgrade Tests
-
-CI installs the chart with each `charts/vector/ci/*-default-values.yaml` file and upgrades it in place to your chart with `helm upgrade`. It starts from two baselines: the latest published chart, and the chart at your PR's base. Both upgrades must succeed, including for breaking changes.
-
-If users must change their values before they upgrade, document the steps and add the same values under `charts/vector/ci/upgrade/`. CI adds them to the upgrade:
-
-- `release-<version>/<name>.yaml` applies to upgrades from release `<version>` while it's the latest release. For example, `release-0.62.0/aggregator.yaml` applies to `aggregator-default-values.yaml`.
-- `base/<name>.yaml` applies to upgrades from your PR's base, only in the PR that adds or changes it.
-
-If maintainers decide not to support an in-place upgrade, add `<name>.unsupported` in the same directory instead, with the reason as its content. CI skips that upgrade and shows the reason as a warning.
-
 ### 4. Submit Pull Request
 
 1. Push your branch to your fork:

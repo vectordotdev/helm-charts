@@ -104,8 +104,7 @@ jobs:
   # `ct install --upgrade` compares against a git revision and skips whenever
   # the minor version changes, which is every PR during a release cycle. This
   # job upgrades a release in place, the way users upgrade, from the latest
-  # published chart and, for PRs, from the chart at the PR's base. See
-  # "Upgrade tests" in CONTRIBUTING.md.
+  # published chart and, for PRs, from the chart at the PR's base.
   upgrade-chart:
     runs-on: ubuntu-latest
     needs:
@@ -124,45 +123,23 @@ jobs:
         env:
           IS_PR: ${{ github.event_name == 'pull_request' }}
         run: |
-          # Whether a file under charts/vector/ci/upgrade/ applies to an upgrade.
-          # release-<version>/ files apply while <version> is the latest release.
-          # base/ files apply only in the PR that adds or changes them. HEAD is
-          # the PR's merge commit, and its first parent is the base.
-          applies() {
-            local from=$1 file=$2
-            [ -f "$file" ] || return 1
-            [ "$from" = release ] || ! git diff --quiet HEAD^1 HEAD -- "$file"
-          }
-
           # Installs the baseline chart with each values file and upgrades it in
           # place to this chart. Every pair runs, and a failed install or
-          # upgrade fails the job. In the baseline's directory, <values>.yaml
-          # adds the documented migration values to the upgrade, and
-          # <values>.unsupported skips an upgrade that isn't supported, with the
-          # reason as its content.
+          # upgrade fails the job.
           status=0
           upgrade_from() {
-            local from=$1 chart=$2 dir=charts/vector/ci/upgrade/$3 values name release args
+            local from=$1 chart=$2 values release
             for values in charts/vector/ci/*-default-values.yaml; do
-              name=$(basename "$values" -default-values.yaml)
-              release="${from}-${name}"
+              release="${from}-$(basename "$values" -default-values.yaml)"
               echo "::group::${release}"
               if ! helm install "$release" "$chart" --values "$values" \
                 --namespace "$release" --create-namespace --wait --timeout 300s; then
                 echo "::error::${release}: installing the ${from} chart failed"
                 status=1
-              elif applies "$from" "$dir/${name}.unsupported"; then
-                echo "::warning::${release}: the upgrade isn't supported: $(< "$dir/${name}.unsupported")"
-              else
-                args=(--values "$values")
-                if applies "$from" "$dir/${name}.yaml"; then
-                  args+=(--values "$dir/${name}.yaml")
-                fi
-                if ! helm upgrade "$release" charts/vector "${args[@]}" \
-                  --namespace "$release" --wait --timeout 300s; then
-                  echo "::error::${release}: the upgrade failed"
-                  status=1
-                fi
+              elif ! helm upgrade "$release" charts/vector --values "$values" \
+                --namespace "$release" --wait --timeout 300s; then
+                echo "::error::${release}: the upgrade failed"
+                status=1
               fi
               echo "::endgroup::"
             done
@@ -171,12 +148,13 @@ jobs:
           helm repo add vector https://helm.vector.dev
           version=$(helm search repo vector/vector --output json | jq -r '.[0].version')
           helm pull vector/vector --version "$version" --untar --untardir "$RUNNER_TEMP/release"
-          upgrade_from release "$RUNNER_TEMP/release/vector" "release-${version}"
+          upgrade_from release "$RUNNER_TEMP/release/vector"
 
-          # Pushes to `releasing/**` have no PR base.
+          # Pushes to `releasing/**` have no PR base. HEAD is the PR's merge
+          # commit, and its first parent is the base.
           if [ "$IS_PR" = true ]; then
             git worktree add --detach "$RUNNER_TEMP/base" HEAD^1
-            upgrade_from base "$RUNNER_TEMP/base/charts/vector" base
+            upgrade_from base "$RUNNER_TEMP/base/charts/vector"
           fi
           exit "$status"
 
