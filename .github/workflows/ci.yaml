@@ -101,11 +101,64 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --upgrade
 
+  # `ct install --upgrade` compares against a git revision and skips whenever
+  # the minor version changes, which is every PR during a release cycle. This
+  # job upgrades a release of the latest published chart in place, the way
+  # users upgrade.
+  upgrade-from-release:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-chart
+      - kubeval-chart
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Create kind
+        uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
+        with:
+          node_image: kindest/node:v1.35.0
+      - name: Find the latest published chart
+        id: latest
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          helm repo add vector https://helm.vector.dev
+          version=$(helm search repo vector/vector --output json | jq -r '.[0].version')
+          git rev-parse --verify --quiet "vector-${version}^{commit}" > /dev/null \
+            || { echo "::error::Tag vector-${version} not found"; exit 1; }
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+          # A change marked breaking (`type(scope)!:`) in this PR or since the
+          # latest release is expected to fail the upgrade.
+          breaking=false
+          pattern='^[a-z]+(\([^)]*\))?!:'
+          if grep -Eq "$pattern" <<< "$PR_TITLE" \
+            || git log --format=%s "vector-${version}..HEAD" | grep -Eq "$pattern"; then
+            breaking=true
+            echo "::warning::Breaking change since ${version}: the upgrade test reports failures without blocking."
+          fi
+          echo "breaking=${breaking}" >> "$GITHUB_OUTPUT"
+      - name: Upgrade in place from ${{ steps.latest.outputs.version }}
+        continue-on-error: ${{ steps.latest.outputs.breaking == 'true' }}
+        env:
+          FROM_VERSION: ${{ steps.latest.outputs.version }}
+        run: |
+          for values in charts/vector/ci/*-default-values.yaml; do
+            release="upgrade-$(basename "$values" -default-values.yaml)"
+            helm install "$release" vector/vector --version "$FROM_VERSION" --values "$values" \
+              --namespace "$release" --create-namespace --wait --timeout 300s
+            helm upgrade "$release" charts/vector --values "$values" \
+              --namespace "$release" --wait --timeout 300s
+          done
+
   pr-validated:
     name: pr-validated
     runs-on: ubuntu-latest
     needs:
       - install-chart
+      - upgrade-from-release
       - lint-docs
     steps:
       - name: validate
