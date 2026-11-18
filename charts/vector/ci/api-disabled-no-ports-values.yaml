@@ -1,0 +1,18 @@
+# Disable the API and only use components without an address.
+## Values file for testing that no Service without ports is rendered.
+
+role: Stateless-Aggregator
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: false
+  sources:
+    demo:
+      type: demo_logs
+      format: json
+  sinks:
+    stdout:
+      type: console
+      inputs: [demo]
+      encoding:
+        codec: json
