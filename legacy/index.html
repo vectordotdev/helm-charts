@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Legacy Vector Helm charts</title>
+  </head>
+  <body>
+    <h1>Legacy Vector Helm charts</h1>
+    <p>
+      This archive preserves the 24 stable chart packages previously published at
+      <code>https://packages.timber.io/helm/latest</code>. The packages and their
+      SHA-256 checksums are unchanged. No new chart versions will be added here.
+    </p>
+    <h2>Move an existing repository</h2>
+    <p>
+      If your repository is named <code>vector</code>, update its URL with the
+      commands below. Substitute your existing repository name if it is different.
+    </p>
+    <pre><code>helm repo add vector https://helm.vector.dev/legacy/ --force-update
+helm repo update vector</code></pre>
+    <p>
+      Keep your existing chart name, pinned version, release name, namespace, and
+      values. This change only updates the download location; it does not upgrade
+      your installation. For example, to download the archived agent chart:
+    </p>
+    <pre><code>helm pull vector/vector-agent --version 0.17.2</code></pre>
+    <p>
+      Chart versions in the current repository at
+      <a href="https://helm.vector.dev/">helm.vector.dev</a> have a different
+      history. The same chart name and version can identify different packages,
+      so use this archive when preserving a legacy installation. Upgrading to the
+      current chart requires a separate migration.
+    </p>
+    <p>
+      These historical charts retain their original Kubernetes APIs, image
+      references, and defaults. Archiving them does not establish compatibility
+      with current clusters or availability of the referenced images.
+    </p>
+    <p>
+      Nightly chart snapshots are not included. For current releases and
+      installation instructions, see the
+      <a href="https://vector.dev/docs/setup/installation/package-managers/helm/"
+        >Vector Helm documentation</a
+      >.
+    </p>
+    <p>
+      <a href="index.yaml">Helm repository index</a> &middot;
+      <a href="SHA256SUMS">Original package checksums</a>
+    </p>
+  </body>
+</html>
