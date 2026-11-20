@@ -1,0 +1,4 @@
+# Aggregator role
+## Values file for testing an empty config directory.
+role: Aggregator
+emptyConfig: true

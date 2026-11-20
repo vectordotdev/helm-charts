@@ -1,0 +1,5 @@
+# Aggregator role
+## Values file for testing the config sidecar with the Aggregator role.
+role: Aggregator
+configSidecar:
+  enabled: true

@@ -25,6 +25,8 @@ annotations:
       image: timberio/vector:0.62.0-distroless-libc
     - name: haproxy
       image: haproxytech/haproxy-alpine:2.6.12
+    - name: config-sidecar
+      image: quay.io/kiwigrid/k8s-sidecar:2.14.3
   artifacthub.io/license: MPL-2.0
   artifacthub.io/links: |
     - name: Chart Source

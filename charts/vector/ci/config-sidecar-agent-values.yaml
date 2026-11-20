@@ -1,0 +1,5 @@
+# Agent role
+## Values file for testing the config sidecar with the Agent role.
+role: Agent
+configSidecar:
+  enabled: true

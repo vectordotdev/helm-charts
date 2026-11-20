@@ -1,4 +1,5 @@
-{{- if .Values.service.enabled }}
+{{- /* A non-headless Service requires ports. With emptyConfig the chart cannot derive them, so service.ports is required. */}}
+{{- if and .Values.service.enabled (or .Values.service.ports (not .Values.emptyConfig)) }}
 apiVersion: v1
 kind: Service
 metadata:
