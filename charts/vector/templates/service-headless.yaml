@@ -29,6 +29,7 @@ spec:
   {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}
+{{- if or .Values.service.ports (not .Values.emptyConfig) }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
@@ -59,7 +60,8 @@ spec:
     - name: prom-exporter
       port: 9090
       protocol: TCP
-  {{- end }}
+{{- end }}
+{{- end }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP
@@ -94,6 +96,7 @@ spec:
   {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end }}
+{{- if or .Values.service.ports (not .Values.emptyConfig) }}
   ports:
 {{- if or .Values.service.ports .Values.existingConfigMaps }}
   {{- toYaml .Values.service.ports | nindent 4 }}
@@ -124,7 +127,8 @@ spec:
     - name: prom-exporter
       port: 9090
       protocol: TCP
-  {{- end }}
+{{- end }}
+{{- end }}
   selector:
     {{- include "vector.selectorLabels" . | nindent 4 }}
   type: ClusterIP
