@@ -3,6 +3,39 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [vector-0.62.1] - 2026-11-16
+
+### Releasing
+
+#### Other
+
+- Set chart version to 0.62.1 (#622) ([9696cee](https://github.com/vectordotdev/helm-charts/commit/9696ceee17146d1124da7ffa1f1365d1631e3abd))
+
+### Vector
+
+#### Bug Fixes
+
+- Keep role casing in app.kubernetes.io/component selector label (#621) ([6273ced](https://github.com/vectordotdev/helm-charts/commit/6273ceda966dd66c4dca0a71c5beff9a9d4a2934))
+  - 0.62.0 (#610) lowercased the role in the `app.kubernetes.io/component` label. This label is part of the immutable `spec.selector` of the DaemonSet, Deployment and StatefulSet, so `helm upgrade` from 0.61.0 to 0.62.0 fails with `field is immutable` (#620). This release restores the original role casing. Role matching stays case-insensitive.
+  - Upgrading from 0.61.0 or earlier: no action. Keep the original role casing (`Agent`, `Aggregator` or `Stateless-Aggregator`). A failed upgrade to 0.62.0 leaves the Services and the PodDisruptionBudget with lowercase selectors that match no pods. Upgrading to 0.62.1 fixes this.
+  - **BREAKING**: releases first installed on 0.62.0 have lowercase selectors, including releases that use the default `Aggregator`. To keep the existing selectors, set the role to lowercase (`role: agent`, `aggregator` or `stateless-aggregator`) before upgrading, and keep that value for later upgrades.
+
+## [vector-0.62.0] - 2026-11-16
+
+### Releasing
+
+#### Other
+
+- Bump chart version to 0.62.0 ([bb788ad](https://github.com/vectordotdev/helm-charts/commit/bb788adfdf0de4986c19607b13b1d7657383dab3))
+
+### Vector
+
+#### Features
+
+- Enable case insensitivity for role (#610) ([1094fe9](https://github.com/vectordotdev/helm-charts/commit/1094fe983b10895ac0129df2668bafd2aaa7f43d))
+- Add ability to provide a digest for haproxy (#524) ([b1943be](https://github.com/vectordotdev/helm-charts/commit/b1943beb6a824a938e5a2b58984553d9b1a34adc))
+- Bump Vector to 0.62.0 and update Helm docs ([e06a782](https://github.com/vectordotdev/helm-charts/commit/e06a782cff70dc57b2192b7ecf6c60e09c56a16c))
+
 ## [vector-0.61.0] - 2026-10-29
 
 ### Releasing

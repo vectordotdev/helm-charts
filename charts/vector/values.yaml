@@ -9,7 +9,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 # role -- [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are:
-# "Agent", "Aggregator", and "Stateless-Aggregator".
+# "Agent", "Aggregator", and "Stateless-Aggregator" (case-insensitive). Invalid values are rejected.
 
 # Each role is created with the following workloads:
 # Agent = DaemonSet
@@ -587,8 +587,10 @@ haproxy:
     # haproxy.image.pullSecrets -- The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod)
     # to reference for the HAProxy Pods.
     pullSecrets: []
-    # haproxy.image.tag -- The tag to use for HAProxy's image.
+    # haproxy.image.tag -- The tag, SHA-256 digest, or tag@sha256:digest to use for HAProxy's image.
     tag: "2.6.12"
+    # haproxy.image.sha -- The SHA-256 digest to use for HAProxy's image, with or without the sha256: prefix. Overrides any digest in image.tag.
+    sha:
 
   # haproxy.rollWorkload -- Add a checksum of the generated ConfigMap to the HAProxy Deployment.
   rollWorkload: true

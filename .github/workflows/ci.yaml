@@ -19,6 +19,10 @@ jobs:
           fetch-depth: 0
       - name: Set up chart-testing
         uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
+      - name: Test rendered image references
+        run: python3 .github/test-image-references.py
+      - name: Test role validation
+        run: python3 .github/test-role-validation.py
       - name: Copy example values into ci/
         run: cp charts/vector/examples/*-values.yaml charts/vector/ci/
       - name: Run chart-testing (lint)
@@ -99,12 +103,81 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install --config .github/ct.yaml --upgrade
 
+  # `ct install --upgrade` compares against a git revision and skips whenever
+  # the minor version changes, which is every PR during a release cycle. This
+  # job upgrades a release in place, the way users upgrade, from the latest
+  # published chart and, for PRs, from the chart at the PR's base.
+  upgrade-chart:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-chart
+      - kubeval-chart
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Create kind
+        uses: helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376 # v1.15.2
+        with:
+          node_image: kindest/node:v1.35.0
+      - name: Upgrade in place
+        env:
+          IS_PR: ${{ github.event_name == 'pull_request' }}
+        run: |
+          # Installs the baseline chart with each values file and upgrades it in
+          # place to this chart. Every pair runs, and a failed install or
+          # upgrade fails the job.
+          status=0
+          upgrade_from() {
+            local from=$1 chart=$2 values release
+            for values in charts/vector/ci/*-default-values.yaml; do
+              release="${from}-$(basename "$values" -default-values.yaml)"
+              echo "::group::${release}"
+              if ! helm install "$release" "$chart" --values "$values" \
+                --namespace "$release" --create-namespace --wait --timeout 300s; then
+                echo "::error::${release}: installing the ${from} chart failed"
+                status=1
+              elif ! helm upgrade "$release" charts/vector --values "$values" \
+                --namespace "$release" --wait --timeout 300s; then
+                echo "::error::${release}: the upgrade failed"
+                status=1
+              fi
+              echo "::endgroup::"
+            done
+          }
+
+          helm repo add vector https://helm.vector.dev
+          version=$(helm search repo vector/vector --output json | jq -r '.[0].version')
+          helm pull vector/vector --version "$version" --untar --untardir "$RUNNER_TEMP/release"
+          upgrade_from release "$RUNNER_TEMP/release/vector"
+
+          # Pushes to `releasing/**` have no PR base. HEAD is the PR's merge
+          # commit, and its first parent is the base.
+          if [ "$IS_PR" = true ]; then
+            git worktree add --detach "$RUNNER_TEMP/base" HEAD^1
+            upgrade_from base "$RUNNER_TEMP/base/charts/vector"
+          fi
+          exit "$status"
+
   pr-validated:
     name: pr-validated
     runs-on: ubuntu-latest
+    # Without always(), a failed dependency skips this job, and a skipped
+    # required check counts as passing.
+    if: ${{ always() }}
     needs:
       - install-chart
+      - upgrade-chart
       - lint-docs
     steps:
       - name: validate
-        run: echo "PR OK"
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          failed=$(jq -r 'to_entries[] | select(.value.result != "success") | "\(.key)=\(.value.result)"' <<< "$NEEDS")
+          if [ -n "$failed" ]; then
+            echo "::error::Required jobs did not succeed: $(paste -sd ' ' <<< "$failed")"
+            exit 1
+          fi
+          echo "PR OK"

@@ -1,6 +1,6 @@
 # Vector
 
-![Version: 0.62.0](https://img.shields.io/badge/Version-0.62.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.61.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.61.0--distroless--libc-informational?style=flat-square)
+![Version: 0.63.0](https://img.shields.io/badge/Version-0.63.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.62.0-distroless-libc](https://img.shields.io/badge/AppVersion-0.62.0--distroless--libc-informational?style=flat-square)
 
 [Vector](https://vector.dev/) is a high-performance, end-to-end observability data pipeline that puts you in control of your observability data. Collect, transform, and route all your logs, metrics, and traces to any vendors you want today and any other vendors you may want tomorrow. Vector enables dramatic cost reduction, novel data enrichment, and data security where you need it, not where is most convenient for your vendors.
 
@@ -30,6 +30,12 @@ helm install <RELEASE_NAME> vector/vector
 ```
 
 ### Upgrading
+
+#### Role validation
+
+The chart accepts `Agent`, `Aggregator`, and `Stateless-Aggregator` in any casing. Empty, unknown, or non-string `role` values fail during rendering. Earlier versions accepted invalid strings without creating a Vector workload; replace those values with a supported role before upgrading.
+
+Keep the original role casing for existing releases, because it is part of the immutable workload selector.
 
 #### From original charts
 
@@ -220,7 +226,7 @@ helm install <RELEASE_NAME> \
 | readinessProbe | object | `{}` | Override default readiness probe settings. If not set, this chart applies an `httpGet /health` readinessProbe on port `8686` for chart-managed default configs. If customConfig is used, requires customConfig.api.enabled to be set to true. `grpc` is recommended once the cluster is on Vector 0.55+; the `httpGet /health` probe is kept for backwards compatibility with older Vector versions. |
 | replicas | int | `1` | Specify the number of Pods to create. Valid for the "Aggregator" and "Stateless-Aggregator" roles. |
 | resources | object | `{}` | Set Vector resource requests and limits. |
-| role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator". |
+| role | string | `"Aggregator"` | [Role](https://vector.dev/docs/setup/deployment/roles/) for this Vector instance, valid options are: "Agent", "Aggregator", and "Stateless-Aggregator" (case-insensitive). Invalid values are rejected. |
 | rollWorkload | bool | `true` | Add a checksum of the generated ConfigMap to workload annotations. |
 | rollWorkloadExtraObjects | bool | `false` | Add a checksum of the generated ExtraObjects to workload annotations. |
 | rollWorkloadSecrets | bool | `false` | Add a checksum of the generated Secret to workload annotations. |
@@ -276,7 +282,8 @@ helm install <RELEASE_NAME> \
 | haproxy.image.pullPolicy | string | `"IfNotPresent"` | HAProxy image pullPolicy. |
 | haproxy.image.pullSecrets | list | `[]` | The [imagePullSecrets](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod) to reference for the HAProxy Pods. |
 | haproxy.image.repository | string | `"haproxytech/haproxy-alpine"` | Override default registry and name for HAProxy. |
-| haproxy.image.tag | string | `"2.6.12"` | The tag to use for HAProxy's image. |
+| haproxy.image.sha | string | `nil` | The SHA-256 digest to use for HAProxy's image, with or without the sha256: prefix. Overrides any digest in image.tag. |
+| haproxy.image.tag | string | `"2.6.12"` | The tag, SHA-256 digest, or tag@sha256:digest to use for HAProxy's image. |
 | haproxy.initContainers | list | `[]` | Init Containers to be added to the HAProxy Pods. This also supports template content, which will eventually be converted to yaml. |
 | haproxy.livenessProbe | object | `{"tcpSocket":{"port":1024}}` | Override default HAProxy liveness probe settings. |
 | haproxy.nodeSelector | object | `{}` | Configure a [nodeSelector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) for HAProxy Pods |
