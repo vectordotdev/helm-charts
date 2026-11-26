@@ -405,3 +405,95 @@ agents:
         url: "{{ $protocol }}://{{ include "vector.fullname" $ }}.{{ $.Release.Namespace }}:{{ $sourceDatadogAgentPort | default "8282" }}"
         {{- end }}
 {{- end }}
+
+{{/*
+Normalize the config sidecar image tag to a string, preserving explicit zero values while accepting null.
+Numeric tags (e.g. `tag: 123`) are decoded as numbers by some Helm versions.
+*/}}
+{{- define "vector.configSidecar.image.tag" -}}
+{{- if ne .Values.configSidecar.image.tag nil -}}
+{{- .Values.configSidecar.image.tag | toString | trim -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Build the image reference for the config sidecar container:
+  - tag only:         registry/repo:tag
+  - sha/digest only:  registry/repo@sha256:…
+  - tag and digest:   registry/repo:tag@sha256:…
+  - nothing set:      registry/repo:latest
+*/}}
+{{- define "vector.configSidecar.image" -}}
+{{- $image := .Values.configSidecar.image -}}
+{{- $repo := $image.repository -}}
+{{- if $image.registry -}}
+  {{- $repo = printf "%s/%s" $image.registry $image.repository -}}
+{{- end -}}
+{{- $tag := include "vector.configSidecar.image.tag" . -}}
+{{- $sha := $image.sha | default "" | toString | trim | trimPrefix "sha256:" -}}
+{{- if and $tag $sha -}}
+  {{- printf "%s:%s@sha256:%s" $repo $tag $sha -}}
+{{- else if $sha -}}
+  {{- printf "%s@sha256:%s" $repo $sha -}}
+{{- else -}}
+  {{- printf "%s:%s" $repo ($tag | default "latest") -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Render a config sidecar container. Used for the long-running sidecar (METHOD=WATCH or SLEEP)
+and for the init container (METHOD=LIST) that populates the config directory once before
+Vector starts. Expects a dict with the keys `root` (top-level context), `name` and `method`.
+*/}}
+{{- define "vector.configSidecar.container" -}}
+{{- $root := .root -}}
+{{- $sidecar := $root.Values.configSidecar -}}
+name: {{ .name }}
+image: {{ include "vector.configSidecar.image" $root | quote }}
+imagePullPolicy: {{ $sidecar.imagePullPolicy }}
+env:
+  {{- if $sidecar.ignoreAlreadyProcessed }}
+  - name: IGNORE_ALREADY_PROCESSED
+    value: "true"
+  {{- end }}
+  - name: METHOD
+    value: {{ .method | quote }}
+  - name: LABEL
+    value: {{ $sidecar.label | quote }}
+  - name: LABEL_VALUE
+    value: {{ include "vector.configSidecar.labelValue" $root | quote }}
+  {{- with $sidecar.logLevel }}
+  - name: LOG_LEVEL
+    value: {{ . | quote }}
+  {{- end }}
+  - name: FOLDER
+    value: "/etc/vector/"
+  - name: RESOURCE
+    value: "configmap"
+  {{- if $sidecar.uniqueFilenames }}
+  - name: UNIQUE_FILENAMES
+    value: "true"
+  {{- end }}
+  {{- with $sidecar.extraEnv }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- with $sidecar.resources }}
+resources:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with $sidecar.securityContext }}
+securityContext:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+volumeMounts:
+  - name: config
+    mountPath: "/etc/vector/"
+{{- end }}
+
+{{/*
+Value of the label that ConfigMaps must carry to be collected by the config sidecar.
+Defaults to the release name.
+*/}}
+{{- define "vector.configSidecar.labelValue" -}}
+{{- .Values.configSidecar.labelValue | default .Release.Name -}}
+{{- end }}
